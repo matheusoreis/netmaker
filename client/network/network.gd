@@ -32,7 +32,7 @@ func register_handlers(handlers: Array) -> void:
 		if callable.is_valid():
 			_handlers[id] = callable
 
-		print("[SERVER] Registrado o handler %s." % str(id))
+		print("[CLIENT] Registrado o handler %s." % str(id))
 
 
 func process() -> void:

@@ -43,6 +43,10 @@ func _on_peer_disconnected(peer: ENetPacketPeer) -> void:
 	print("[SERVER] Cliente desconectado:", peer.get_instance_id())
 
 
+func register_handlers(handlers: Array) -> void:
+	_network.register_handlers(handlers)
+
+
 func _send(filter: Callable, packet: Array) -> void:
 	var data := var_to_bytes(packet)
 	for peer in _network.get_peers():

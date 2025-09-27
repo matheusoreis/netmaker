@@ -27,5 +27,9 @@ func _process(_delta: float) -> void:
 	_network.process()
 
 
+func register_handlers(handlers: Array) -> void:
+	_network.register_handlers(handlers)
+
+
 func send(packet: Array) -> void:
 	_network.send(packet)
