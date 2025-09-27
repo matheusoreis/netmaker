@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://c5puogxyrm3k1"]
+
+[ext_resource type="Script" uid="uid://c3j5fgauqc5og" path="res://shared/boot.gd" id="1_wcx4a"]
+[ext_resource type="PackedScene" uid="uid://df4d5x8kylc1n" path="res://client/client.tscn" id="2_fd7ac"]
+[ext_resource type="PackedScene" uid="uid://bjctk2v6ywyhb" path="res://server/server.tscn" id="3_ans4w"]
+
+[node name="Boot" type="Node2D"]
+script = ExtResource("1_wcx4a")
+client = ExtResource("2_fd7ac")
+server = ExtResource("3_ans4w")
+
+[node name="Interfaces" type="CanvasLayer" parent="."]
+
+[node name="Center" type="CenterContainer" parent="Interfaces"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Vbox" type="VBoxContainer" parent="Interfaces/Center"]
+layout_mode = 2
+
+[node name="Client" type="Button" parent="Interfaces/Center/Vbox"]
+layout_mode = 2
+text = "Cliente"
+
+[node name="Server" type="Button" parent="Interfaces/Center/Vbox"]
+layout_mode = 2
+text = "Servidor"
+
+[connection signal="pressed" from="Interfaces/Center/Vbox/Client" to="." method="_on_client_pressed"]
+[connection signal="pressed" from="Interfaces/Center/Vbox/Server" to="." method="_on_server_pressed"]
