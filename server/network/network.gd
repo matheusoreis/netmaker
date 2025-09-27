@@ -1,12 +1,13 @@
 class_name NetworkServer extends RefCounted
 
 
-signal client_connected(peer: ENetPacketPeer)
-signal client_disconnected(peer: ENetPacketPeer)
+signal peer_connected(peer: ENetPacketPeer)
+signal peer_disconnected(peer: ENetPacketPeer)
 
 
 var _enet: ENetConnection
 var _handlers: Dictionary
+
 var _peers: Array[ENetPacketPeer]
 
 
@@ -22,6 +23,10 @@ func start(port: int, capacity: int) -> Error:
 	return OK
 
 
+func get_peers() -> Array[ENetPacketPeer]:
+	return _peers.duplicate()
+
+
 func register_handlers(handlers: Array) -> void:
 	for handler in handlers:
 		var id: int = handler[0]
@@ -31,10 +36,6 @@ func register_handlers(handlers: Array) -> void:
 			_handlers[id] = callable
 
 		print("[SERVER] Registrado o handler %s." % str(id))
-
-
-func get_peers() -> Array[ENetPacketPeer]:
-	return _peers.duplicate()
 
 
 func process() -> void:
@@ -58,12 +59,12 @@ func process() -> void:
 
 func _handle_connect(peer: ENetPacketPeer) -> void:
 	_peers.append(peer)
-	client_connected.emit(peer)
+	peer_connected.emit(peer)
 
 
 func _handle_disconnect(peer: ENetPacketPeer) -> void:
 	_peers.erase(peer)
-	client_disconnected.emit(peer)
+	peer_disconnected.emit(peer)
 
 
 func _handle_packet(peer: ENetPacketPeer) -> void:
