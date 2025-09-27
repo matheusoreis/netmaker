@@ -85,3 +85,14 @@ func _handle_packet(peer: ENetPacketPeer) -> void:
 		return
 
 	handler.callv(args)
+
+
+func send(packet: Array) -> void:
+	if _peer == null:
+		return
+
+	if _peer.get_state() != ENetPacketPeer.STATE_CONNECTED:
+		return
+
+	var data := var_to_bytes(packet)
+	_peer.send(0, data, ENetPacketPeer.FLAG_RELIABLE)
