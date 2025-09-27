@@ -21,7 +21,6 @@ func start(host: String, port: int) -> Error:
 		print("[CLIENT] Falha ao conectar ao servidor %s:%d" % [host, port])
 		return FAILED
 
-	print("[CLIENT] Conectando em %s:%d..." % [host, port])
 	return OK
 
 

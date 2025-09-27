@@ -19,7 +19,6 @@ func start(port: int, capacity: int) -> Error:
 		print("[SERVER] Erro ao iniciar servidor na porta %d" % port)
 		return err
 
-	print("[SERVER] Servidor iniciado na porta %d" % port)
 	return OK
 
 

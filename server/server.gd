@@ -5,7 +5,6 @@ class_name Server
 @export_category("General")
 @export var server_name: String = "NetMaker"
 
-
 @export_category("Settings")
 @export var port: int = 7001
 @export var capacity: int = 100
@@ -25,6 +24,10 @@ func _ready() -> void:
 	var err: Error = _network.start(port, capacity)
 	if err == Error.OK:
 		print("[SERVER] Rodando na porta %d, com capacidade de %d clientes." % [port, capacity])
+
+
+func _process(_delta: float) -> void:
+	_network.process()
 
 
 func _on_peer_connected(peer: ENetPacketPeer) -> void:
