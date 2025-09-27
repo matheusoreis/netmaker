@@ -4,8 +4,10 @@
 [ext_resource type="PackedScene" uid="uid://cbbb3sh1xdox7" path="res://server/modules/map/map.tscn" id="2_0wvpq"]
 [ext_resource type="PackedScene" uid="uid://boys70ah4yk27" path="res://server/modules/actor/actor.tscn" id="3_u3pyk"]
 
-[node name="Server" type="Node2D"]
+[node name="Server" type="Node2D" node_paths=PackedStringArray("map", "actor")]
 script = ExtResource("1_pcfvm")
+map = NodePath("Modules/Map")
+actor = NodePath("Modules/Actor")
 
 [node name="Modules" type="Node" parent="."]
 

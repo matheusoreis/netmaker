@@ -15,7 +15,7 @@ func add(peer: ENetPacketPeer, data: Dictionary) -> void:
 
 
 func read(peer: ENetPacketPeer) -> Dictionary:
-	return _actors.get(peer, {})
+	return _actors.get(peer, null)
 
 
 func read_all() -> Array:
@@ -41,3 +41,8 @@ func patch(peer: ENetPacketPeer, data: Dictionary) -> void:
 
 	_actors[peer] = actor
 	updated.emit(peer, actor)
+
+
+func is_in_map(peer: ENetPacketPeer, map_id: int) -> bool:
+	var a := read(peer)
+	return a != null and a.get("map_id", null) == map_id
