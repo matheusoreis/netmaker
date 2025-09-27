@@ -1,4 +1,4 @@
-class_name NetworkServer extends Node
+class_name NetworkServer extends RefCounted
 
 
 signal client_connected(peer: ENetPacketPeer)
@@ -31,6 +31,10 @@ func register_handlers(handlers: Array) -> void:
 			_handlers[id] = callable
 
 		print("[SERVER] Registrado o handler %s." % str(id))
+
+
+func get_peers() -> Array[ENetPacketPeer]:
+	return _peers.duplicate()
 
 
 func process() -> void:
