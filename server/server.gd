@@ -50,6 +50,7 @@ func _send(filter: Callable, packet: Array) -> void:
 			continue
 		if peer.get_state() != ENetPacketPeer.STATE_CONNECTED:
 			continue
+
 		peer.send(0, data, ENetPacketPeer.FLAG_RELIABLE)
 
 
