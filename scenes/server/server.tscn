@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://c85knoernaa6i"]
+
+[ext_resource type="Script" uid="uid://7h5yx1eul4ha" path="res://scenes/server/server.gd" id="1_fp0pw"]
+
+[node name="Server" type="Node2D"]
+script = ExtResource("1_fp0pw")
+
+[node name="Modules" type="Node" parent="."]
+unique_name_in_owner = true

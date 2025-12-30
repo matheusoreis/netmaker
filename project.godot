@@ -11,8 +11,13 @@ config_version=5
 [application]
 
 config/name="netmaker"
+run/main_scene="uid://hkfqe13aqjtd"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Globals="*res://common/globals.gd"
 
 [debug]
 

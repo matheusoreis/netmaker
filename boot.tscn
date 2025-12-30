@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://hkfqe13aqjtd"]
+
+[ext_resource type="Script" uid="uid://h2kyq85i2lxk" path="res://boot.gd" id="1_6ypks"]
+
+[node name="Boot" type="Node2D"]
+script = ExtResource("1_6ypks")
+
+[node name="Multiplayer" type="CanvasLayer" parent="."]
+
+[node name="HBox" type="HBoxContainer" parent="Multiplayer"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Server" type="Button" parent="Multiplayer/HBox"]
+layout_mode = 2
+text = "Servidor"
+
+[node name="Client" type="Button" parent="Multiplayer/HBox"]
+layout_mode = 2
+text = "Cliente"
+
+[connection signal="pressed" from="Multiplayer/HBox/Server" to="." method="_on_server_pressed"]
+[connection signal="pressed" from="Multiplayer/HBox/Client" to="." method="_on_client_pressed"]
