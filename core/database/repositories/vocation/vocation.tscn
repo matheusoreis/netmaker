@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bgu85nqn6wj85"]
+
+[ext_resource type="Script" uid="uid://c341vookuecsu" path="res://core/database/repositories/vocation/vocation.gd" id="1_l8wmq"]
+
+[node name="Vocation" type="Node"]
+script = ExtResource("1_l8wmq")
+metadata/_custom_type_script = "uid://c6vxs18op0je0"

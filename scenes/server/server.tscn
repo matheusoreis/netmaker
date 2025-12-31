@@ -1,9 +1,24 @@
-[gd_scene load_steps=2 format=3 uid="uid://c85knoernaa6i"]
+[gd_scene load_steps=6 format=3 uid="uid://c85knoernaa6i"]
 
 [ext_resource type="Script" uid="uid://7h5yx1eul4ha" path="res://scenes/server/server.gd" id="1_fp0pw"]
+[ext_resource type="PackedScene" uid="uid://6vj58m78umkk" path="res://core/database/repositories/account/account.tscn" id="2_hkcox"]
+[ext_resource type="PackedScene" uid="uid://dq44xrenewuh4" path="res://core/database/repositories/map/map.tscn" id="3_kr8px"]
+[ext_resource type="PackedScene" uid="uid://bgu85nqn6wj85" path="res://core/database/repositories/vocation/vocation.tscn" id="4_rqijc"]
+[ext_resource type="PackedScene" uid="uid://b1x1yorbltxck" path="res://core/database/repositories/character/character.tscn" id="5_3e01g"]
 
 [node name="Server" type="Node2D"]
 script = ExtResource("1_fp0pw")
+
+[node name="Repositories" type="Node" parent="."]
+unique_name_in_owner = true
+
+[node name="Account" parent="Repositories" instance=ExtResource("2_hkcox")]
+
+[node name="Map" parent="Repositories" instance=ExtResource("3_kr8px")]
+
+[node name="Vocation" parent="Repositories" instance=ExtResource("4_rqijc")]
+
+[node name="Character" parent="Repositories" instance=ExtResource("5_3e01g")]
 
 [node name="Modules" type="Node" parent="."]
 unique_name_in_owner = true

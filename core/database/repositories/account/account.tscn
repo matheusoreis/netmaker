@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://6vj58m78umkk"]
+
+[ext_resource type="Script" uid="uid://d4chp7b1du0vj" path="res://core/database/repositories/account/account.gd" id="1_70n78"]
+
+[node name="Account" type="Node"]
+script = ExtResource("1_70n78")
+metadata/_custom_type_script = "uid://c6vxs18op0je0"
