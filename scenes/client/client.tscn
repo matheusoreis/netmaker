@@ -7,3 +7,12 @@ script = ExtResource("1_qqd53")
 
 [node name="Modules" type="Node" parent="."]
 unique_name_in_owner = true
+
+[node name="Auth" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+
+[node name="Menu" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+
+[node name="Game" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
