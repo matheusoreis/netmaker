@@ -36,7 +36,7 @@ func _create_indexes() -> Error:
 
 
 func _row_to_dictionary(row: Array, columns: Array) -> Dictionary:
-	var dict := {}
+	var dict: Dictionary = {}
 	for i in range(columns.size()):
 		dict[columns[i]] = row[i]
 	return dict
@@ -49,18 +49,20 @@ func _parse_result(result: Array) -> Dictionary:
 			"data": "Banco não retornou resposta."
 		}
 
-	var status = result[0]
-	var data = null
-
-	if result.size() > 1:
-		data = result[1]
-
-	var dict = {
-		"status": status,
-		"data": data
+	var status: Error = result[0]
+	var dict: Dictionary = {
+		"status": status
 	}
 
-	if result.size() > 2 and result[2] != "":
-		dict["message"] = result[2]
+	if status == OK:
+		if result.size() > 1:
+			dict["data"] = result[1]
+		if result.size() > 2:
+			dict["columns"] = result[2]
+	else:
+		if result.size() > 1:
+			dict["code"] = result[1]
+		if result.size() > 2:
+			dict["message"] = result[2]
 
 	return dict

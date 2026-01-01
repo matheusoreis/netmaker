@@ -6,7 +6,7 @@ const SEPARATOR: String = ":"
 const SALT_LENGTH: int = 32
 
 
-func make(password: String) -> String:
+func hash(password: String) -> String:
 	var crypto = Crypto.new()
 
 	var salt_bytes = crypto.generate_random_bytes(SALT_LENGTH)
