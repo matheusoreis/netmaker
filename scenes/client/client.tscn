@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://dj518c24rdya1"]
+[gd_scene load_steps=5 format=3 uid="uid://dj518c24rdya1"]
 
 [ext_resource type="Script" uid="uid://dy07e0t48bdke" path="res://scenes/client/client.gd" id="1_qqd53"]
+[ext_resource type="PackedScene" uid="uid://qunbjywso1ly" path="res://scenes/client/menu/sign_in/sign_in.tscn" id="2_drkvg"]
+[ext_resource type="PackedScene" uid="uid://bnowqio5n4l1d" path="res://scenes/client/menu/sign_up/sign_up.tscn" id="3_s2gpv"]
+[ext_resource type="PackedScene" uid="uid://egj58neq31r8" path="res://scenes/client/shared/alert/alert_ui.tscn" id="4_oismd"]
 
 [node name="Client" type="Node2D"]
 script = ExtResource("1_qqd53")
@@ -8,11 +11,45 @@ script = ExtResource("1_qqd53")
 [node name="Modules" type="Node" parent="."]
 unique_name_in_owner = true
 
-[node name="Auth" type="CanvasLayer" parent="."]
-unique_name_in_owner = true
-
 [node name="Menu" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
 
+[node name="SignIn" parent="Menu" node_paths=PackedStringArray("alert_ui", "sign_up_ui") instance=ExtResource("2_drkvg")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -131.0
+offset_right = 150.0
+offset_bottom = 131.0
+grow_horizontal = 2
+grow_vertical = 2
+alert_ui = NodePath("../../Shared/AlertUi")
+sign_up_ui = NodePath("../SignUp")
+
+[node name="SignUp" parent="Menu" node_paths=PackedStringArray("alert_ui", "sign_in_ui") instance=ExtResource("3_s2gpv")]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -166.5
+offset_right = 150.0
+offset_bottom = 166.5
+grow_horizontal = 2
+grow_vertical = 2
+alert_ui = NodePath("../../Shared/AlertUi")
+sign_in_ui = NodePath("../SignIn")
+
 [node name="Game" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
+
+[node name="Shared" type="CanvasLayer" parent="."]
+
+[node name="AlertUi" parent="Shared" instance=ExtResource("4_oismd")]
+unique_name_in_owner = true
+visible = false

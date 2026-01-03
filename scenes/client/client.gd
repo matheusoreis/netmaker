@@ -1,5 +1,9 @@
 extends Node2D
 
+@export_category("Connection")
+@export var _address: String = "127.0.0.1"
+@export var _port: int = 7001
+
 
 var _network: Rpc.Client
 
@@ -12,24 +16,21 @@ func _initialize_network() -> void:
 	_network = Rpc.Client.new()
 	Globals.rpc = _network
 
-	var address: String = Constants.ADDRESS
-	var port: int = Constants.PORT
-
 	print(
 		"[CLIENT] Iniciando cliente em %s:%d" % [
-			address, port
+			_address, _port
 		]
 	)
 
 	var error: Error = _network.start(
-		address, port
+		_address, _port
 	)
 
 	if error != OK:
 		push_error("[CLIENT] Falha ao iniciar o cliente: %s" % error)
 		return
 
-	print("[CLIENT] Cliente iniciado com sucesso na porta %d!" % port)
+	print("[CLIENT] Cliente iniciado com sucesso na porta %d!" % _port)
 
 	for child in %Modules.get_children():
 		if child is not RpcModule:

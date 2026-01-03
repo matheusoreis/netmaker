@@ -1,0 +1,87 @@
+[gd_scene load_steps=2 format=3 uid="uid://bnowqio5n4l1d"]
+
+[ext_resource type="Script" uid="uid://c2awwto1laxlt" path="res://scenes/client/menu/sign_up/sign_up.gd" id="1_ojkxr"]
+
+[node name="SignUp" type="PanelContainer" node_paths=PackedStringArray("user_input", "password_input", "repassword_input")]
+custom_minimum_size = Vector2(300, 0)
+script = ExtResource("1_ojkxr")
+user_input = NodePath("VBox/Margin/VBox/Inputs/UserInput")
+password_input = NodePath("VBox/Margin/VBox/Inputs/PasswordInput")
+repassword_input = NodePath("VBox/Margin/VBox/Inputs/RePasswordInput")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TopBar" type="PanelContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="VBox/TopBar"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBox" type="HBoxContainer" parent="VBox/TopBar/Margin"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="VBox/TopBar/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="VBox/TopBar/Margin/HBox"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Inputs" type="VBoxContainer" parent="VBox/Margin/VBox"]
+layout_mode = 2
+
+[node name="UserLabel" type="Label" parent="VBox/Margin/VBox/Inputs"]
+layout_mode = 2
+text = "Usuário:"
+
+[node name="UserInput" type="LineEdit" parent="VBox/Margin/VBox/Inputs"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="PasswordLabel" type="Label" parent="VBox/Margin/VBox/Inputs"]
+layout_mode = 2
+text = "Senha:"
+
+[node name="PasswordInput" type="LineEdit" parent="VBox/Margin/VBox/Inputs"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="RePasswordLabel" type="Label" parent="VBox/Margin/VBox/Inputs"]
+layout_mode = 2
+text = "Senha"
+
+[node name="RePasswordInput" type="LineEdit" parent="VBox/Margin/VBox/Inputs"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="VBox/Margin/VBox"]
+layout_mode = 2
+
+[node name="SignIn" type="Button" parent="VBox/Margin/VBox/Buttons"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Acessar"
+
+[node name="SignUp" type="Button" parent="VBox/Margin/VBox/Buttons"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cadastrar"
