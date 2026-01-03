@@ -1,5 +1,5 @@
 extends Node
-class_name RpcModule
+class_name NetworkModule
 
 @export_category("Settings")
 @export var scope: String

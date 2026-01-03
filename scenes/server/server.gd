@@ -66,8 +66,8 @@ func _initialize_network() -> void:
 	print("[SERVER] Servidor iniciado com sucesso na porta %d!" % _port)
 
 	for child in %Modules.get_children():
-		if child is not RpcModule:
-			push_warning("[RPC] Node ignorado não é RpcModule: %s" % child.name)
+		if child is not NetworkModule:
+			push_warning("[RPC] Node ignorado não é NetworkModule: %s" % child.name)
 			continue
 
 		child.initialize(_network)

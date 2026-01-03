@@ -1,0 +1,2 @@
+extends NetworkModule
+class_name AuthModule

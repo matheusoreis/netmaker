@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://c85knoernaa6i"]
+[gd_scene load_steps=7 format=3 uid="uid://c85knoernaa6i"]
 
 [ext_resource type="Script" uid="uid://7h5yx1eul4ha" path="res://scenes/server/server.gd" id="1_fp0pw"]
 [ext_resource type="PackedScene" uid="uid://6vj58m78umkk" path="res://core/database/repositories/account/account.tscn" id="2_hkcox"]
 [ext_resource type="PackedScene" uid="uid://dq44xrenewuh4" path="res://core/database/repositories/map/map.tscn" id="3_kr8px"]
 [ext_resource type="PackedScene" uid="uid://bgu85nqn6wj85" path="res://core/database/repositories/vocation/vocation.tscn" id="4_rqijc"]
 [ext_resource type="PackedScene" uid="uid://b1x1yorbltxck" path="res://core/database/repositories/character/character.tscn" id="5_3e01g"]
+[ext_resource type="PackedScene" uid="uid://j7fo2ioo1v1w" path="res://core/network/modules/server/Auth/auth.tscn" id="6_kr8px"]
 
 [node name="Server" type="Node2D"]
 script = ExtResource("1_fp0pw")
@@ -22,3 +23,5 @@ unique_name_in_owner = true
 
 [node name="Modules" type="Node" parent="."]
 unique_name_in_owner = true
+
+[node name="Auth" parent="Modules" instance=ExtResource("6_kr8px")]
