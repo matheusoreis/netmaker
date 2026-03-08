@@ -11,8 +11,14 @@ config_version=5
 [application]
 
 config/name="Netmaker"
+run/main_scene="uid://g6fmg3clxhln"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
+
+[debug]
+
+gdscript/warnings/shadowed_variable=0
+gdscript/warnings/shadowed_variable_base_class=0
 
 [physics]
 
