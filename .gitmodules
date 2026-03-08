@@ -1,0 +1,18 @@
+[submodule "client/addons/zodot"]
+	path = client/addons/zodot
+	url = https://github.com/matheusoreis/zodot
+[submodule "client/addons/enhanced_grid"]
+	path = client/addons/enhanced_grid
+	url = https://github.com/matheusoreis/enhanced_grid
+[submodule "client/addons/enhanced_rpc"]
+	path = client/addons/enhanced_rpc
+	url = https://github.com/matheusoreis/enhanced_rpc
+[submodule "server/addons/zodot"]
+	path = server/addons/zodot
+	url = https://github.com/matheusoreis/zodot
+[submodule "server/addons/enhanced_grid"]
+	path = server/addons/enhanced_grid
+	url = https://github.com/matheusoreis/enhanced_grid
+[submodule "server/addons/enhanced_rpc"]
+	path = server/addons/enhanced_rpc
+	url = https://github.com/matheusoreis/enhanced_rpc
