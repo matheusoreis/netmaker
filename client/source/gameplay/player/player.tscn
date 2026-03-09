@@ -5,6 +5,7 @@
 
 [node name="Player" type="Node2D" unique_id=743275217 node_paths=PackedStringArray("sprite_2d", "camera_2d")]
 script = ExtResource("1_bhnvy")
+move_speed = 160.0
 sprite_2d = NodePath("Sprite2D")
 camera_2d = NodePath("Camera2D")
 collision_layers = Array[String](["player"])
