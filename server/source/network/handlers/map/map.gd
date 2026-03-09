@@ -40,34 +40,13 @@ func initialize(network: Network, map_cache: MapCache) -> void:
 
 func move(ctx: EnhancedRpc.RpcContext, buf: StreamPeerBuffer) -> void:
 	var direction: Vector2i = Vector2i(buf.get_8(), buf.get_8())
-	var claimed_pos: Vector2i = Vector2i(buf.get_16(), buf.get_16())
 
 	var map: GameMap = _get_player_map(ctx.sender_id)
 	if map == null:
 		push_warning("[MAP HANDLER] Peer %d tentou mover mas não está em nenhum mapa." % ctx.sender_id)
 		return
 
-	var entity: GridEntity2D = map.get_player_entity(ctx.sender_id)
-
-	if entity.map_position != claimed_pos:
-		print("[MAP HANDLER] DESSYNC peer %d | server: %s | cliente: %s" % [
-			ctx.sender_id, entity.map_position, claimed_pos
-		])
-		_network.exec(ctx.sender_id, "game.map.player_position_corrected", func(b: StreamPeerBuffer) -> void:
-			b.put_16(entity.map_position.x)
-			b.put_16(entity.map_position.y)
-		)
-		return
-
-	var pos_before: Vector2i = entity.map_position
 	map.move_player(ctx.sender_id, direction)
-
-	if entity.map_position == pos_before:
-		print("[MAP HANDLER] REJEITADO peer %d em %s dir %s" % [ctx.sender_id, pos_before, direction])
-		_network.exec(ctx.sender_id, "game.map.player_position_corrected", func(b: StreamPeerBuffer) -> void:
-			b.put_16(pos_before.x)
-			b.put_16(pos_before.y)
-		)
 
 
 func entered(ctx: EnhancedRpc.RpcContext, _buf: StreamPeerBuffer) -> void:

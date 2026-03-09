@@ -22,6 +22,7 @@ var _database: Database
 var _network: Network
 var _local_player: Player = null
 var _remote_players: Dictionary[int, Player] = {}
+var _can_move: bool = false
 
 
 func _ready() -> void:
@@ -56,21 +57,18 @@ func _process(_delta: float) -> void:
 
 
 func _process_movement() -> void:
-	if not _local_player:
-		return
-
-	if _local_player._is_moving:
+	if not _local_player or not _can_move:
 		return
 
 	var direction: Vector2i = Vector2i.ZERO
 
-	if Input.is_action_pressed("ui_up"):
+	if Input.is_action_just_pressed("ui_up") or Input.is_action_pressed("ui_up"):
 		direction = Vector2i(0, -1)
-	elif Input.is_action_pressed("ui_down"):
+	elif Input.is_action_just_pressed("ui_down") or Input.is_action_pressed("ui_down"):
 		direction = Vector2i(0, 1)
-	elif Input.is_action_pressed("ui_left"):
+	elif Input.is_action_just_pressed("ui_left") or Input.is_action_pressed("ui_left"):
 		direction = Vector2i(-1, 0)
-	elif Input.is_action_pressed("ui_right"):
+	elif Input.is_action_just_pressed("ui_right") or Input.is_action_pressed("ui_right"):
 		direction = Vector2i(1, 0)
 
 	if direction == Vector2i.ZERO:
@@ -82,11 +80,11 @@ func _process_movement() -> void:
 	if _local_player.map_position == pos_before:
 		return
 
+	_can_move = false
+
 	_network.exec("game.map.move", func(buf: StreamPeerBuffer) -> void:
 		buf.put_8(direction.x)
 		buf.put_8(direction.y)
-		buf.put_16(pos_before.x)
-		buf.put_16(pos_before.y)
 	)
 
 
@@ -97,9 +95,19 @@ func set_id(buf: StreamPeerBuffer) -> void:
 	_local_player = _player_scene.instantiate() as Player
 	_local_player.entity_id = my_id
 	_local_player.setup_as_local()
+	_local_player.move_finished.connect(_on_local_move_finished)
+	_local_player.move_blocked.connect(_on_local_move_blocked)
 	_map.add_entity(_local_player, Vector2i(5, 5))
 
 	_network.exec("game.map.entered")
+
+
+func _on_local_move_finished(_pos: Vector2i) -> void:
+	_can_move = true
+
+
+func _on_local_move_blocked(_target: Vector2i, _reason: String) -> void:
+	_can_move = true
 
 
 func player_self_spawned(buf: StreamPeerBuffer) -> void:
@@ -110,6 +118,7 @@ func player_self_spawned(buf: StreamPeerBuffer) -> void:
 		return
 
 	_local_player.go_to(spawn_pos)
+	_can_move = true
 	print("[CLIENT] Self spawned em %s" % spawn_pos)
 
 
@@ -161,6 +170,7 @@ func player_position_corrected(buf: StreamPeerBuffer) -> void:
 		return
 
 	_local_player.go_to(correct_pos)
+	_can_move = true
 	print("[CLIENT] Posição corrigida para %s" % correct_pos)
 
 
@@ -175,6 +185,8 @@ func _on_disconnected(_peer_id: int) -> void:
 		_map.remove_entity(_local_player)
 		_local_player.queue_free()
 		_local_player = null
+
+	_can_move = false
 
 	for player: Player in _remote_players.values():
 		_map.remove_entity(player)
