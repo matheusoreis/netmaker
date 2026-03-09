@@ -10,9 +10,8 @@ identifier = "floresta"
 bounds = Rect2i(0, 0, 20, 20)
 metadata/_custom_type_script = "uid://csleye42jcwbe"
 
-[node name="Main" type="Node2D" unique_id=1238138593 node_paths=PackedStringArray("map_cache")]
+[node name="Main" type="Node2D" unique_id=1238138593]
 script = ExtResource("1_kaxhg")
-map_cache = NodePath("Maps")
 
 [node name="Maps" parent="." unique_id=1803602726 instance=ExtResource("2_62cc7")]
 maps_data = Array[ExtResource("3_caq8k")]([SubResource("Resource_caq8k")])

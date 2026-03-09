@@ -16,7 +16,10 @@ class_name Main
 
 @export_category("Caches")
 @export_group("Maps")
-@export var map_cache: MapCache
+@export var _map_cache: MapCache
+
+@export_category("Handlers")
+@export var _map_handler: MapHandler
 
 var _database: Database
 var _network: Network
@@ -37,7 +40,9 @@ func _ready() -> void:
 		_max_tasks
 	)
 
-	map_cache.initialize()
+	_map_cache.initialize()
+
+	_map_handler.initialize(_network, _map_cache)
 
 
 func _process(_delta: float) -> void:
