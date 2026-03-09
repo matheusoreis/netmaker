@@ -48,7 +48,17 @@ func move(ctx: EnhancedRpc.RpcContext, buf: StreamPeerBuffer) -> void:
 		push_warning("[MAP HANDLER] Peer %d tentou mover mas não está em nenhum mapa." % ctx.sender_id)
 		return
 
+	var entity: GridEntity2D = map.get_player_entity(ctx.sender_id)
+	var pos_before: Vector2i = entity.map_position
+
 	map.move_player(ctx.sender_id, direction)
+
+	if entity.map_position == pos_before:
+		print("[MAP HANDLER] Movimento rejeitado para peer %d, corrigindo posição." % ctx.sender_id)
+		_network.exec(ctx.sender_id, "game.map.player_position_corrected", func(b: StreamPeerBuffer) -> void:
+			b.put_16(pos_before.x)
+			b.put_16(pos_before.y)
+		)
 
 
 func entered(ctx: EnhancedRpc.RpcContext, _buf: StreamPeerBuffer) -> void:
@@ -76,9 +86,14 @@ func left(ctx: EnhancedRpc.RpcContext, _buf: StreamPeerBuffer) -> void:
 
 
 func _on_player_moved(peer_ids: Array, entity_id: int, direction: Vector2i) -> void:
-	print("[MAP HANDLER] Entidade %d moveu | notificando: %s" % [entity_id, peer_ids])
+	var targets: Array = peer_ids.filter(func(id: int) -> bool: return id != entity_id)
 
-	_network.exec(peer_ids, "game.map.player_moved", func(buf: StreamPeerBuffer) -> void:
+	print("[MAP HANDLER] Entidade %d moveu | notificando: %s" % [entity_id, targets])
+
+	if targets.is_empty():
+		return
+
+	_network.exec(targets, "game.map.player_moved", func(buf: StreamPeerBuffer) -> void:
 		buf.put_u32(entity_id)
 		buf.put_8(direction.x)
 		buf.put_8(direction.y)

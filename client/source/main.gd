@@ -1,7 +1,7 @@
 extends Node
 class_name Main
 
-const MOVE_INTERVAL: float = 0.05
+const MOVE_INTERVAL: float = 0.15
 
 @export_category("Configuration")
 @export_group("Network")
@@ -46,6 +46,7 @@ func _ready() -> void:
 		player_self_spawned,
 		player_despawned,
 		player_moved,
+		player_position_corrected,
 	])
 
 
@@ -87,6 +88,9 @@ func _process_movement(delta: float) -> void:
 		return
 
 	_move_timer = 0.0
+
+	_local_player.move(direction)
+
 	_network.exec("game.map.move", func(buf: StreamPeerBuffer) -> void:
 		buf.put_8(direction.x)
 		buf.put_8(direction.y)
@@ -147,17 +151,22 @@ func player_moved(buf: StreamPeerBuffer) -> void:
 	var entity_id: int = buf.get_u32()
 	var direction: Vector2i = Vector2i(buf.get_8(), buf.get_8())
 
-	if _local_player and _local_player.entity_id == entity_id:
-		_local_player.move(direction)
-		print("[CLIENT] Meu movimento confirmado: %s" % direction)
-		return
-
 	var player: Player = _remote_players.get(entity_id)
 	if player == null:
 		return
 
 	player.move(direction)
 	print("[CLIENT] Jogador %d moveu: %s" % [entity_id, direction])
+
+
+func player_position_corrected(buf: StreamPeerBuffer) -> void:
+	var correct_pos: Vector2i = Vector2i(buf.get_16(), buf.get_16())
+
+	if _local_player == null:
+		return
+
+	_local_player.go_to(correct_pos)
+	print("[CLIENT] Posição corrigida para: %s" % correct_pos)
 
 
 func _on_connected(_peer_id: int) -> void:
