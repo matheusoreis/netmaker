@@ -13,7 +13,6 @@ func initialize(port: int, max_channels: int, max_peers: int, max_tasks: int) ->
 	print("[NETWORK] Iniciando o network na porta %d..." % port)
 
 	var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
-
 	var error: Error = peer.create_server(
 		port,
 		max_peers,
@@ -38,6 +37,27 @@ func initialize(port: int, max_channels: int, max_peers: int, max_tasks: int) ->
 			print("[NETWORK] Peer desconectado: %d" % peer_id)
 			peer_disconnected.emit(peer_id)
 	)
+
+
+func register(scope: StringName, functions: Array[Callable]) -> void:
+	if _server:
+		_server.register_methods(scope, functions)
+
+
+func unregister(scope: StringName, functions: Array[Callable]) -> void:
+	if _server:
+		_server.unregister_methods(scope, functions)
+
+
+func exec(target: Variant, path: StringName, writer: Callable = Callable(), channel: int = 0) -> void:
+	if _server:
+		_server.exec(target, path, writer, channel)
+
+
+func invoke(peer_id: int, path: StringName, writer: Callable = Callable(), channel: int = 0) -> StreamPeerBuffer:
+	if _server:
+		return await _server.invoke(peer_id, path, writer, channel)
+	return null
 
 
 func poll(_connection_timeout: int) -> void:
