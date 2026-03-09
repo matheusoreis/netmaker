@@ -101,5 +101,5 @@ func initialize(path: String, filename: String) -> void:
 	print("[DATABASE] Iniciando o banco de dados em %s" % full_path)
 
 
-func poll(poll_time: int) -> void:
+func poll(_poll_time: int) -> void:
 	pass

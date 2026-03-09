@@ -13,6 +13,7 @@ func initialize(network: Network, map_cache: MapCache) -> void:
 	_map_cache = map_cache
 
 	_network.peer_disconnected.connect(_on_peer_disconnected)
+	_network.peer_connected.connect(_on_peer_connected)
 
 	for map: GameMap in _map_cache.maps.values():
 		map.player_moved.connect(
@@ -75,14 +76,9 @@ func left(ctx: EnhancedRpc.RpcContext, _buf: StreamPeerBuffer) -> void:
 
 
 func _on_player_moved(peer_ids: Array, entity_id: int, direction: Vector2i) -> void:
-	var targets: Array = peer_ids.filter(func(id: int) -> bool: return id != entity_id)
+	print("[MAP HANDLER] Entidade %d moveu | notificando: %s" % [entity_id, peer_ids])
 
-	print("[MAP HANDLER] Entidade %d moveu | notificando: %s" % [entity_id, targets])
-
-	if targets.is_empty():
-		return
-
-	_network.exec(targets, "game.map.player_moved", func(buf: StreamPeerBuffer) -> void:
+	_network.exec(peer_ids, "game.map.player_moved", func(buf: StreamPeerBuffer) -> void:
 		buf.put_u32(entity_id)
 		buf.put_8(direction.x)
 		buf.put_8(direction.y)
@@ -94,6 +90,12 @@ func _on_player_entered(map: GameMap, peer_id: int) -> void:
 	var others: Array = map.get_player_ids().filter(func(id: int) -> bool: return id != peer_id)
 
 	print("[MAP HANDLER] Peer %d entrou em '%s' | outros no mapa: %s" % [peer_id, map.map_data.identifier, others])
+
+	_network.exec(peer_id, "game.map.player_self_spawned", func(buf: StreamPeerBuffer) -> void:
+		buf.put_u32(entity.entity_id)
+		buf.put_16(entity.map_position.x)
+		buf.put_16(entity.map_position.y)
+	)
 
 	if not others.is_empty():
 		_network.exec(others, "game.map.player_spawned", func(buf: StreamPeerBuffer) -> void:
@@ -120,6 +122,13 @@ func _on_player_left(map: GameMap, peer_id: int) -> void:
 		return
 
 	_network.exec(others, "game.map.player_despawned", func(buf: StreamPeerBuffer) -> void:
+		buf.put_u32(peer_id)
+	)
+
+
+func _on_peer_connected(peer_id: int) -> void:
+	print("[MAP HANDLER] Peer %d conectado, enviando ID." % peer_id)
+	_network.exec(peer_id, "network.set_id", func(buf: StreamPeerBuffer) -> void:
 		buf.put_u32(peer_id)
 	)
 

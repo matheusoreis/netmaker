@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://byvlukus3xavi"]
+
+[ext_resource type="Script" uid="uid://dvxrsglvsu6dh" path="res://source/gameplay/player/player.gd" id="1_bhnvy"]
+[ext_resource type="Texture2D" uid="uid://dshnil10o7366" path="res://assets/graphics/characters/001-Fighter01.png" id="2_h5y72"]
+
+[node name="Player" type="Node2D" unique_id=743275217 node_paths=PackedStringArray("sprite_2d", "camera_2d")]
+script = ExtResource("1_bhnvy")
+sprite_2d = NodePath("Sprite2D")
+camera_2d = NodePath("Camera2D")
+collision_layers = Array[String](["player"])
+collision_masks = Array[String](["player"])
+metadata/_custom_type_script = "uid://3nn3ukk45ckx"
+metadata/_edit_horizontal_guides_ = [64.0]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1551518720]
+position = Vector2(32, 10)
+texture = ExtResource("2_h5y72")
+hframes = 4
+vframes = 4
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=790773633]
+position = Vector2(33, 29)
