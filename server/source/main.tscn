@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cq1a8u4bfpwti" path="res://source/main.gd" id="1_kaxhg"]
 [ext_resource type="PackedScene" uid="uid://baa7jstxu5clu" path="res://source/database/cache/map/map.tscn" id="2_62cc7"]
 [ext_resource type="Script" uid="uid://csleye42jcwbe" path="res://addons/enhanced_grid/resources/grid_map_data.gd" id="3_caq8k"]
+[ext_resource type="PackedScene" uid="uid://dvuf1srd0hesr" path="res://source/network/handlers/map/map.tscn" id="4_m4r8s"]
 
 [sub_resource type="Resource" id="Resource_caq8k"]
 script = ExtResource("3_caq8k")
@@ -10,8 +11,16 @@ identifier = "floresta"
 bounds = Rect2i(0, 0, 20, 20)
 metadata/_custom_type_script = "uid://csleye42jcwbe"
 
-[node name="Main" type="Node2D" unique_id=1238138593]
+[node name="Main" type="Node2D" unique_id=1238138593 node_paths=PackedStringArray("_map_cache", "_map_handler")]
 script = ExtResource("1_kaxhg")
+_map_cache = NodePath("Caches/MapCache")
+_map_handler = NodePath("Handlers/MapHandler")
 
-[node name="Maps" parent="." unique_id=1803602726 instance=ExtResource("2_62cc7")]
+[node name="Caches" type="Node" parent="." unique_id=179568041]
+
+[node name="MapCache" parent="Caches" unique_id=1803602726 instance=ExtResource("2_62cc7")]
 maps_data = Array[ExtResource("3_caq8k")]([SubResource("Resource_caq8k")])
+
+[node name="Handlers" type="Node" parent="." unique_id=1309761573]
+
+[node name="MapHandler" parent="Handlers" unique_id=434716006 instance=ExtResource("4_m4r8s")]

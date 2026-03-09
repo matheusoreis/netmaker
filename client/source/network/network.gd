@@ -38,6 +38,27 @@ func initialize(address: String, port: int, max_channels: int, max_tasks: int) -
 			peer_disconnected.emit(1)
 	)
 
-func poll(connection_timeout: int) -> void:
+func register(scope: StringName, functions: Array[Callable]) -> void:
 	if _client:
-		_client.poll(connection_timeout)
+		_client.register_methods(scope, functions)
+
+
+func unregister(scope: StringName, functions: Array[Callable]) -> void:
+	if _client:
+		_client.unregister_methods(scope, functions)
+
+
+func exec(path: StringName, writer: Callable = Callable(), channel: int = 0) -> void:
+	if _client:
+		_client.exec(path, writer, channel)
+
+
+func invoke(path: StringName, writer: Callable = Callable(), channel: int = 0) -> StreamPeerBuffer:
+	if _client:
+		return await _client.invoke(path, writer, channel)
+	return null
+
+
+func poll(_connection_timeout: int) -> void:
+	if _client:
+		_client.poll(_connection_timeout)

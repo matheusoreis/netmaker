@@ -12,17 +12,17 @@ func initialize(network: Network, map_cache: MapCache) -> void:
 	_network = network
 	_map_cache = map_cache
 
+	_network.peer_disconnected.connect(_on_peer_disconnected)
+
 	for map: GameMap in _map_cache.maps.values():
 		map.player_moved.connect(
 			func(peer_ids: Array, entity_id: int, direction: Vector2i) -> void:
 				_on_player_moved(peer_ids, entity_id, direction)
 		)
-
 		map.player_entered.connect(
 			func(peer_id: int) -> void:
 				_on_player_entered(map, peer_id)
 		)
-
 		map.player_left.connect(
 			func(peer_id: int) -> void:
 				_on_player_left(map, peer_id)
@@ -34,20 +34,25 @@ func initialize(network: Network, map_cache: MapCache) -> void:
 		left,
 	])
 
+	print("[MAP HANDLER] Inicializado com %d mapa(s)." % _map_cache.maps.size())
+
 
 func move(ctx: EnhancedRpc.RpcContext, buf: StreamPeerBuffer) -> void:
-	var direction: Vector2i = Vector2i(
-		buf.get_8(), buf.get_8()
-	)
+	var direction: Vector2i = Vector2i(buf.get_8(), buf.get_8())
+
+	print("[MAP HANDLER] Peer %d moveu: %s" % [ctx.sender_id, direction])
 
 	var map: GameMap = _get_player_map(ctx.sender_id)
 	if map == null:
+		push_warning("[MAP HANDLER] Peer %d tentou mover mas não está em nenhum mapa." % ctx.sender_id)
 		return
 
 	map.move_player(ctx.sender_id, direction)
 
 
 func entered(ctx: EnhancedRpc.RpcContext, _buf: StreamPeerBuffer) -> void:
+	print("[MAP HANDLER] Peer %d solicitou entrada no mapa." % ctx.sender_id)
+
 	var map: GameMap = _map_cache.get_map(DEFAULT_MAP)
 	if map == null:
 		push_warning("[MAP HANDLER] Mapa padrão '%s' não encontrado." % DEFAULT_MAP)
@@ -55,23 +60,24 @@ func entered(ctx: EnhancedRpc.RpcContext, _buf: StreamPeerBuffer) -> void:
 
 	var entity: GridEntity2D = GridEntity2D.new()
 	entity.entity_id = ctx.sender_id
-
 	map.add_player(ctx.sender_id, entity, DEFAULT_SPAWN)
 
 
 func left(ctx: EnhancedRpc.RpcContext, _buf: StreamPeerBuffer) -> void:
+	print("[MAP HANDLER] Peer %d saiu do mapa." % ctx.sender_id)
+
 	var map: GameMap = _get_player_map(ctx.sender_id)
 	if map == null:
+		push_warning("[MAP HANDLER] Peer %d tentou sair mas não está em nenhum mapa." % ctx.sender_id)
 		return
 
 	map.remove_player(ctx.sender_id)
 
 
 func _on_player_moved(peer_ids: Array, entity_id: int, direction: Vector2i) -> void:
-	var targets: Array = peer_ids.filter(
-		func(id: int) -> bool:
-			return id != entity_id
-	)
+	var targets: Array = peer_ids.filter(func(id: int) -> bool: return id != entity_id)
+
+	print("[MAP HANDLER] Entidade %d moveu | notificando: %s" % [entity_id, targets])
 
 	if targets.is_empty():
 		return
@@ -85,11 +91,9 @@ func _on_player_moved(peer_ids: Array, entity_id: int, direction: Vector2i) -> v
 
 func _on_player_entered(map: GameMap, peer_id: int) -> void:
 	var entity: GridEntity2D = map.get_player_entity(peer_id)
+	var others: Array = map.get_player_ids().filter(func(id: int) -> bool: return id != peer_id)
 
-	var others: Array = map.get_player_ids().filter(
-		func(id: int) -> bool:
-			return id != peer_id
-	)
+	print("[MAP HANDLER] Peer %d entrou em '%s' | outros no mapa: %s" % [peer_id, map.map_data.identifier, others])
 
 	if not others.is_empty():
 		_network.exec(others, "game.map.player_spawned", func(buf: StreamPeerBuffer) -> void:
@@ -109,12 +113,25 @@ func _on_player_entered(map: GameMap, peer_id: int) -> void:
 
 func _on_player_left(map: GameMap, peer_id: int) -> void:
 	var others: Array = map.get_player_ids()
+
+	print("[MAP HANDLER] Peer %d saiu de '%s' | restantes: %s" % [peer_id, map.map_data.identifier, others])
+
 	if others.is_empty():
 		return
 
 	_network.exec(others, "game.map.player_despawned", func(buf: StreamPeerBuffer) -> void:
 		buf.put_u32(peer_id)
 	)
+
+
+func _on_peer_disconnected(peer_id: int) -> void:
+	print("[MAP HANDLER] Peer %d desconectou abruptamente." % peer_id)
+
+	var map: GameMap = _get_player_map(peer_id)
+	if map == null:
+		return
+
+	map.remove_player(peer_id)
 
 
 func _get_player_map(peer_id: int) -> GameMap:

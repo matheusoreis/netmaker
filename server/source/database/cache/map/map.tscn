@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" uid="uid://lee70le1cd5" path="res://source/database/cache/map/map.gd" id="1_dk6er"]
 
-[node name="Maps" type="Node" unique_id=1803602726]
+[node name="MapCache" type="Node" unique_id=1803602726]
 script = ExtResource("1_dk6er")
