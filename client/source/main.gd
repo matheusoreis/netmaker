@@ -1,8 +1,6 @@
 extends Node
 class_name Main
 
-const MOVE_INTERVAL: float = 0.15
-
 @export_category("Configuration")
 @export_group("Network")
 @export var _address: String = "127.0.0.1"
@@ -24,8 +22,6 @@ var _database: Database
 var _network: Network
 var _local_player: Player = null
 var _remote_players: Dictionary[int, Player] = {}
-var _move_timer: float = MOVE_INTERVAL
-var _last_direction: Vector2i = Vector2i.ZERO
 
 
 func _ready() -> void:
@@ -50,17 +46,20 @@ func _ready() -> void:
 	])
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if _database:
 		_database.poll(_database_poll_time)
 	if _network:
 		_network.poll(_connection_poll_time)
 
-	_process_movement(delta)
+	_process_movement()
 
 
-func _process_movement(delta: float) -> void:
+func _process_movement() -> void:
 	if not _local_player:
+		return
+
+	if _local_player._is_moving:
 		return
 
 	var direction: Vector2i = Vector2i.ZERO
@@ -75,25 +74,19 @@ func _process_movement(delta: float) -> void:
 		direction = Vector2i(1, 0)
 
 	if direction == Vector2i.ZERO:
-		_move_timer = MOVE_INTERVAL
-		_last_direction = Vector2i.ZERO
 		return
 
-	if direction != _last_direction:
-		_move_timer = MOVE_INTERVAL
-		_last_direction = direction
-
-	_move_timer += delta
-	if _move_timer < MOVE_INTERVAL:
-		return
-
-	_move_timer = 0.0
-
+	var pos_before: Vector2i = _local_player.map_position
 	_local_player.move(direction)
+
+	if _local_player.map_position == pos_before:
+		return
 
 	_network.exec("game.map.move", func(buf: StreamPeerBuffer) -> void:
 		buf.put_8(direction.x)
 		buf.put_8(direction.y)
+		buf.put_16(pos_before.x)
+		buf.put_16(pos_before.y)
 	)
 
 
@@ -117,7 +110,7 @@ func player_self_spawned(buf: StreamPeerBuffer) -> void:
 		return
 
 	_local_player.go_to(spawn_pos)
-	print("[CLIENT] Minha posição confirmada: %s" % spawn_pos)
+	print("[CLIENT] Self spawned em %s" % spawn_pos)
 
 
 func player_spawned(buf: StreamPeerBuffer) -> void:
@@ -149,14 +142,16 @@ func player_despawned(buf: StreamPeerBuffer) -> void:
 
 func player_moved(buf: StreamPeerBuffer) -> void:
 	var entity_id: int = buf.get_u32()
+	var new_pos: Vector2i = Vector2i(buf.get_16(), buf.get_16())
 	var direction: Vector2i = Vector2i(buf.get_8(), buf.get_8())
 
 	var player: Player = _remote_players.get(entity_id)
 	if player == null:
 		return
 
-	player.move(direction)
-	print("[CLIENT] Jogador %d moveu: %s" % [entity_id, direction])
+	player.move_remote(new_pos, direction)
+
+	print("[CLIENT] Jogador %d moveu para %s dir %s" % [entity_id, new_pos, direction])
 
 
 func player_position_corrected(buf: StreamPeerBuffer) -> void:
@@ -166,7 +161,7 @@ func player_position_corrected(buf: StreamPeerBuffer) -> void:
 		return
 
 	_local_player.go_to(correct_pos)
-	print("[CLIENT] Posição corrigida para: %s" % correct_pos)
+	print("[CLIENT] Posição corrigida para %s" % correct_pos)
 
 
 func _on_connected(_peer_id: int) -> void:

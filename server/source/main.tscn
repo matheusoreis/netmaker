@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cq1a8u4bfpwti" path="res://source/main.gd" id="1_kaxhg"]
 [ext_resource type="PackedScene" uid="uid://baa7jstxu5clu" path="res://source/database/cache/map/map.tscn" id="2_62cc7"]
 [ext_resource type="Script" uid="uid://csleye42jcwbe" path="res://addons/enhanced_grid/resources/grid_map_data.gd" id="3_caq8k"]
-[ext_resource type="Resource" path="res://data/maps/floresta.res" id="4_c1q7g"]
+[ext_resource type="Resource" uid="uid://bhlct2f4n7e22" path="res://data/maps/floresta.res" id="4_c1q7g"]
 [ext_resource type="PackedScene" uid="uid://dvuf1srd0hesr" path="res://source/network/handlers/map/map.tscn" id="4_m4r8s"]
 
 [node name="Main" type="Node2D" unique_id=1238138593 node_paths=PackedStringArray("_map_cache", "_map_handler")]

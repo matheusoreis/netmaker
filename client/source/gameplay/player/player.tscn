@@ -8,7 +8,7 @@ script = ExtResource("1_bhnvy")
 sprite_2d = NodePath("Sprite2D")
 camera_2d = NodePath("Camera2D")
 collision_layers = Array[String](["player"])
-collision_masks = Array[String](["player"])
+collision_masks = Array[String](["monster"])
 metadata/_custom_type_script = "uid://3nn3ukk45ckx"
 metadata/_edit_horizontal_guides_ = [64.0]
 
