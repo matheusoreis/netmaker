@@ -14,6 +14,7 @@ var _is_local: bool = false
 var _move_from: Vector2
 var _move_to: Vector2
 var _move_progress: float = 1.0
+var _current_move_duration: float = 0.0
 
 var _buffered_input: Vector2i = Vector2i.ZERO
 
@@ -98,7 +99,7 @@ func _input(event: InputEvent) -> void:
 func _update_visual(delta: float) -> void:
 	if _move_progress >= 1.0:
 		return
-	_move_progress = minf(_move_progress + delta / move_duration, 1.0)
+	_move_progress = minf(_move_progress + delta / _current_move_duration, 1.0)
 	position = _move_from.lerp(_move_to, _move_progress)
 
 
@@ -133,7 +134,10 @@ func _on_move_started(from: Vector2i, to: Vector2i) -> void:
 	_move_from = position
 	_move_to = current_map.grid_to_world(to)
 	_move_progress = 0.0
-	_play_anim(_WALK_ANIM, to - from)
+	var direction: Vector2i = to - from
+	var is_diagonal: bool = direction.x != 0 and direction.y != 0
+	_current_move_duration = move_duration * (1.414 if is_diagonal else 1.0)
+	_play_anim(_WALK_ANIM, direction)
 
 
 func _on_move_finished(_grid_pos: Vector2i) -> void:
