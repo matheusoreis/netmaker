@@ -4,10 +4,12 @@ class_name GameMap
 signal player_entered(peer_id: int)
 signal player_left(peer_id: int)
 signal player_moved(peer_ids: Array, entity_id: int, direction: Vector2i)
+signal npc_moved(peer_ids: Array, entity_id: int, direction: Vector2i)
 
 var _delta: float = 0.0
 var _tick_counters: Dictionary[int, float] = {}
 var _players: Dictionary[int, GridEntity2D] = {}
+var _npcs: Array[Npc] = []
 
 
 func add_player(peer_id: int, entity: GridEntity2D, spawn_pos: Vector2i) -> void:
@@ -30,7 +32,7 @@ func remove_player(peer_id: int) -> void:
 	_players.erase(peer_id)
 	player_left.emit(peer_id)
 
-	if _players.is_empty():
+	if _players.is_empty() and _npcs.is_empty():
 		_set_active(false)
 
 
@@ -49,6 +51,18 @@ func move_player(peer_id: int, direction: Vector2i) -> MoveResult:
 	return result
 
 
+func spawn_npc(npc_id: int, spawn_pos: Vector2i) -> Npc:
+	var npc: Npc = Npc.new()
+	add_child(npc)
+	npc.move_started.connect(func(from: Vector2i, to: Vector2i) -> void:
+		npc_moved.emit(_players.keys(), npc.entity_id, to - from)
+	)
+	npc.setup(self, spawn_pos, npc_id)
+	_npcs.append(npc)
+	_set_active(true)
+	return npc
+
+
 func get_player_ids() -> Array:
 	return _players.keys()
 
@@ -59,6 +73,10 @@ func has_player(peer_id: int) -> bool:
 
 func get_player_entity(peer_id: int) -> GridEntity2D:
 	return _players.get(peer_id)
+
+
+func get_npcs() -> Array[Npc]:
+	return _npcs
 
 
 func _set_active(value: bool) -> void:
@@ -72,7 +90,7 @@ func _process(delta: float) -> void:
 
 
 func _tick() -> void:
-	_run_on_tick(0.5, _tick_npcs)
+	_run_on_tick(0.25, _tick_npcs)
 
 
 func _run_on_tick(interval_sec: float, callback: Callable) -> void:
@@ -87,4 +105,5 @@ func _run_on_tick(interval_sec: float, callback: Callable) -> void:
 
 
 func _tick_npcs() -> void:
-	pass
+	for npc: Npc in _npcs:
+		npc.tick()

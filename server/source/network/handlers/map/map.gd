@@ -12,6 +12,7 @@ const VALID_DIRECTIONS: Array[Vector2i] = [
 
 var _network: Network
 var _map_cache: MapCache
+var _next_npc_id: int = 10000
 
 
 func initialize(network: Network, map_cache: MapCache) -> void:
@@ -34,12 +35,18 @@ func initialize(network: Network, map_cache: MapCache) -> void:
 			func(peer_id: int) -> void:
 				_on_player_left(map, peer_id)
 		)
+		map.npc_moved.connect(
+			func(peer_ids: Array, entity_id: int, direction: Vector2i) -> void:
+				_on_npc_moved(peer_ids, entity_id, direction)
+		)
 
 	_network.register("game.map", [
 		move,
 		entered,
 		left,
 	])
+
+	_spawn_default_npcs()
 
 	print("[MAP HANDLER] Inicializado com %d mapa(s)." % _map_cache.maps.size())
 
@@ -90,12 +97,34 @@ func left(ctx: EnhancedRpc.RpcContext, _buf: StreamPeerBuffer) -> void:
 	map.remove_player(ctx.sender_id)
 
 
+func _spawn_default_npcs() -> void:
+	var map: GameMap = _map_cache.get_map(DEFAULT_MAP)
+	if map == null:
+		print("[NPC] ERRO: mapa '%s' não encontrado!" % DEFAULT_MAP)
+		return
+
+	var npc: Npc = map.spawn_npc(_next_npc_id, Vector2i(3, 3))
+	print("[NPC] spawnado id=%d npc=%s npcs_no_mapa=%d" % [_next_npc_id, npc, map.get_npcs().size()])
+	_next_npc_id += 1
+
+
 func _on_player_moved(peer_ids: Array, entity_id: int, direction: Vector2i) -> void:
 	var targets: Array = peer_ids.filter(func(id: int) -> bool: return id != entity_id)
 	if targets.is_empty():
 		return
 
 	_network.exec(targets, "game.map.player_moved", func(buf: StreamPeerBuffer) -> void:
+		buf.put_u32(entity_id)
+		buf.put_8(direction.x)
+		buf.put_8(direction.y)
+	)
+
+
+func _on_npc_moved(peer_ids: Array, entity_id: int, direction: Vector2i) -> void:
+	if peer_ids.is_empty():
+		return
+
+	_network.exec(peer_ids, "game.map.npc_moved", func(buf: StreamPeerBuffer) -> void:
 		buf.put_u32(entity_id)
 		buf.put_8(direction.x)
 		buf.put_8(direction.y)
@@ -127,6 +156,15 @@ func _on_player_entered(map: GameMap, peer_id: int) -> void:
 			buf.put_u32(other.entity_id)
 			buf.put_16(other.map_position.x)
 			buf.put_16(other.map_position.y)
+		)
+
+	print("[NPC] enviando %d npc(s) para peer %d" % [map.get_npcs().size(), peer_id])
+	for npc: Npc in map.get_npcs():
+		print("[NPC] enviando npc_spawned id=%d pos=%s para peer %d" % [npc.entity_id, npc.map_position, peer_id])
+		_network.exec(peer_id, "game.map.npc_spawned", func(buf: StreamPeerBuffer) -> void:
+			buf.put_u32(npc.entity_id)
+			buf.put_16(npc.map_position.x)
+			buf.put_16(npc.map_position.y)
 		)
 
 

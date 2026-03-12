@@ -16,12 +16,14 @@ class_name Main
 
 @export_category("Gameplay")
 @export var _player_scene: PackedScene
+@export var _npc_scene: PackedScene
 @export var _map: GridMap2D
 
 var _database: Database
 var _network: Network
 var _local_player: Player = null
 var _remote_players: Dictionary[int, Player] = {}
+var _remote_npcs: Dictionary[int, NpcClient] = {}
 
 
 func _ready() -> void:
@@ -43,6 +45,9 @@ func _ready() -> void:
 		player_despawned,
 		player_moved,
 		position_correction,
+		npc_spawned,
+		npc_despawned,
+		npc_moved,
 	])
 
 
@@ -127,6 +132,54 @@ func position_correction(buf: StreamPeerBuffer) -> void:
 	print("[CLIENT] Posição corrigida para %s" % correct_pos)
 
 
+func npc_spawned(buf: StreamPeerBuffer) -> void:
+	print("[NPC] pacote npc_spawned recebido")
+
+	var entity_id: int = buf.get_u32()
+	var spawn_pos: Vector2i = Vector2i(buf.get_16(), buf.get_16())
+	print("[NPC] id=%d pos=%s" % [entity_id, spawn_pos])
+
+	if _npc_scene == null:
+		print("[NPC] ERRO: _npc_scene não atribuída no inspetor!")
+		return
+
+	var npc: NpcClient = _npc_scene.instantiate() as NpcClient
+	if npc == null:
+		print("[NPC] ERRO: instanciação falhou, cena não é NpcClient!")
+		return
+
+	print("[NPC] instanciado com sucesso")
+	npc.entity_id = entity_id
+	_remote_npcs[entity_id] = npc
+	_map.add_entity(npc, spawn_pos)
+	print("[NPC] add_entity chamado em pos=%s" % spawn_pos)
+
+
+func npc_despawned(buf: StreamPeerBuffer) -> void:
+	var entity_id: int = buf.get_u32()
+
+	var npc: NpcClient = _remote_npcs.get(entity_id)
+	if npc == null:
+		return
+
+	_map.remove_entity(npc)
+	npc.queue_free()
+	_remote_npcs.erase(entity_id)
+
+	print("[CLIENT] NPC %d removido" % entity_id)
+
+
+func npc_moved(buf: StreamPeerBuffer) -> void:
+	var entity_id: int = buf.get_u32()
+	var direction: Vector2i = Vector2i(buf.get_8(), buf.get_8())
+
+	var npc: NpcClient = _remote_npcs.get(entity_id)
+	if npc == null:
+		return
+
+	npc.enqueue_move(direction)
+
+
 # — Callbacks locais —
 
 func _on_local_move_started(from: Vector2i, to: Vector2i) -> void:
@@ -157,3 +210,8 @@ func _on_disconnected(_peer_id: int) -> void:
 		_map.remove_entity(player)
 		player.queue_free()
 	_remote_players.clear()
+
+	for npc: NpcClient in _remote_npcs.values():
+		_map.remove_entity(npc)
+		npc.queue_free()
+	_remote_npcs.clear()
