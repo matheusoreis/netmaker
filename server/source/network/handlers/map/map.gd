@@ -4,6 +4,12 @@ class_name MapHandler
 const DEFAULT_MAP: String = "floresta"
 const DEFAULT_SPAWN: Vector2i = Vector2i(5, 5)
 
+const VALID_DIRECTIONS: Array[Vector2i] = [
+	Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN,
+	Vector2i(-1, -1), Vector2i( 1, -1),
+	Vector2i(-1,  1), Vector2i( 1,  1),
+]
+
 var _network: Network
 var _map_cache: MapCache
 
@@ -41,16 +47,27 @@ func initialize(network: Network, map_cache: MapCache) -> void:
 func move(ctx: EnhancedRpc.RpcContext, buf: StreamPeerBuffer) -> void:
 	var direction: Vector2i = Vector2i(buf.get_8(), buf.get_8())
 
+	if not direction in VALID_DIRECTIONS:
+		push_warning("[MAP HANDLER] Peer %d enviou direção inválida: %s." % [ctx.sender_id, direction])
+		return
+
 	var map: GameMap = _get_player_map(ctx.sender_id)
 	if map == null:
 		push_warning("[MAP HANDLER] Peer %d tentou mover mas não está em nenhum mapa." % ctx.sender_id)
 		return
 
-	map.move_player(ctx.sender_id, direction)
+	var result: GameMap.MoveResult = map.move_player(ctx.sender_id, direction)
+
+	if result != null and not result.success:
+		_send_position_correction(ctx.sender_id, result.from)
 
 
 func entered(ctx: EnhancedRpc.RpcContext, _buf: StreamPeerBuffer) -> void:
 	print("[MAP HANDLER] Peer %d solicitou entrada no mapa." % ctx.sender_id)
+
+	if _get_player_map(ctx.sender_id) != null:
+		push_warning("[MAP HANDLER] Peer %d já está em um mapa." % ctx.sender_id)
+		return
 
 	var map: GameMap = _map_cache.get_map(DEFAULT_MAP)
 	if map == null:
@@ -78,19 +95,8 @@ func _on_player_moved(peer_ids: Array, entity_id: int, direction: Vector2i) -> v
 	if targets.is_empty():
 		return
 
-	var entity: GridEntity2D = null
-	for map: GameMap in _map_cache.maps.values():
-		if map.has_player(entity_id):
-			entity = map.get_player_entity(entity_id)
-			break
-
-	if entity == null:
-		return
-
 	_network.exec(targets, "game.map.player_moved", func(buf: StreamPeerBuffer) -> void:
 		buf.put_u32(entity_id)
-		buf.put_16(entity.map_position.x)
-		buf.put_16(entity.map_position.y)
 		buf.put_8(direction.x)
 		buf.put_8(direction.y)
 	)
@@ -152,6 +158,13 @@ func _on_peer_disconnected(peer_id: int) -> void:
 		return
 
 	map.remove_player(peer_id)
+
+
+func _send_position_correction(peer_id: int, correct_pos: Vector2i) -> void:
+	_network.exec(peer_id, "game.map.position_correction", func(buf: StreamPeerBuffer) -> void:
+		buf.put_16(correct_pos.x)
+		buf.put_16(correct_pos.y)
+	)
 
 
 func _get_player_map(peer_id: int) -> GameMap:

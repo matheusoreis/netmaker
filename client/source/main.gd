@@ -22,7 +22,6 @@ var _database: Database
 var _network: Network
 var _local_player: Player = null
 var _remote_players: Dictionary[int, Player] = {}
-var _can_move: bool = false
 
 
 func _ready() -> void:
@@ -43,7 +42,7 @@ func _ready() -> void:
 		player_self_spawned,
 		player_despawned,
 		player_moved,
-		player_position_corrected,
+		position_correction,
 	])
 
 
@@ -53,40 +52,8 @@ func _process(_delta: float) -> void:
 	if _network:
 		_network.poll(_connection_poll_time)
 
-	_process_movement()
 
-
-func _process_movement() -> void:
-	if not _local_player or not _can_move:
-		return
-
-	var direction: Vector2i = Vector2i.ZERO
-
-	if Input.is_action_just_pressed("ui_up") or Input.is_action_pressed("ui_up"):
-		direction = Vector2i(0, -1)
-	elif Input.is_action_just_pressed("ui_down") or Input.is_action_pressed("ui_down"):
-		direction = Vector2i(0, 1)
-	elif Input.is_action_just_pressed("ui_left") or Input.is_action_pressed("ui_left"):
-		direction = Vector2i(-1, 0)
-	elif Input.is_action_just_pressed("ui_right") or Input.is_action_pressed("ui_right"):
-		direction = Vector2i(1, 0)
-
-	if direction == Vector2i.ZERO:
-		return
-
-	var pos_before: Vector2i = _local_player.map_position
-	_local_player.move(direction)
-
-	if _local_player.map_position == pos_before:
-		return
-
-	_can_move = false
-
-	_network.exec("game.map.move", func(buf: StreamPeerBuffer) -> void:
-		buf.put_8(direction.x)
-		buf.put_8(direction.y)
-	)
-
+# — RPC recebidos do servidor —
 
 func set_id(buf: StreamPeerBuffer) -> void:
 	var my_id: int = buf.get_u32()
@@ -95,30 +62,20 @@ func set_id(buf: StreamPeerBuffer) -> void:
 	_local_player = _player_scene.instantiate() as Player
 	_local_player.entity_id = my_id
 	_local_player.setup_as_local()
-	_local_player.move_finished.connect(_on_local_move_finished)
+	_local_player.move_started.connect(_on_local_move_started)
 	_local_player.move_blocked.connect(_on_local_move_blocked)
-	_map.add_entity(_local_player, Vector2i(5, 5))
 
 	_network.exec("game.map.entered")
 
 
-func _on_local_move_finished(_pos: Vector2i) -> void:
-	_can_move = true
-
-
-func _on_local_move_blocked(_target: Vector2i, _reason: String) -> void:
-	_can_move = true
-
-
 func player_self_spawned(buf: StreamPeerBuffer) -> void:
-	var entity_id: int = buf.get_u32()
+	var _entity_id: int = buf.get_u32()
 	var spawn_pos: Vector2i = Vector2i(buf.get_16(), buf.get_16())
 
 	if _local_player == null:
 		return
 
-	_local_player.go_to(spawn_pos)
-	_can_move = true
+	_map.add_entity(_local_player, spawn_pos)
 	print("[CLIENT] Self spawned em %s" % spawn_pos)
 
 
@@ -151,27 +108,37 @@ func player_despawned(buf: StreamPeerBuffer) -> void:
 
 func player_moved(buf: StreamPeerBuffer) -> void:
 	var entity_id: int = buf.get_u32()
-	var new_pos: Vector2i = Vector2i(buf.get_16(), buf.get_16())
 	var direction: Vector2i = Vector2i(buf.get_8(), buf.get_8())
 
 	var player: Player = _remote_players.get(entity_id)
 	if player == null:
 		return
 
-	player.move_remote(new_pos, direction)
-
-	print("[CLIENT] Jogador %d moveu para %s dir %s" % [entity_id, new_pos, direction])
+	player.enqueue_move(direction)
 
 
-func player_position_corrected(buf: StreamPeerBuffer) -> void:
+func position_correction(buf: StreamPeerBuffer) -> void:
 	var correct_pos: Vector2i = Vector2i(buf.get_16(), buf.get_16())
 
 	if _local_player == null:
 		return
 
 	_local_player.go_to(correct_pos)
-	_can_move = true
 	print("[CLIENT] Posição corrigida para %s" % correct_pos)
+
+
+# — Callbacks locais —
+
+func _on_local_move_started(from: Vector2i, to: Vector2i) -> void:
+	var direction: Vector2i = to - from
+	_network.exec("game.map.move", func(buf: StreamPeerBuffer) -> void:
+		buf.put_8(direction.x)
+		buf.put_8(direction.y)
+	)
+
+
+func _on_local_move_blocked(_target: Vector2i, _reason: String) -> void:
+	pass
 
 
 func _on_connected(_peer_id: int) -> void:
@@ -185,8 +152,6 @@ func _on_disconnected(_peer_id: int) -> void:
 		_map.remove_entity(_local_player)
 		_local_player.queue_free()
 		_local_player = null
-
-	_can_move = false
 
 	for player: Player in _remote_players.values():
 		_map.remove_entity(player)

@@ -24,6 +24,10 @@ gdscript/warnings/shadowed_variable_base_class=0
 
 enabled=PackedStringArray("res://addons/enhanced_grid/plugin.cfg", "res://addons/enhanced_rpc/plugin.cfg", "res://addons/zodot/plugin.cfg")
 
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
@@ -33,3 +37,4 @@ enabled=PackedStringArray("res://addons/enhanced_grid/plugin.cfg", "res://addons
 textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true

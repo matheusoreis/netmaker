@@ -1,19 +1,20 @@
 extends GridMap2D
 class_name GameMap
 
-
 signal player_entered(peer_id: int)
 signal player_left(peer_id: int)
 signal player_moved(peer_ids: Array, entity_id: int, direction: Vector2i)
 
-
 var _delta: float = 0.0
 var _tick_counters: Dictionary[int, float] = {}
-
 var _players: Dictionary[int, GridEntity2D] = {}
 
 
 func add_player(peer_id: int, entity: GridEntity2D, spawn_pos: Vector2i) -> void:
+	if _players.has(peer_id):
+		push_warning("GameMap [%s]: peer %d já está no mapa." % [map_data.identifier, peer_id])
+		return
+
 	_players[peer_id] = entity
 	add_entity(entity, spawn_pos)
 	_set_active(true)
@@ -22,25 +23,30 @@ func add_player(peer_id: int, entity: GridEntity2D, spawn_pos: Vector2i) -> void
 
 func remove_player(peer_id: int) -> void:
 	var entity: GridEntity2D = _players.get(peer_id)
-	if entity:
-		remove_entity(entity)
-		_players.erase(peer_id)
-		player_left.emit(peer_id)
+	if entity == null:
+		return
+
+	remove_entity(entity)
+	_players.erase(peer_id)
+	player_left.emit(peer_id)
 
 	if _players.is_empty():
 		_set_active(false)
 
 
-func move_player(peer_id: int, direction: Vector2i) -> void:
+## Tenta mover o jogador. Retorna o MoveResult para que o caller
+## possa enviar correção ao cliente em caso de rejeição.
+func move_player(peer_id: int, direction: Vector2i) -> MoveResult:
 	var entity: GridEntity2D = _players.get(peer_id)
 	if entity == null:
-		return
+		return null
 
 	var result: MoveResult = request_move(entity, direction)
-	if not result.success:
-		return
 
-	player_moved.emit(_players.keys(), entity.entity_id, direction)
+	if result.success:
+		player_moved.emit(_players.keys(), entity.entity_id, direction)
+
+	return result
 
 
 func get_player_ids() -> Array:

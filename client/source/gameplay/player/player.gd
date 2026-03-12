@@ -1,13 +1,56 @@
 extends GridEntity2D
 class_name Player
 
-@export var move_speed: float = 128.0
-@export var sprite_2d: Sprite2D
+@export_category("Visuals")
+@export var animated_sprite: AnimatedSprite2D
 @export var camera_2d: Camera2D
 
-var _move_target: Vector2 = Vector2.ZERO
-var _is_moving: bool = false
+@export_category("Mobile Controls")
+@export var enable_swipe_controls: bool = true
+@export var swipe_threshold: float = 40.0
+
 var _is_local: bool = false
+
+var _move_from: Vector2
+var _move_to: Vector2
+var _move_progress: float = 1.0
+
+var _buffered_input: Vector2i = Vector2i.ZERO
+
+var _touch_start: Vector2
+
+const _WALK_ANIM: Dictionary = {
+	Vector2i.LEFT:    "walk_left",
+	Vector2i.RIGHT:   "walk_right",
+	Vector2i.UP:      "walk_up",
+	Vector2i.DOWN:    "walk_down",
+	Vector2i(-1, -1): "walk_up",
+	Vector2i( 1, -1): "walk_up",
+	Vector2i(-1,  1): "walk_down",
+	Vector2i( 1,  1): "walk_down",
+}
+
+const _IDLE_ANIM: Dictionary = {
+	Vector2i.LEFT:    "idle_left",
+	Vector2i.RIGHT:   "idle_right",
+	Vector2i.UP:      "idle_up",
+	Vector2i.DOWN:    "idle_down",
+	Vector2i(-1, -1): "idle_up",
+	Vector2i( 1, -1): "idle_up",
+	Vector2i(-1,  1): "idle_down",
+	Vector2i( 1,  1): "idle_down",
+}
+
+
+func _ready() -> void:
+	super()
+	move_started.connect(_on_move_started)
+	move_finished.connect(_on_move_finished)
+	move_blocked.connect(_on_move_blocked)
+	direction_changed.connect(_on_direction_changed)
+
+	if animated_sprite:
+		animated_sprite.play("idle_down")
 
 
 func setup_as_local() -> void:
@@ -23,92 +66,91 @@ func setup_as_remote() -> void:
 
 
 func on_added_to_map() -> void:
-	super.on_added_to_map()
-	_move_target = position
-
-	var blocked_count: int = 0
-	for x in range(current_map.map_data.bounds.size.x):
-		for y in range(current_map.map_data.bounds.size.y):
-			if current_map.is_cell_blocked(Vector2i(x, y)):
-				blocked_count += 1
-				if blocked_count <= 5:
-					print("[PLAYER] Tile bloqueado: (%d, %d)" % [x, y])
-	print("[PLAYER] Total tiles bloqueados: %d" % blocked_count)
+	super()
+	var world_pos := current_map.grid_to_world(map_position)
+	position = world_pos
+	_move_from = world_pos
+	_move_to = world_pos
+	_move_progress = 1.0
 
 
 func _process(delta: float) -> void:
-	if _is_moving:
-		_process_interpolation(delta)
+	super._process(delta)
+	_update_visual(delta)
 
-
-func _advance_path() -> void:
-	if _is_moving:
-		return
-	super._advance_path()
-
-
-func move(direction: Vector2i) -> void:
-	_attempt_move(direction)
-
-
-func move_remote(new_pos: Vector2i, direction: Vector2i) -> void:
-	if not current_map:
+	if not _is_local:
 		return
 
-	if direction != facing:
-		facing = direction
-		direction_changed.emit(facing)
-
-	var visual_from: Vector2 = position
-
-	go_to(new_pos)
-
-	position = visual_from
-	_move_target = current_map.grid_to_world(new_pos)
-	_is_moving = true
-
-	move_started.emit(new_pos - direction, new_pos)
+	_read_input()
 
 
-func _attempt_move(direction: Vector2i) -> void:
-	if not current_map or not can_move or _is_moving:
+func _input(event: InputEvent) -> void:
+	if not enable_swipe_controls or not _is_local:
 		return
 
-	var destino: Vector2i = map_position + direction
-	print("[PLAYER] pos: %s | destino: %s | bloqueado: %s | dentro do mapa: %s" % [
-		map_position,
-		destino,
-		current_map.is_cell_blocked(destino),
-		current_map.is_within_map(destino)
-	])
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			_touch_start = event.position
+		else:
+			_handle_swipe(event.position)
 
-	if direction != facing:
-		facing = direction
-		direction_changed.emit(facing)
 
-	var result: GridMap2D.MoveResult = current_map.request_move(self, direction)
+func _update_visual(delta: float) -> void:
+	if _move_progress >= 1.0:
+		return
+	_move_progress = minf(_move_progress + delta / move_duration, 1.0)
+	position = _move_from.lerp(_move_to, _move_progress)
 
-	print("[PLAYER] resultado: success=%s | reason='%s'" % [result.success, result.rejection_reason])
 
-	if not result.success:
-		move_blocked.emit(result.to, result.rejection_reason)
-		_queued_path.clear()
+func _read_input() -> void:
+	_buffered_input = _get_input_direction()
+	if is_idle() and _buffered_input != Vector2i.ZERO:
+		enqueue_move(_buffered_input)
+
+
+func _get_input_direction() -> Vector2i:
+	var x: int = int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left"))
+	var y: int = int(Input.is_action_pressed("ui_down"))  - int(Input.is_action_pressed("ui_up"))
+	return Vector2i(x, y)
+
+
+func _handle_swipe(touch_end: Vector2) -> void:
+	var delta := touch_end - _touch_start
+	if delta.length() < swipe_threshold:
 		return
 
-	var from: Vector2i = result.from
-	_move_target = result.world_target
-	_is_moving = true
+	var direction: Vector2i
+	if abs(delta.x) > abs(delta.y):
+		direction = Vector2i.RIGHT if delta.x > 0 else Vector2i.LEFT
+	else:
+		direction = Vector2i.DOWN if delta.y > 0 else Vector2i.UP
 
-	current_map.confirm_move(self, from, map_position)
-	move_started.emit(from, map_position)
+	if can_move and is_idle():
+		enqueue_move(direction)
 
 
-func _process_interpolation(delta: float) -> void:
-	if position.distance_to(_move_target) < 1.0:
-		position = _move_target
-		_is_moving = false
-		move_finished.emit(map_position)
-		_advance_path()
-		return
+func _on_move_started(from: Vector2i, to: Vector2i) -> void:
+	_move_from = position
+	_move_to = current_map.grid_to_world(to)
+	_move_progress = 0.0
+	_play_anim(_WALK_ANIM, to - from)
 
-	position = position.move_toward(_move_target, move_speed * delta)
+
+func _on_move_finished(_grid_pos: Vector2i) -> void:
+	if _buffered_input != Vector2i.ZERO:
+		enqueue_move(_buffered_input)
+	else:
+		_play_anim(_IDLE_ANIM, facing)
+
+
+func _on_move_blocked(_target: Vector2i, _reason: String) -> void:
+	_play_anim(_IDLE_ANIM, facing)
+
+
+func _on_direction_changed(new_direction: Vector2i) -> void:
+	_play_anim(_IDLE_ANIM, new_direction)
+
+
+func _play_anim(table: Dictionary, dir: Vector2i) -> void:
+	if animated_sprite:
+		animated_sprite.play(table.get(dir, "idle_down"))
