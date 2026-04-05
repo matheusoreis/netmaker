@@ -14,11 +14,32 @@ config/name="server"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
 
+[debug]
+
+gdscript/warnings/shadowed_variable=0
+gdscript/warnings/shadowed_variable_base_class=0
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/grid/plugin.cfg", "res://addons/rpc/plugin.cfg", "res://addons/zodot/plugin.cfg")
+
+[file_customization]
+
+folder_colors={
+"res://addons/": "orange",
+"res://data/": "gray"
+}
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://data/i18n/translations.en_US.translation", "res://data/i18n/translations.pt_BR.translation")
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"

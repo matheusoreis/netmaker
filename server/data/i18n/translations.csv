@@ -1,0 +1,26 @@
+key,pt_BR,en_US
+# --- NETWORK ---
+NETWORK_STARTING,[NETWORK] Iniciando o network na porta %d...,[NETWORK] Starting network on port %d...
+NETWORK_START_FAILED,[NETWORK] Falha ao iniciar o network: %s,[NETWORK] Failed to start network: %s
+NETWORK_STARTED,[NETWORK] Network iniciado com capacidade de %d peers.,[NETWORK] Network started with capacity for %d peers.
+NETWORK_PEER_CONNECTED,[NETWORK] Novo peer conectado: %d,[NETWORK] New peer connected: %d
+NETWORK_PEER_DISCONNECTED,[NETWORK] Peer desconectado: %d,[NETWORK] Peer disconnected: %d
+NETWORK_CONNECTING,[NETWORK] Conectando ao servidor %s:%d...,[NETWORK] Connecting to server %s:%d...
+NETWORK_CONNECT_FAILED,[NETWORK] Falha ao conectar ao servidor: %s,[NETWORK] Failed to connect to server: %s
+NETWORK_CONNECTED,[NETWORK] Conectado ao servidor.,[NETWORK] Connected to server.
+NETWORK_DISCONNECTED,[NETWORK] Desconectado do servidor.,[NETWORK] Disconnected from server.
+# --- NETWORK HANDLER ---
+NETWORK_HANDLER_STARTING,[%s HANDLER] Iniciando handler...,[%s HANDLER] Starting handler...
+NETWORK_HANDLER_STARTED,[%s HANDLER] Handler iniciado.,[%s HANDLER] Handler started.
+# --- SQLITE ---
+SQLITE_STARTING,[SQLITE] Iniciando o banco de dados em %s,[SQLITE] Starting database at %s
+SQLITE_STARTED,[SQLITE] Banco de dados iniciado em %s,[SQLITE] Database started at %s
+SQLITE_START_FAILED,[SQLITE] Falha ao abrir o banco de dados em %s,[SQLITE] Failed to open database at %s
+# --- SQLITE REPOSITORY ---
+SQLITE_REPOSITORY_STARTING,[SQLITE] Iniciando repositório: %s...,[SQLITE] Starting repository: %s...
+SQLITE_REPOSITORY_STARTED,[SQLITE] Repositório iniciado com sucesso: %s,[SQLITE] Repository started successfully: %s
+SQLITE_REPOSITORY_TABLE_FAILED,[SQLITE] Falha ao criar a tabela para o repositório: %s,[SQLITE] Failed to create table for repository: %s
+SQLITE_REPOSITORY_INDEX_FAILED,[SQLITE] Falha ao criar os índices para o repositório: %s,[SQLITE] Failed to create indexes for repository: %s
+SQLITE_REPOSITORY_TABLE_ERROR,[SQLITE] Detalhes do erro ao criar tabela: %s,[SQLITE] Table creation error details: %s
+SQLITE_REPOSITORY_INDEX_ERROR,[SQLITE] Detalhes do erro ao criar índice: %s,[SQLITE] Index creation error details: %s
+SQLITE_REPOSITORY_EMPTY_RESPONSE,Nenhuma resposta retornada pelo banco de dados.,No response returned by the database.
