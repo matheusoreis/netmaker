@@ -24,3 +24,9 @@ SQLITE_REPOSITORY_INDEX_FAILED,[SQLITE] Falha ao criar os índices para o reposi
 SQLITE_REPOSITORY_TABLE_ERROR,[SQLITE] Detalhes do erro ao criar tabela: %s,[SQLITE] Table creation error details: %s
 SQLITE_REPOSITORY_INDEX_ERROR,[SQLITE] Detalhes do erro ao criar índice: %s,[SQLITE] Index creation error details: %s
 SQLITE_REPOSITORY_EMPTY_RESPONSE,Nenhuma resposta retornada pelo banco de dados.,No response returned by the database.
+--- ACCOUNT CACHE ---
+CACHE_LOADED_ACCOUNTS,"[CACHE] %d contas carregadas.","[CACHE] %d accounts loaded."
+--- CHARACTER CACHE ---
+CACHE_LOADED_CHARACTERS,"[CACHE] %d personagens carregados.","[CACHE] %d characters loaded."
+--- MAP CACHE ---
+CACHE_LOADED_MAPS,"[CACHE] %d mapas carregados.","[CACHE] %d maps loaded."

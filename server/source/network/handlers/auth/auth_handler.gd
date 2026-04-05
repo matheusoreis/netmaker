@@ -1,0 +1,2 @@
+extends Handler
+class_name AuthHandler
