@@ -1,0 +1,123 @@
+extends RefCounted
+class_name Database
+
+
+enum Codes {
+	OK = 0,
+	ERROR = 1,
+	INTERNAL = 2,
+	PERM = 3,
+	ABORT = 4,
+	BUSY = 5,
+	LOCKED = 6,
+	NOMEM = 7,
+	READONLY = 8,
+	INTERRUPT = 9,
+	IOERR = 10,
+	CORRUPT = 11,
+	NOTFOUND = 12,
+	FULL = 13,
+	CANTOPEN = 14,
+	PROTOCOL = 15,
+	EMPTY = 16,
+	SCHEMA = 17,
+	TOOBIG = 18,
+	CONSTRAINT = 19,
+	MISMATCH = 20,
+	MISUSE = 21,
+	NOLFS = 22,
+	AUTH = 23,
+	FORMAT = 24,
+	RANGE = 25,
+	NOTADB = 26,
+	NOTICE = 27,
+	WARNING = 28,
+	ROW = 100,
+	DONE = 101,
+	ABORT_ROLLBACK = 516,
+	AUTH_USER = 279,
+	BUSY_RECOVERY = 261,
+	BUSY_SNAPSHOT = 517,
+	BUSY_TIMEOUT = 773,
+	CANTOPEN_CONVPATH = 1038,
+	CANTOPEN_DIRTYWAL = 1294,
+	CANTOPEN_FULLPATH = 782,
+	CANTOPEN_ISDIR = 526,
+	CANTOPEN_NOTEMPDIR = 270,
+	CANTOPEN_SYMLINK = 1550,
+	CONSTRAINT_CHECK = 275,
+	CONSTRAINT_COMMITHOOK = 531,
+	CONSTRAINT_DATATYPE = 3091,
+	CONSTRAINT_FOREIGNKEY = 787,
+	CONSTRAINT_FUNCTION = 1043,
+	CONSTRAINT_NOTNULL = 1299,
+	CONSTRAINT_PINNED = 2835,
+	CONSTRAINT_PRIMARYKEY = 1555,
+	CONSTRAINT_ROWID = 2579,
+	CONSTRAINT_TRIGGER = 1811,
+	CONSTRAINT_UNIQUE = 2067,
+	CONSTRAINT_VTAB = 2323,
+	CORRUPT_INDEX = 779,
+	CORRUPT_SEQUENCE = 523,
+	CORRUPT_VTAB = 267,
+	ERROR_MISSING_COLLSEQ = 257,
+	ERROR_RETRY = 513,
+	ERROR_SNAPSHOT = 769,
+	IOERR_ACCESS = 3338,
+	IOERR_AUTH = 7178,
+	IOERR_BEGIN_ATOMIC = 7434,
+	IOERR_BLOCKED = 2826,
+	IOERR_CHECKRESERVEDLOCK = 3594,
+	IOERR_CLOSE = 4106,
+	IOERR_COMMIT_ATOMIC = 7690,
+	IOERR_CONVPATH = 6666,
+	IOERR_CORRUPTFS = 8458,
+	IOERR_DATA = 8202,
+	IOERR_DELETE = 2570,
+	IOERR_DELETE_NOENT = 5898,
+	IOERR_DIR_CLOSE = 4362,
+	IOERR_DIR_FSYNC = 1290,
+	IOERR_FSTAT = 1802,
+	IOERR_FSYNC = 1034,
+	IOERR_GETTEMPPATH = 6410,
+	IOERR_LOCK = 3850,
+	IOERR_MMAP = 6154,
+	IOERR_NOMEM = 3082,
+	IOERR_RDLOCK = 2314,
+	IOERR_READ = 266,
+	IOERR_ROLLBACK_ATOMIC = 7946,
+	IOERR_SEEK = 5642,
+	IOERR_SHMLOCK = 5130,
+	IOERR_SHMMAP = 5386,
+	IOERR_SHMOPEN = 4618,
+	IOERR_SHMSIZE = 4874,
+}
+
+
+var _aslet: Aslet
+var connection: AsletConn
+
+
+func _init(path: String, filename: String) -> void:
+	DirAccess.make_dir_recursive_absolute(path)
+	var full_path: String = "%s%s.db" % [path, filename]
+	print(tr("SQLITE_STARTING") % full_path)
+
+	_aslet = Aslet.new()
+
+	var result: Array = _aslet.open(full_path).wait()
+	if result.is_empty() || result[0] != OK:
+		push_error(tr("SQLITE_START_FAILED") % full_path)
+		return
+
+	connection = result[1] as AsletConn
+
+	connection.exec("PRAGMA foreign_keys = ON;", []).wait()
+	connection.exec("PRAGMA journal_mode = WAL;", []).wait()
+
+	print(tr("SQLITE_STARTED") % full_path)
+
+
+func poll(poll_time: int = 0) -> void:
+	if _aslet:
+		_aslet.poll(poll_time)
