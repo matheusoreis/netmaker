@@ -22,11 +22,9 @@ var _network: Network
 
 var _account_repository: AccountRepository
 var _character_repository: CharacterRepository
-var _map_repository: MapRepository
 
 var _account_cache: AccountCache
 var _character_cache: CharacterCache
-var _map_cache: MapCache
 
 var _auth_handler: AuthHandler
 var _account_handler: AccountHandler
@@ -54,17 +52,14 @@ func _initialize_database() -> Error:
 func _initialize_repositories() -> void:
 	_account_repository = AccountRepository.new(_database.connection)
 	_character_repository = CharacterRepository.new(_database.connection)
-	_map_repository = MapRepository.new(_database.connection)
 
 
 func _initialize_caches() -> void:
 	_account_cache = AccountCache.new(_account_repository)
 	_character_cache = CharacterCache.new(_character_repository)
-	_map_cache = MapCache.new(_map_repository)
 
 	await _account_cache.load_all()
 	await _character_cache.load_all()
-	await _map_cache.load_all()
 
 
 func _initialize_network() -> void:
