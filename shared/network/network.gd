@@ -12,6 +12,9 @@ var multiplayer_peer: Rpc
 
 
 func create_server() -> void:
+	if multiplayer_peer:
+		return
+
 	print("[SERVER] Iniciando servidor...")
 
 	multiplayer_peer = Rpc.Server.new(
@@ -38,6 +41,9 @@ func create_server() -> void:
 
 
 func create_client() -> void:
+	if multiplayer_peer:
+		return
+
 	print("[CLIENT] Iniciando cliente...")
 
 	print("[CLIENT] RPC criado para o cliente!")

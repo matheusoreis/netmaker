@@ -18,26 +18,10 @@
       ]
     },
     {
-      "id": "mpbs4vjj7auvsyidpx9",
-      "title": "Iniciar o servidor no boot da scene",
-      "description": "",
-      "column": "in-progress",
-      "priority": "medium",
-      "createdAt": 1779143553199,
-      "updatedAt": 1779143553199,
-      "movedAt": 1779143553199,
-      "columnHistory": [
-        {
-          "column": "in-progress",
-          "at": 1779143553199
-        }
-      ]
-    },
-    {
       "id": "mpbs5im7ghgff1ktd89",
       "title": "Iniciar o cliente no boot da scene",
       "description": "",
-      "column": "in-progress",
+      "column": "completed",
       "priority": "medium",
       "createdAt": 1779143583103,
       "updatedAt": 1779143583103,
@@ -50,10 +34,26 @@
       ]
     },
     {
+      "id": "mpbs4vjj7auvsyidpx9",
+      "title": "Iniciar o servidor no boot da scene",
+      "description": "",
+      "column": "completed",
+      "priority": "medium",
+      "createdAt": 1779143553199,
+      "updatedAt": 1779143553199,
+      "movedAt": 1779143553199,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779143553199
+        }
+      ]
+    },
+    {
       "id": "mpbs0la332eq2uxsz8h",
       "title": "Adicionar o network",
       "description": "Helper para acessar o RPC e expor os métodos em uma única classe.",
-      "column": "reviewed",
+      "column": "completed",
       "priority": "critical",
       "createdAt": 1779143353275,
       "updatedAt": 1779143385200,
