@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 Network="*uid://cpmv7lmryunvw"
+Database="*uid://bx5ryagqb3i22"
 
 [debug]
 

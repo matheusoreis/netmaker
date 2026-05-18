@@ -10,3 +10,7 @@ const NETWORK_PORT: int = 7720
 const NETWORK_MAX_CLIENTS: int = 100
 const NETWORK_MAX_TASKS: int = 2048
 const NETWORK_POLL_TIME: int = 1
+
+const DATABASE_PATH: String = "user://database/"
+const DATABASE_FILENAME: String = "database"
+const DATABASE_POLL_TIME: int = 1

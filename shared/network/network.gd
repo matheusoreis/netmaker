@@ -11,9 +11,14 @@ signal peer_disconnected(peer_id: int)
 var multiplayer_peer: Rpc
 
 
-func create_server() -> void:
+func _process(_delta: float) -> void:
 	if multiplayer_peer:
-		return
+		multiplayer_peer.poll(Constants.Server.NETWORK_POLL_TIME)
+
+
+func create_server() -> Error:
+	if multiplayer_peer:
+		return FAILED
 
 	print("[SERVER] Iniciando servidor...")
 
@@ -29,7 +34,7 @@ func create_server() -> void:
 	var error: Error = multiplayer_peer.start()
 	if error != Error.OK:
 		push_error("[SERVER] Falha ao criar servidor. Erro: ", error)
-		return
+		return error
 
 	print("[SERVER] Servidor criado com sucesso na porta: ", Constants.Server.NETWORK_PORT)
 	print("[SERVER] Max clients: ", Constants.Server.NETWORK_MAX_CLIENTS)
@@ -38,11 +43,12 @@ func create_server() -> void:
 	print("[SERVER] Servidor iniciado com sucesso!")
 
 	_connect_signals()
+	return OK
 
 
-func create_client() -> void:
+func create_client() -> Error:
 	if multiplayer_peer:
-		return
+		return FAILED
 
 	print("[CLIENT] Iniciando cliente...")
 
@@ -57,13 +63,14 @@ func create_client() -> void:
 	var error: Error = multiplayer_peer.start()
 	if error != Error.OK:
 		push_error("[CLIENT] Falha ao criar cliente. Erro: ", error)
-		return
+		return error
 
 	print("[CLIENT] Cliente conectando em: ", Constants.Client.NETWORK_ADDRESS, ":", Constants.Client.NETWORK_PORT)
 
 	print("[CLIENT] Cliente iniciado com sucesso!")
 
 	_connect_signals()
+	return OK
 
 
 func is_server() -> bool:
@@ -150,8 +157,3 @@ func _on_peer_connected(peer_id: int) -> void:
 func _on_peer_disconnected(peer_id: int) -> void:
 	print("[SERVER] Peer desconectado: ", peer_id)
 	peer_disconnected.emit(peer_id)
-
-
-func _process(_delta: float) -> void:
-	if multiplayer_peer:
-		multiplayer_peer.poll(0)

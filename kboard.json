@@ -5,7 +5,7 @@
       "id": "mpbs12afd1zfvdsgykb",
       "title": "Adicionar o database",
       "description": "Helper para acessar o ASLET e expor os métodos em uma única classe",
-      "column": "in-progress",
+      "column": "completed",
       "priority": "low",
       "createdAt": 1779143375319,
       "updatedAt": 1779143375319,
