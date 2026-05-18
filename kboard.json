@@ -2,10 +2,30 @@
   "version": 2,
   "cards": [
     {
+      "id": "mpbri8hy4heit89qeoo",
+      "title": "Criar a cena de boot e navegar para o servidor ou o cliente",
+      "description": "",
+      "column": "in-progress",
+      "priority": "medium",
+      "createdAt": 1779142496902,
+      "updatedAt": 1779142496902,
+      "movedAt": 1779142499724,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779142496902
+        },
+        {
+          "column": "reviewed",
+          "at": 1779142499724
+        }
+      ]
+    },
+    {
       "id": "mpbr8qwi3a7ofvuupst",
       "title": "Criar a cena principal do cliente e do servidor com seus scripts",
       "description": "",
-      "column": "in-progress",
+      "column": "reviewed",
       "priority": "high",
       "createdAt": 1779142054194,
       "updatedAt": 1779142262181,
@@ -21,7 +41,7 @@
       "id": "mpbr73vl7pplg26o58v",
       "title": "Adicionar addon de RPC",
       "description": "",
-      "column": "reviewed",
+      "column": "completed",
       "priority": "high",
       "createdAt": 1779141977697,
       "updatedAt": 1779141977697,
@@ -37,7 +57,7 @@
       "id": "mpbr7s7b30mc5rl56p8",
       "title": "Adicionar addon de SQLite",
       "description": "https://github.com/carabalonepaulo/aslet",
-      "column": "reviewed",
+      "column": "completed",
       "priority": "high",
       "createdAt": 1779142009223,
       "updatedAt": 1779142009223,
