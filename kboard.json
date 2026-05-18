@@ -2,6 +2,86 @@
   "version": 2,
   "cards": [
     {
+      "id": "mpbs12afd1zfvdsgykb",
+      "title": "Adicionar o database",
+      "description": "Helper para acessar o ASLET e expor os métodos em uma única classe",
+      "column": "in-progress",
+      "priority": "low",
+      "createdAt": 1779143375319,
+      "updatedAt": 1779143375319,
+      "movedAt": 1779143375319,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779143375319
+        }
+      ]
+    },
+    {
+      "id": "mpbs4vjj7auvsyidpx9",
+      "title": "Iniciar o servidor no boot da scene",
+      "description": "",
+      "column": "in-progress",
+      "priority": "medium",
+      "createdAt": 1779143553199,
+      "updatedAt": 1779143553199,
+      "movedAt": 1779143553199,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779143553199
+        }
+      ]
+    },
+    {
+      "id": "mpbs5im7ghgff1ktd89",
+      "title": "Iniciar o cliente no boot da scene",
+      "description": "",
+      "column": "in-progress",
+      "priority": "medium",
+      "createdAt": 1779143583103,
+      "updatedAt": 1779143583103,
+      "movedAt": 1779143583103,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779143583103
+        }
+      ]
+    },
+    {
+      "id": "mpbs0la332eq2uxsz8h",
+      "title": "Adicionar o network",
+      "description": "Helper para acessar o RPC e expor os métodos em uma única classe.",
+      "column": "reviewed",
+      "priority": "critical",
+      "createdAt": 1779143353275,
+      "updatedAt": 1779143385200,
+      "movedAt": 1779143353275,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779143353275
+        }
+      ]
+    },
+    {
+      "id": "mpbs462ehfgwy05imfn",
+      "title": "Adicionar as constantes, enums e types no cliente e servidor",
+      "description": "",
+      "column": "completed",
+      "priority": "medium",
+      "createdAt": 1779143520181,
+      "updatedAt": 1779144338932,
+      "movedAt": 1779143520181,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779143520181
+        }
+      ]
+    },
+    {
       "id": "mpbri8hy4heit89qeoo",
       "title": "Criar a cena de boot e navegar para o servidor ou o cliente",
       "description": "",

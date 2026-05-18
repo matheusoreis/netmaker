@@ -231,15 +231,15 @@ class Server extends Rpc:
 		return result
 
 
-	func get_clients() -> Array[int]:
+	func get_peers() -> Array[int]:
 		return _peers.keys()
 
 
-	func get_client_count() -> int:
+	func get_peer_count() -> int:
 		return _peers.size()
 
 
-	func has_client(id: int) -> bool:
+	func has_peer(id: int) -> bool:
 		return _peers.has(id)
 
 
