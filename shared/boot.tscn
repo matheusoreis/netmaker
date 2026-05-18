@@ -2,5 +2,35 @@
 
 [ext_resource type="Script" uid="uid://jjdi5ojdwr2k" path="res://shared/boot.gd" id="1_wcx4a"]
 
-[node name="Boot" type="Node2D" unique_id=2087081658]
+[node name="Boot" type="Control" unique_id=1471634595]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_wcx4a")
+
+[node name="C1" type="CenterContainer" parent="." unique_id=829312554]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VB1" type="VBoxContainer" parent="C1" unique_id=1836812212]
+layout_mode = 2
+
+[node name="ClientButton" type="Button" parent="C1/VB1" unique_id=211368685]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Cliente"
+
+[node name="ServerButton" type="Button" parent="C1/VB1" unique_id=1676393260]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Servidor"
+
+[connection signal="pressed" from="C1/VB1/ClientButton" to="." method="_on_client_button_pressed"]
+[connection signal="pressed" from="C1/VB1/ServerButton" to="." method="_on_server_button_pressed"]
