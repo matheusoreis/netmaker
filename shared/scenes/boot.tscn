@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bdmvnr6oabpb7"]
 
-[ext_resource type="Script" uid="uid://jjdi5ojdwr2k" path="res://shared/boot.gd" id="1_wcx4a"]
+[ext_resource type="Script" uid="uid://jjdi5ojdwr2k" path="res://shared/scenes/boot.gd" id="1_wcx4a"]
 
 [node name="Boot" type="Control" unique_id=1471634595]
 layout_mode = 3
