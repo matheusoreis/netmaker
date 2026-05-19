@@ -42,29 +42,27 @@ func _process(_delta: float) -> void:
 		_aslet.poll(Constants.Server.DATABASE_POLL_TIME)
 
 
-func create_database() -> Error:
-	var full_path: String = "%s%s.db" % [
-		Constants.Server.DATABASE_PATH,
-		Constants.Server.DATABASE_FILENAME
-	]
+func create(path: String, filename: String, wal: bool = false) -> Error:
+	var full_path: String = "%s%s.db" % [path, filename]
 
-	DirAccess.make_dir_recursive_absolute(Constants.Server.DATABASE_PATH)
+	DirAccess.make_dir_recursive_absolute(path)
 
 	print("[SQLITE] Iniciando banco de dados em %s" % full_path)
 
 	_aslet = Aslet.new()
-
 	var result: Array = _aslet.open(full_path).wait()
 	if result.is_empty() || result[0] != OK:
 		push_error("[SQLITE] Falha ao abrir banco de dados em %s" % full_path)
 		return FAILED
 
 	_conn = result[1] as AsletConn
-
 	_conn.exec("PRAGMA foreign_keys = ON;", []).wait()
-	_conn.exec("PRAGMA journal_mode = WAL;", []).wait()
+
+	if wal:
+		_conn.exec("PRAGMA journal_mode = WAL;", []).wait()
 
 	print("[SQLITE] Banco de dados pronto em %s" % full_path)
+
 	return OK
 
 

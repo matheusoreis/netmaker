@@ -16,17 +16,14 @@ func _process(_delta: float) -> void:
 		multiplayer_peer.poll(Constants.Server.NETWORK_POLL_TIME)
 
 
-func create_server() -> Error:
+func create_server(port: int, max_clients: int, max_tasks: int) -> Error:
 	if multiplayer_peer:
 		return FAILED
 
 	print("[SERVER] Iniciando servidor...")
 
 	multiplayer_peer = Rpc.Server.new(
-		"0.0.0.0",
-		Constants.Server.NETWORK_PORT,
-		Constants.Server.NETWORK_MAX_CLIENTS,
-		Constants.Server.NETWORK_MAX_TASKS
+		"0.0.0.0", port, max_clients, max_tasks
 	)
 
 	print("[SERVER] RPC criado para o servidor!")
@@ -46,7 +43,7 @@ func create_server() -> Error:
 	return OK
 
 
-func create_client() -> Error:
+func create_client(address: String, port: int, max_tasks: int) -> Error:
 	if multiplayer_peer:
 		return FAILED
 
@@ -55,9 +52,7 @@ func create_client() -> Error:
 	print("[CLIENT] RPC criado para o cliente!")
 
 	multiplayer_peer = Rpc.Client.new(
-		Constants.Client.NETWORK_ADDRESS,
-		Constants.Client.NETWORK_PORT,
-		Constants.Client.NETWORK_MAX_TASKS
+		address, port, max_tasks
 	)
 
 	var error: Error = multiplayer_peer.start()

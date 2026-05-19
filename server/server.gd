@@ -10,8 +10,16 @@ func _ready() -> void:
 
 
 func _setup_database() -> bool:
-	return OK if Database.create_database() else FAILED
+	return OK if Database.create(
+		Constants.Server.DATABASE_PATH,
+		Constants.Server.DATABASE_FILENAME,
+		true
+	) else FAILED
 
 
 func _setup_network() -> bool:
-	return true if Network.create_server() == OK else false
+	return true if Network.create_server(
+		Constants.Server.NETWORK_PORT,
+		Constants.Server.NETWORK_MAX_CLIENTS,
+		Constants.Server.NETWORK_MAX_TASKS
+	) == OK else false
