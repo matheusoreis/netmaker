@@ -1,185 +1,281 @@
 {
-	"version": 2.0,
-	"cards": [
-		{
-			"id": "mpbs12afd1zfvdsgykb",
-			"title": "Adicionar o database",
-			"description": "Helper para acessar o ASLET e expor os métodos em uma única classe",
-			"column": "completed",
-			"priority": "low",
-			"createdAt": 1779143375319.0,
-			"updatedAt": 1779143375319.0,
-			"movedAt": 1779143375319.0,
-			"columnHistory": [
-				{
-					"column": "in-progress",
-					"at": 1779143375319.0
-				}
-			]
-		},
-		{
-			"id": "mpbs5im7ghgff1ktd89",
-			"title": "Iniciar o cliente no boot da scene",
-			"description": "",
-			"column": "completed",
-			"priority": "medium",
-			"createdAt": 1779143583103.0,
-			"updatedAt": 1779143583103.0,
-			"movedAt": 1779143583103.0,
-			"columnHistory": [
-				{
-					"column": "in-progress",
-					"at": 1779143583103.0
-				}
-			]
-		},
-		{
-			"id": "mpbs4vjj7auvsyidpx9",
-			"title": "Iniciar o servidor no boot da scene",
-			"description": "",
-			"column": "completed",
-			"priority": "medium",
-			"createdAt": 1779143553199.0,
-			"updatedAt": 1779143553199.0,
-			"movedAt": 1779143553199.0,
-			"columnHistory": [
-				{
-					"column": "in-progress",
-					"at": 1779143553199.0
-				}
-			]
-		},
-		{
-			"id": "mpbs0la332eq2uxsz8h",
-			"title": "Adicionar o network",
-			"description": "Helper para acessar o RPC e expor os métodos em uma única classe.",
-			"column": "completed",
-			"priority": "critical",
-			"createdAt": 1779143353275.0,
-			"updatedAt": 1779143385200.0,
-			"movedAt": 1779143353275.0,
-			"columnHistory": [
-				{
-					"column": "in-progress",
-					"at": 1779143353275.0
-				}
-			]
-		},
-		{
-			"id": "mpbs462ehfgwy05imfn",
-			"title": "Adicionar as constantes, enums e types no cliente e servidor",
-			"description": "",
-			"column": "completed",
-			"priority": "medium",
-			"createdAt": 1779143520181.0,
-			"updatedAt": 1779144338932.0,
-			"movedAt": 1779143520181.0,
-			"columnHistory": [
-				{
-					"column": "in-progress",
-					"at": 1779143520181.0
-				}
-			]
-		},
-		{
-			"id": "mpbri8hy4heit89qeoo",
-			"title": "Criar a cena de boot e navegar para o servidor ou o cliente",
-			"description": "",
-			"column": "completed",
-			"priority": "medium",
-			"createdAt": 1779142496902.0,
-			"updatedAt": 1779142496902.0,
-			"movedAt": 1779142499724.0,
-			"columnHistory": [
-				{
-					"column": "in-progress",
-					"at": 1779142496902.0
-				},
-				{
-					"column": "reviewed",
-					"at": 1779142499724.0
-				}
-			]
-		},
-		{
-			"id": "mpbr8qwi3a7ofvuupst",
-			"title": "Criar a cena principal do cliente e do servidor com seus scripts",
-			"description": "",
-			"column": "completed",
-			"priority": "high",
-			"createdAt": 1779142054194.0,
-			"updatedAt": 1779142262181.0,
-			"movedAt": 1779142054194.0,
-			"columnHistory": [
-				{
-					"column": "in-progress",
-					"at": 1779142054194.0
-				}
-			]
-		},
-		{
-			"id": "mpbr73vl7pplg26o58v",
-			"title": "Adicionar addon de RPC",
-			"description": "",
-			"column": "completed",
-			"priority": "high",
-			"createdAt": 1779141977697.0,
-			"updatedAt": 1779141977697.0,
-			"movedAt": 1779141977697.0,
-			"columnHistory": [
-				{
-					"column": "in-progress",
-					"at": 1779141977697.0
-				}
-			]
-		},
-		{
-			"id": "mpbr7s7b30mc5rl56p8",
-			"title": "Adicionar addon de SQLite",
-			"description": "https://github.com/carabalonepaulo/aslet",
-			"column": "completed",
-			"priority": "high",
-			"createdAt": 1779142009223.0,
-			"updatedAt": 1779142009223.0,
-			"movedAt": 1779142009223.0,
-			"columnHistory": [
-				{
-					"column": "in-progress",
-					"at": 1779142009223.0
-				}
-			]
-		},
-		{
-			"id": "mpbq0gg5512nti4hdfc",
-			"title": "Configurar o projeto",
-			"description": "Ativar o filtro para pixel art e desativar o warn em shadow do gdscript.",
-			"column": "completed",
-			"priority": "low",
-			"createdAt": 1779141072990.0,
-			"updatedAt": 1779141712039.0,
-			"movedAt": 1779141072990.0,
-			"columnHistory": [
-				{
-					"column": "in-progress",
-					"at": 1779141072990.0
-				}
-			]
-		},
-		{
-			"id": "mpbptanx83s7bvmdd4t",
-			"title": "Projeto",
-			"description": "Criar o projeto da godot e subir no GitHub.\n\nhttps://github.com/matheusoreis/netmaker",
-			"column": "completed",
-			"priority": "low",
-			"createdAt": 1779141072990.0,
-			"updatedAt": 1779141715833.0,
-			"movedAt": 1779141072990.0,
-			"columnHistory": [
-				{
-					"column": "completed",
-					"at": 1779141072990.0
-				}
-			]
-		}
-	]
+  "version": 2,
+  "cards": [
+    {
+      "id": "mpbs12afd1zfvdsgykb",
+      "title": "Adicionar o database",
+      "description": "Helper para acessar o ASLET e expor os métodos em uma única classe",
+      "column": "completed",
+      "priority": "low",
+      "createdAt": 1779143375319,
+      "updatedAt": 1779143375319,
+      "movedAt": 1779143375319,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779143375319
+        }
+      ]
+    },
+    {
+      "id": "mpbs5im7ghgff1ktd89",
+      "title": "Iniciar o cliente no boot da scene",
+      "description": "",
+      "column": "completed",
+      "priority": "medium",
+      "createdAt": 1779143583103,
+      "updatedAt": 1779143583103,
+      "movedAt": 1779143583103,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779143583103
+        }
+      ]
+    },
+    {
+      "id": "mpbs4vjj7auvsyidpx9",
+      "title": "Iniciar o servidor no boot da scene",
+      "description": "",
+      "column": "completed",
+      "priority": "medium",
+      "createdAt": 1779143553199,
+      "updatedAt": 1779143553199,
+      "movedAt": 1779143553199,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779143553199
+        }
+      ]
+    },
+    {
+      "id": "mpbs0la332eq2uxsz8h",
+      "title": "Adicionar o network",
+      "description": "Helper para acessar o RPC e expor os métodos em uma única classe.",
+      "column": "completed",
+      "priority": "critical",
+      "createdAt": 1779143353275,
+      "updatedAt": 1779143385200,
+      "movedAt": 1779143353275,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779143353275
+        }
+      ]
+    },
+    {
+      "id": "mpbs462ehfgwy05imfn",
+      "title": "Adicionar as constantes, enums e types no cliente e servidor",
+      "description": "",
+      "column": "completed",
+      "priority": "medium",
+      "createdAt": 1779143520181,
+      "updatedAt": 1779144338932,
+      "movedAt": 1779143520181,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779143520181
+        }
+      ]
+    },
+    {
+      "id": "mpbri8hy4heit89qeoo",
+      "title": "Criar a cena de boot e navegar para o servidor ou o cliente",
+      "description": "",
+      "column": "completed",
+      "priority": "medium",
+      "createdAt": 1779142496902,
+      "updatedAt": 1779142496902,
+      "movedAt": 1779142499724,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779142496902
+        },
+        {
+          "column": "reviewed",
+          "at": 1779142499724
+        }
+      ]
+    },
+    {
+      "id": "mpbr8qwi3a7ofvuupst",
+      "title": "Criar a cena principal do cliente e do servidor com seus scripts",
+      "description": "",
+      "column": "completed",
+      "priority": "high",
+      "createdAt": 1779142054194,
+      "updatedAt": 1779142262181,
+      "movedAt": 1779142054194,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779142054194
+        }
+      ]
+    },
+    {
+      "id": "mpbr73vl7pplg26o58v",
+      "title": "Adicionar addon de RPC",
+      "description": "",
+      "column": "completed",
+      "priority": "high",
+      "createdAt": 1779141977697,
+      "updatedAt": 1779141977697,
+      "movedAt": 1779141977697,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779141977697
+        }
+      ]
+    },
+    {
+      "id": "mpbr7s7b30mc5rl56p8",
+      "title": "Adicionar addon de SQLite",
+      "description": "https://github.com/carabalonepaulo/aslet",
+      "column": "completed",
+      "priority": "high",
+      "createdAt": 1779142009223,
+      "updatedAt": 1779142009223,
+      "movedAt": 1779142009223,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779142009223
+        }
+      ]
+    },
+    {
+      "id": "mpbq0gg5512nti4hdfc",
+      "title": "Configurar o projeto",
+      "description": "Ativar o filtro para pixel art e desativar o warn em shadow do gdscript.",
+      "column": "completed",
+      "priority": "low",
+      "createdAt": 1779141072990,
+      "updatedAt": 1779141712039,
+      "movedAt": 1779141072990,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779141072990
+        }
+      ]
+    },
+    {
+      "id": "mpbptanx83s7bvmdd4t",
+      "title": "Projeto",
+      "description": "Criar o projeto da godot e subir no GitHub.\n\nhttps://github.com/matheusoreis/netmaker",
+      "column": "completed",
+      "priority": "low",
+      "createdAt": 1779141072990,
+      "updatedAt": 1779141715833,
+      "movedAt": 1779141072990,
+      "columnHistory": [
+        {
+          "column": "completed",
+          "at": 1779141072990
+        }
+      ]
+    },
+    {
+      "id": "mpbxnvw9k0rd2azagdh",
+      "title": "Módulo de autenticação no servidor",
+      "description": "",
+      "column": "in-progress",
+      "priority": "medium",
+      "createdAt": 1779152838201,
+      "updatedAt": 1779152838201,
+      "movedAt": 1779152838201,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779152838201
+        }
+      ]
+    },
+    {
+      "id": "mpbxo0lu8cjitpli7ln",
+      "title": "Carregamento dos mapas no servidor",
+      "description": "",
+      "column": "in-progress",
+      "priority": "medium",
+      "createdAt": 1779152844306,
+      "updatedAt": 1779152844306,
+      "movedAt": 1779152844306,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779152844306
+        }
+      ]
+    },
+    {
+      "id": "mpbxo5lz1mqegysnrny",
+      "title": "Carregamento do mapa no cliente",
+      "description": "",
+      "column": "in-progress",
+      "priority": "medium",
+      "createdAt": 1779152850791,
+      "updatedAt": 1779152850791,
+      "movedAt": 1779152850791,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779152850791
+        }
+      ]
+    },
+    {
+      "id": "mpbxom020mqv0132f04",
+      "title": "Janelas de login, cadastro",
+      "description": "",
+      "column": "in-progress",
+      "priority": "medium",
+      "createdAt": 1779152872034,
+      "updatedAt": 1779152872034,
+      "movedAt": 1779152872034,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779152872034
+        }
+      ]
+    },
+    {
+      "id": "mpbxorzaavndnjx4sot",
+      "title": "Módulo de account no servidor",
+      "description": "",
+      "column": "in-progress",
+      "priority": "medium",
+      "createdAt": 1779152879782,
+      "updatedAt": 1779152879782,
+      "movedAt": 1779152879782,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779152879782
+        }
+      ]
+    },
+    {
+      "id": "mpbxrsnpe97nydi8edp",
+      "title": "Listar e criar o personagem",
+      "description": "",
+      "column": "in-progress",
+      "priority": "high",
+      "createdAt": 1779153020629,
+      "updatedAt": 1779153020629,
+      "movedAt": 1779153020629,
+      "columnHistory": [
+        {
+          "column": "in-progress",
+          "at": 1779153020629
+        }
+      ]
+    }
+  ]
 }
