@@ -15,6 +15,12 @@ run/main_scene="uid://cbp2r63mkijox"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Network="*uid://c6nbvphrpvamb"
+Handler="*uid://c0wff0h7wksrg"
+Sender="*uid://bq3pbtwhe7sio"
+
 [debug]
 
 gdscript/warnings/shadowed_variable=0
