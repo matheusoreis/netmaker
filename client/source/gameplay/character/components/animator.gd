@@ -113,6 +113,118 @@ func has_animation(anim_name: String) -> bool:
 	return _animations.has(anim_name)
 
 
+func read_animations() -> Dictionary:
+	return _animations
+
+
+func read_current_name() -> String:
+	return _current_name
+
+
+func read_anim_first() -> int:
+	return _anim_first
+
+
+func read_anim_last() -> int:
+	return _anim_last
+
+
+func read_anim_fps() -> float:
+	return _anim_fps
+
+
+func read_anim_loop() -> bool:
+	return _anim_loop
+
+
+func read_current_frame() -> int:
+	return _current_frame
+
+
+func read_accumulator() -> float:
+	return _accumulator
+
+
+func read_playing() -> bool:
+	return _playing
+
+
+func read_should_finish() -> bool:
+	return _should_finish
+
+
+func read_eager() -> bool:
+	return _eager
+
+
+func read_sprite() -> Sprite2D:
+	return _sprite
+
+
+func read_cols() -> int:
+	return _cols
+
+
+func read_rows() -> int:
+	return _rows
+
+
+func write_animations(value: Dictionary) -> void:
+	_animations = value
+
+
+func write_current_name(value: String) -> void:
+	_current_name = value
+
+
+func write_anim_first(value: int) -> void:
+	_anim_first = value
+
+
+func write_anim_last(value: int) -> void:
+	_anim_last = value
+
+
+func write_anim_fps(value: float) -> void:
+	_anim_fps = value
+
+
+func write_anim_loop(value: bool) -> void:
+	_anim_loop = value
+
+
+func write_current_frame(value: int) -> void:
+	_current_frame = value
+
+
+func write_accumulator(value: float) -> void:
+	_accumulator = value
+
+
+func write_playing(value: bool) -> void:
+	_playing = value
+
+
+func write_should_finish(value: bool) -> void:
+	_should_finish = value
+
+
+func write_eager(value: bool) -> void:
+	_eager = value
+
+
+func write_sprite(value: Sprite2D) -> void:
+	_sprite = value
+
+
+func write_cols(value: int) -> void:
+	_cols = value
+
+
+func write_rows(value: int) -> void:
+	_rows = value
+
+
 func _advance_frame(frame_duration: float) -> void:
 	if _should_finish:
 		_current_frame = _anim_first

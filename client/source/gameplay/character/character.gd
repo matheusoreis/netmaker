@@ -40,7 +40,7 @@ func _ready() -> void:
 	_animator.name = "Animator"
 	add_child(_animator)
 
-	_nameplate = CharacterNameplate.new(identifier, get_overhead_anchor())
+	_nameplate = CharacterNameplate.new(identifier, read_overhead_anchor())
 	_nameplate.name = "Nameplate"
 	add_child(_nameplate)
 
@@ -52,8 +52,40 @@ func _physics_process(_delta: float) -> void:
 	position = target.round()
 
 
-func get_overhead_anchor() -> Vector2:
+func read_overhead_anchor() -> Vector2:
 	return Vector2(Constants.TILE_SIZE / 2.0, _visual_anchor.y)
+
+
+func read_map_position() -> Vector2i:
+	return _map_position
+
+
+func read_direction() -> Vector2i:
+	return _direction
+
+
+func read_visual_offset() -> Vector2:
+	return _visual_offset
+
+
+func read_animator() -> CharacterAnimator:
+	return _animator
+
+
+func read_nameplate() -> CharacterNameplate:
+	return _nameplate
+
+
+func write_map_position(value: Vector2i) -> void:
+	_map_position = value
+
+
+func write_direction(value: Vector2i) -> void:
+	_direction = value
+
+
+func write_visual_offset(value: Vector2) -> void:
+	_visual_offset = value
 
 
 func _register_animations() -> void:

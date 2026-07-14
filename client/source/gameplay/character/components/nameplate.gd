@@ -50,6 +50,18 @@ func _draw() -> void:
 	_draw_text(text_size, font)
 
 
+func read_overhead_anchor() -> Vector2:
+	return _overhead_anchor
+
+
+func write_overhead_anchor(value: Vector2) -> void:
+	_overhead_anchor = value
+
+
+func read_style_box() -> StyleBoxFlat:
+	return _style_box
+
+
 func _update_position() -> void:
 	position = _overhead_anchor + Vector2(0, OFFSET_Y)
 

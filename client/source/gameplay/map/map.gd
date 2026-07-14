@@ -15,25 +15,51 @@ class_name Map
 @onready var above_03: TileMapLayer = $Above03
 
 
-var id: int
-var identifier: String
-var start_position: Vector2i
-var start_direction: Vector2i
-var width: int
-var height: int
+var _id: int
+var _identifier: String
+var _start_position: Vector2i
+var _start_direction: Vector2i
+var _width: int
+var _height: int
 
 var _collisions: Dictionary[Vector2i, int] = {}
 
 
 func setup(id: int, identifier: String, start_position: Vector2i, start_direction: Vector2i, width: int, height: int) -> void:
-	self.id = id
-	self.identifier = identifier
+	_id = id
+	_identifier = identifier
+	_start_position = start_position
+	_start_direction = start_direction
+	_width = width
+	_height = height
 
-	self.start_position = start_position
-	self.start_direction = start_direction
 
-	self.width = width
-	self.height = height
+func read_id() -> int:
+	return _id
+
+
+func read_identifier() -> String:
+	return _identifier
+
+
+func read_start_position() -> Vector2i:
+	return _start_position
+
+
+func read_start_direction() -> Vector2i:
+	return _start_direction
+
+
+func read_width() -> int:
+	return _width
+
+
+func read_height() -> int:
+	return _height
+
+
+func read_collisions() -> Dictionary:
+	return _collisions
 
 
 func _get_layers() -> Array[TileMapLayer]:
@@ -48,7 +74,7 @@ func _get_layers() -> Array[TileMapLayer]:
 
 
 func is_within_bounds(pos: Vector2i) -> bool:
-	return pos.x >= 0 and pos.x < width and pos.y >= 0 and pos.y < height
+	return pos.x >= 0 and pos.x < _width and pos.y >= 0 and pos.y < _height
 
 
 func to_screen(cell: Vector2i) -> Vector2:
@@ -97,7 +123,6 @@ func can_pass(from: Vector2i, direction: Vector2i) -> bool:
 	if (from_flag & direction_flag) != 0:
 		return false
 
-	# Verifica diagonais
 	if abs(direction.x) == 1 and abs(direction.y) == 1:
 		var horiz_cell: Vector2i = Vector2i(from.x + direction.x, from.y)
 		var vert_cell: Vector2i = Vector2i(from.x, from.y + direction.y)
