@@ -3,19 +3,18 @@ extends Node
 
 var actor_id: int = -1
 
-var _maps: Dictionary[int, Map]
+
+var _map: Map = null
+
 var _actors: Dictionary[int, Actor]
 
 
-func get_map(id: int) -> Map:
-	return _maps.get(id)
+func get_map() -> Map:
+	return _map
 
 
 func add_map(map: Map) -> void:
-	if _maps.has(map.id):
-		return
-
-	_maps[map.id] = map
+	_map = map
 
 
 func get_actor(id: int) -> Actor:
