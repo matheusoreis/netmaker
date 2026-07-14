@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+GameAudio="*uid://cai0xysbnvblb"
 Network="*uid://c6nbvphrpvamb"
 Handler="*uid://c0wff0h7wksrg"
 Sender="*uid://bq3pbtwhe7sio"
