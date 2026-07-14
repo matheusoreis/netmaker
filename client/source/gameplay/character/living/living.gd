@@ -28,21 +28,9 @@ func _physics_process(delta: float) -> void:
 	super(delta)
 
 
-func set_direction(new_direction: Vector2i) -> void:
-	if _direction == new_direction:
-		return
-
-	_direction = new_direction
-
-	if not is_walking and _animator:
-		_animator.play(_animation_name("idle"))
-
-
 func move_to(map: Map, new_direction: Vector2i) -> void:
 	if is_walking:
 		return
-
-
 
 	var target: Vector2i = _map_position + new_direction
 	if not _can_move_to(map, target):
