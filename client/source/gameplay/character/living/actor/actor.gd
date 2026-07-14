@@ -15,9 +15,6 @@ func _ready() -> void:
 
 
 func move(direction: Vector2i) -> void:
-	if _is_local_actor() and is_walking:
-		return
-
 	_execute_move(direction)
 
 
