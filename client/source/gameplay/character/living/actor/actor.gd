@@ -9,7 +9,7 @@ func _ready() -> void:
 	super()
 
 	if _is_local_actor():
-		_camera = ActorCamera.new()
+		_camera = ActorCamera.new(get_overhead_anchor())
 		_camera.name = "Camera"
 		add_child(_camera)
 
