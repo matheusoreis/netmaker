@@ -5,3 +5,15 @@
 [node name="Menu" type="Node2D" unique_id=1795243033]
 script = ExtResource("1_hnrmn")
 metadata/_custom_type_script = "uid://c0uikxaej1jws"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1590823258]
+
+[node name="VirtualJoystick" type="VirtualJoystick" parent="CanvasLayer" unique_id=896969460]
+offset_left = 98.0
+offset_top = 512.0
+offset_right = 138.0
+offset_bottom = 552.0
+action_left = &"walking_left"
+action_right = &"walking_right"
+action_up = &"walking_up"
+action_down = &"walking_down"
