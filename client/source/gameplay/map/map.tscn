@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://2hkbiwnp1kre"]
+
+[ext_resource type="Script" uid="uid://bavcmx0pay0a1" path="res://source/gameplay/map/map.gd" id="1_4cnpj"]
+
+[node name="Map" type="Node2D" unique_id=1869527112]
+script = ExtResource("1_4cnpj")
+
+[node name="Ground01" type="TileMapLayer" parent="." unique_id=1614143151]
+
+[node name="Ground02" type="TileMapLayer" parent="." unique_id=1908041246]
+
+[node name="Ground03" type="TileMapLayer" parent="." unique_id=1813531441]
+
+[node name="Below01" type="TileMapLayer" parent="." unique_id=1520795136]
+
+[node name="Below02" type="TileMapLayer" parent="." unique_id=2029307786]
+
+[node name="Below03" type="TileMapLayer" parent="." unique_id=1822907948]
+
+[node name="Above01" type="TileMapLayer" parent="." unique_id=125403103]
+
+[node name="Above02" type="TileMapLayer" parent="." unique_id=1569375893]
+
+[node name="Above03" type="TileMapLayer" parent="." unique_id=145512786]
