@@ -7,12 +7,11 @@ var is_walking: bool = false
 var _pending_idle: bool = false
 
 
-func _init(id: int, identifier: String, sprite_identifier: String, spritesheet_cols: int, spritesheet_rows: int, map_id: int, map_position: Vector2i, direction: Vector2i) -> void:
+func _init(id: int, identifier: String, sprite_identifier: String, spritesheet_cols: int, spritesheet_rows: int, map_position: Vector2i, direction: Vector2i) -> void:
 	super(id, identifier, sprite_identifier, spritesheet_cols, spritesheet_rows)
 
-	self.map_id = map_id
-	self.map_position = map_position
-	self.direction = direction
+	self._map_position = map_position
+	self._direction = direction
 
 
 func _ready() -> void:
@@ -29,13 +28,24 @@ func _physics_process(delta: float) -> void:
 	super(delta)
 
 
-func move_to(new_direction: Vector2i) -> void:
+func set_direction(new_direction: Vector2i) -> void:
+	if _direction == new_direction:
+		return
+
+	_direction = new_direction
+
+	if not is_walking and _animator:
+		_animator.play(_animation_name("idle"))
+
+
+func move_to(map: Map, new_direction: Vector2i) -> void:
 	if is_walking:
 		return
 
-	var target: Vector2i = map_position + new_direction
 
-	if not _can_move_to(target):
+
+	var target: Vector2i = _map_position + new_direction
+	if not _can_move_to(map, target):
 		return
 
 	_execute_move(new_direction)
@@ -74,8 +84,8 @@ func _play_walk() -> void:
 func _advance_step(delta: float) -> void:
 	var step: float = Constants.WALKING_SPEED * delta * Constants.TILE_SIZE
 
-	visual_offset = visual_offset.move_toward(Vector2.ZERO, step)
-	if not visual_offset.is_zero_approx():
+	_visual_offset = _visual_offset.move_toward(Vector2.ZERO, step)
+	if not _visual_offset.is_zero_approx():
 		return
 
 	is_walking = false
@@ -83,17 +93,26 @@ func _advance_step(delta: float) -> void:
 
 
 func _execute_move(new_direction: Vector2i) -> void:
-	map_position += new_direction
+	_map_position += new_direction
 
-	visual_offset = Vector2(-new_direction * Constants.TILE_SIZE)
-
-	direction = new_direction
+	_visual_offset = Vector2(-new_direction * Constants.TILE_SIZE)
+	_direction = new_direction
 
 	is_walking = true
 	_play_walk()
 
 
-func _can_move_to(_target: Vector2i) -> bool:
+func _can_move_to(map: Map, target: Vector2i) -> bool:
+	if not map.is_within_bounds(target):
+		return false
+
+	if map.is_solid(target):
+		return false
+
+	var direction: Vector2i = target - _map_position
+	if not map.can_pass(_map_position, direction):
+		return false
+
 	return true
 
 

@@ -9,13 +9,12 @@ var sprite_identifier: String
 var spritesheet_cols: int = 4
 var spritesheet_rows: int = 4
 
-var map_id: int
-var map_position: Vector2i
+var _map_position: Vector2i
 
 var _visual_anchor: Vector2i = Vector2i.ZERO
-var visual_offset: Vector2 = Vector2.ZERO
+var _visual_offset: Vector2 = Vector2.ZERO
 
-var direction: Vector2i
+var _direction: Vector2i
 
 var _animator: CharacterAnimator
 var _nameplate: CharacterNameplate
@@ -49,7 +48,7 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	var target: Vector2 = Vector2(map_position * Constants.TILE_SIZE) + visual_offset
+	var target: Vector2 = Vector2(_map_position * Constants.TILE_SIZE) + _visual_offset
 	position = target.round()
 
 
@@ -74,7 +73,7 @@ func _play_idle() -> void:
 
 func _animation_name(prefix: String) -> String:
 	var row: String = ""
-	match direction:
+	match _direction:
 		Vector2i.DOWN:
 			row = "down"
 		Vector2i.LEFT:

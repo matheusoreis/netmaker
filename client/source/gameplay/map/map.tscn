@@ -6,19 +6,28 @@
 script = ExtResource("1_4cnpj")
 
 [node name="Ground01" type="TileMapLayer" parent="." unique_id=1614143151]
+unique_name_in_owner = true
 
 [node name="Ground02" type="TileMapLayer" parent="." unique_id=1908041246]
+unique_name_in_owner = true
 
 [node name="Ground03" type="TileMapLayer" parent="." unique_id=1813531441]
+unique_name_in_owner = true
 
 [node name="Below01" type="TileMapLayer" parent="." unique_id=1520795136]
+unique_name_in_owner = true
 
 [node name="Below02" type="TileMapLayer" parent="." unique_id=2029307786]
+unique_name_in_owner = true
 
 [node name="Below03" type="TileMapLayer" parent="." unique_id=1822907948]
+unique_name_in_owner = true
 
 [node name="Above01" type="TileMapLayer" parent="." unique_id=125403103]
+unique_name_in_owner = true
 
 [node name="Above02" type="TileMapLayer" parent="." unique_id=1569375893]
+unique_name_in_owner = true
 
 [node name="Above03" type="TileMapLayer" parent="." unique_id=145512786]
+unique_name_in_owner = true

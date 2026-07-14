@@ -5,7 +5,6 @@ var actor_id: int = -1
 
 
 var _map: Map = null
-
 var _actors: Dictionary[int, Actor]
 
 

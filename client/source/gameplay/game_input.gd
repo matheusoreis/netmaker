@@ -1,6 +1,5 @@
 extends Node
 
-
 const JOYSTICK_DEAD_ZONE: float = 0.5
 
 
@@ -14,7 +13,11 @@ func _handle_movement() -> void:
 		return
 
 	var actor: Actor = GameSystem.get_actor(actor_id)
-	if actor == null or actor.is_walking:
+	if actor == null:
+		return
+
+	var map: Map = GameSystem.get_map()
+	if map == null:
 		return
 
 	var input: Vector2 = Input.get_vector(
@@ -24,12 +27,14 @@ func _handle_movement() -> void:
 		"walking_down"
 	)
 
+	if input.length() < JOYSTICK_DEAD_ZONE:
+		return
+
 	var direction: Vector2i = Vector2i.ZERO
 
-	if input.length() >= JOYSTICK_DEAD_ZONE:
-		if abs(input.x) > abs(input.y):
-			direction = Vector2i.RIGHT if input.x > 0 else Vector2i.LEFT
-		else:
-			direction = Vector2i.DOWN if input.y > 0 else Vector2i.UP
+	if abs(input.x) > abs(input.y):
+		direction = Vector2i.RIGHT if input.x > 0 else Vector2i.LEFT
+	else:
+		direction = Vector2i.DOWN if input.y > 0 else Vector2i.UP
 
-	actor.move(direction)
+	actor.move_to(map, direction)
