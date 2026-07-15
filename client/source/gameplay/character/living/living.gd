@@ -80,6 +80,11 @@ func _advance_step(delta: float) -> void:
 
 	is_walking = false
 	_play_idle()
+	_on_step_completed()
+
+
+func _on_step_completed() -> void:
+	pass
 
 
 func _execute_move(new_direction: Vector2i) -> void:

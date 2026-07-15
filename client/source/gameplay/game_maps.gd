@@ -17,11 +17,12 @@ func load_map(map_name: String) -> Map:
 	var map_scene: PackedScene = load(path)
 	var map: Map = map_scene.instantiate()
 
-	if _current_map:
-		_current_map.queue_free()
-		_current_map = null
-
+	var old_map: Map = _current_map
 	_current_map = map
+
+	if old_map:
+		old_map.queue_free()
+
 	return map
 
 

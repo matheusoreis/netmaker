@@ -22,6 +22,8 @@ class_name Map
 @export var width: int
 @export var height: int
 
+@export var teleports: Dictionary[Vector2i, Teleport] = {}
+
 var _collisions: Dictionary[Vector2i, int] = {}
 
 
@@ -80,6 +82,14 @@ func write_collisions(data: Array) -> void:
 		var cell: Vector2i = Vector2i(entry[0], entry[1])
 		var flag: int = entry[2]
 		_collisions[cell] = flag
+
+
+func read_teleport(cell: Vector2i) -> Teleport:
+	return teleports.get(cell, null)
+
+
+func has_teleport(cell: Vector2i) -> bool:
+	return teleports.has(cell)
 
 
 func is_within_bounds(pos: Vector2i) -> bool:
