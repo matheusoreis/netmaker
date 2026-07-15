@@ -50,20 +50,14 @@ func play_bgm(name: String, volume: float = 1.0, pitch: float = 1.0, loop: bool 
 	_bgm_player.stream = stream
 	_bgm_player.volume_db = _linear_to_db(volume)
 	_bgm_player.pitch_scale = pitch
-	_bgm_player.finished.connect(_on_bgm_finished.bind(loop))
+	_bgm_player.stream.loop = loop
 	_bgm_player.play()
-
-
-func _on_bgm_finished(loop: bool) -> void:
-	if loop and not _playing_bgm.is_empty():
-		_bgm_player.play()
 
 
 func stop_bgm() -> void:
 	_playing_bgm = ""
 	_bgm_player.stop()
 	_bgm_player.stream = null
-	_bgm_player.finished.disconnect(_on_bgm_finished)
 
 
 func fade_bgm(time: float) -> void:
@@ -100,20 +94,14 @@ func play_bgs(name: String, volume: float = 1.0, pitch: float = 1.0, loop: bool 
 	_bgs_player.stream = stream
 	_bgs_player.volume_db = _linear_to_db(volume)
 	_bgs_player.pitch_scale = pitch
-	_bgs_player.finished.connect(_on_bgs_finished.bind(loop))
+	_bgs_player.stream.loop = loop
 	_bgs_player.play()
-
-
-func _on_bgs_finished(loop: bool) -> void:
-	if loop and not _playing_bgs.is_empty():
-		_bgs_player.play()
 
 
 func stop_bgs() -> void:
 	_playing_bgs = ""
 	_bgs_player.stop()
 	_bgs_player.stream = null
-	_bgs_player.finished.disconnect(_on_bgs_finished)
 
 
 func fade_bgs(time: float) -> void:
@@ -149,6 +137,7 @@ func play_me(name: String, volume: float = 1.0, pitch: float = 1.0) -> void:
 	_me_player.stream = stream
 	_me_player.volume_db = _linear_to_db(volume)
 	_me_player.pitch_scale = pitch
+	_me_player.stream.loop = false
 	_me_player.play()
 
 
@@ -166,6 +155,7 @@ func play_se(name: String, volume: float = 1.0, pitch: float = 1.0) -> void:
 	_se_player.stream = stream
 	_se_player.volume_db = _linear_to_db(volume)
 	_se_player.pitch_scale = pitch
+	_se_player.stream.loop = false
 	_se_player.play()
 
 
