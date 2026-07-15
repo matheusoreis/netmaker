@@ -15,7 +15,6 @@ var shader_material: ShaderMaterial
 var _enabled: bool = true
 var _aa_scale: float = DEFAULT_AA_SCALE
 
-
 var _managed_nodes: Dictionary = {}
 
 
