@@ -53,7 +53,8 @@ func _physics_process(_delta: float) -> void:
 
 
 func read_overhead_anchor() -> Vector2:
-	return Vector2(Constants.TILE_SIZE / 2.0, _visual_anchor.y)
+	var sprite_height: float = _get_sprite_height()
+	return Vector2(Constants.TILE_SIZE / 2.0, _visual_anchor.y - sprite_height)
 
 
 func read_map_position() -> Vector2i:
@@ -86,6 +87,23 @@ func write_direction(value: Vector2i) -> void:
 
 func write_visual_offset(value: Vector2) -> void:
 	_visual_offset = value
+
+
+func _get_sprite_height() -> float:
+	if not _animator:
+		return 0.0
+
+	var sprite: Sprite2D = _animator.read_sprite()
+	if not sprite:
+		return 0.0
+
+	var texture: Texture2D = sprite.texture
+	if not texture:
+		return 0.0
+
+	var frame_height: float = texture.get_height() / float(spritesheet_rows)
+	print(frame_height)
+	return frame_height
 
 
 func _register_animations() -> void:

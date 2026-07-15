@@ -7,7 +7,7 @@ const PADDING_Y: float = 2.0
 
 const FONT_SIZE: int = 12
 
-const OFFSET_Y: float = -18.0
+const OFFSET_Y: float = 30
 
 const BG_COLOR: Color = Color(0.15, 0.15, 0.15, 0.7)
 const TEXT_COLOR: Color = Color(1.0, 1.0, 1.0, 1.0)

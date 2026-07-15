@@ -11,7 +11,7 @@ func _ready() -> void:
 	if map == null:
 		return
 
-	var actor: Actor = Actor.new(1, "Raizen", "fighter01", 4, 4, map.start_position, map.start_direction)
+	var actor: Actor = Actor.new(1, "Raizen", "monster13", 4, 4, map.start_position, map.start_direction)
 	actor.name = "Actor1"
 
 	GameActors.add_actor(map, actor)
