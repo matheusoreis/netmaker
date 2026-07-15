@@ -3,11 +3,11 @@ class_name ActorCamera
 
 
 func _ready() -> void:
-	zoom = Vector2(1, 1)
+	zoom = Vector2(2, 2)
 
 
 func set_map_limits(map: Map) -> void:
-	var pixel_size: Vector2i = map.get_pixel_size()
+	var pixel_size: Vector2i = map.read_pixel_size()
 
 	limit_left = 0
 	limit_top = 0

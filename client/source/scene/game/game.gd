@@ -17,7 +17,7 @@ func _ready() -> void:
 	GameActors.add_actor(actor)
 	GameActors.actor_id = 1
 
-	actor.set_local(true if GameActors.actor_id == actor.id else false)
+	actor.write_is_local(true if GameActors.actor_id == actor.id else false)
 
 	add_child(map)
 	map.add_child(actor)

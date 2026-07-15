@@ -32,7 +32,7 @@ func _init(id: int, identifier: String, sprite_identifier: String, spritesheet_c
 
 
 func _ready() -> void:
-	var texture: Texture2D = _get_entity_texture(sprite_identifier)
+	var texture: Texture2D = _load_entity_texture(sprite_identifier)
 	if texture == null:
 		return
 
@@ -53,7 +53,7 @@ func _physics_process(_delta: float) -> void:
 
 
 func read_overhead_anchor() -> Vector2:
-	var sprite_height: float = _get_sprite_height()
+	var sprite_height: float = _calculate_sprite_height()
 	return Vector2(Constants.TILE_SIZE / 2.0, _visual_anchor.y - sprite_height)
 
 
@@ -89,7 +89,7 @@ func write_visual_offset(value: Vector2) -> void:
 	_visual_offset = value
 
 
-func _get_sprite_height() -> float:
+func _calculate_sprite_height() -> float:
 	if not _animator:
 		return 0.0
 
@@ -102,7 +102,6 @@ func _get_sprite_height() -> float:
 		return 0.0
 
 	var frame_height: float = texture.get_height() / float(spritesheet_rows)
-	print(frame_height)
 	return frame_height
 
 
@@ -136,7 +135,7 @@ func _animation_name(prefix: String) -> String:
 	return prefix + "_" + row
 
 
-func _get_entity_texture(sprite: String) -> Texture2D:
+func _load_entity_texture(sprite: String) -> Texture2D:
 	var path: String = "res://assets/gfx/actor/%s.png" % sprite.to_lower()
 
 	if not ResourceLoader.exists(path):

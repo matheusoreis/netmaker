@@ -5,6 +5,7 @@ const JOYSTICK_DEAD_ZONE: float = 0.5
 
 func _physics_process(_delta: float) -> void:
 	_handle_movement()
+	_handle_no_pixel()
 
 
 func _handle_movement() -> void:
@@ -38,3 +39,8 @@ func _handle_movement() -> void:
 		direction = Vector2i.DOWN if input.y > 0 else Vector2i.UP
 
 	actor.move_to(map, direction)
+
+
+func _handle_no_pixel() -> void:
+	if Input.is_action_just_pressed("nopixel"):
+		GameNopixel.toggle_enabled()
