@@ -1,33 +1,47 @@
 [gd_scene format=3 uid="uid://2hkbiwnp1kre"]
 
 [ext_resource type="Script" uid="uid://bavcmx0pay0a1" path="res://source/gameplay/map/map.gd" id="1_4cnpj"]
+[ext_resource type="TileSet" uid="uid://b7nwh8j8f530r" path="res://data/tilesets/tileset.tres" id="2_b1v8w"]
 
 [node name="Map" type="Node2D" unique_id=1869527112]
+y_sort_enabled = true
 script = ExtResource("1_4cnpj")
 
 [node name="Ground01" type="TileMapLayer" parent="." unique_id=1614143151]
 unique_name_in_owner = true
+tile_set = ExtResource("2_b1v8w")
 
 [node name="Ground02" type="TileMapLayer" parent="." unique_id=1908041246]
 unique_name_in_owner = true
+tile_set = ExtResource("2_b1v8w")
 
 [node name="Ground03" type="TileMapLayer" parent="." unique_id=1813531441]
 unique_name_in_owner = true
+tile_set = ExtResource("2_b1v8w")
 
 [node name="Below01" type="TileMapLayer" parent="." unique_id=1520795136]
 unique_name_in_owner = true
+tile_set = ExtResource("2_b1v8w")
 
 [node name="Below02" type="TileMapLayer" parent="." unique_id=2029307786]
 unique_name_in_owner = true
+tile_set = ExtResource("2_b1v8w")
 
 [node name="Below03" type="TileMapLayer" parent="." unique_id=1822907948]
 unique_name_in_owner = true
+tile_set = ExtResource("2_b1v8w")
 
 [node name="Above01" type="TileMapLayer" parent="." unique_id=125403103]
 unique_name_in_owner = true
+y_sort_enabled = true
+tile_set = ExtResource("2_b1v8w")
 
 [node name="Above02" type="TileMapLayer" parent="." unique_id=1569375893]
 unique_name_in_owner = true
+y_sort_enabled = true
+tile_set = ExtResource("2_b1v8w")
 
 [node name="Above03" type="TileMapLayer" parent="." unique_id=145512786]
 unique_name_in_owner = true
+y_sort_enabled = true
+tile_set = ExtResource("2_b1v8w")

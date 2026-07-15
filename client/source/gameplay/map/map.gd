@@ -15,47 +15,42 @@ class_name Map
 @onready var above_03: TileMapLayer = $Above03
 
 
-var _id: int
-var _identifier: String
-var _start_position: Vector2i
-var _start_direction: Vector2i
-var _width: int
-var _height: int
+@export var id: int
+@export var identifier: String
+@export var start_position: Vector2i
+@export var start_direction: Vector2i
+@export var width: int
+@export var height: int
 
 var _collisions: Dictionary[Vector2i, int] = {}
 
 
-func setup(id: int, identifier: String, start_position: Vector2i, start_direction: Vector2i, width: int, height: int) -> void:
-	_id = id
-	_identifier = identifier
-	_start_position = start_position
-	_start_direction = start_direction
-	_width = width
-	_height = height
+func _ready() -> void:
+	_load_collisions()
 
 
 func read_id() -> int:
-	return _id
+	return id
 
 
 func read_identifier() -> String:
-	return _identifier
+	return identifier
 
 
 func read_start_position() -> Vector2i:
-	return _start_position
+	return start_position
 
 
 func read_start_direction() -> Vector2i:
-	return _start_direction
+	return start_direction
 
 
 func read_width() -> int:
-	return _width
+	return width
 
 
 func read_height() -> int:
-	return _height
+	return height
 
 
 func read_collisions() -> Dictionary:
@@ -73,8 +68,32 @@ func _get_layers() -> Array[TileMapLayer]:
 	]
 
 
+func _load_collisions() -> void:
+	_collisions.clear()
+
+	for layer: TileMapLayer in _get_layers():
+		if not layer:
+			continue
+
+		var used_cells: Array[Vector2i] = layer.get_used_cells()
+		for cell: Vector2i in used_cells:
+			var collision_flag: int = _get_collision_from_tile(layer, cell)
+			if collision_flag != Constants.CELL_COLLISION_NONE:
+				var current_flag: int = _collisions.get(cell, Constants.CELL_COLLISION_NONE)
+				_collisions[cell] = current_flag | collision_flag
+
+
+func _get_collision_from_tile(layer: TileMapLayer, cell: Vector2i) -> int:
+	var tile_data: TileData = layer.get_cell_tile_data(cell)
+	if not tile_data:
+		return Constants.CELL_COLLISION_NONE
+
+	var collision_value: int = tile_data.get_custom_data("collision")
+	return collision_value
+
+
 func is_within_bounds(pos: Vector2i) -> bool:
-	return pos.x >= 0 and pos.x < _width and pos.y >= 0 and pos.y < _height
+	return pos.x >= 0 and pos.x < width and pos.y >= 0 and pos.y < height
 
 
 func to_screen(cell: Vector2i) -> Vector2:
@@ -209,3 +228,5 @@ func import_map(data: Array) -> void:
 			var alt_tile: int = cell_data[5]
 
 			layer.set_cell(cell, source_id, atlas_coord, alt_tile)
+
+	_load_collisions()

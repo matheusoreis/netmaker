@@ -17,7 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GameSystem="*uid://g3fumtvm3wc6"
+GameMaps="*uid://b64l07a62sj5y"
+GameActors="*uid://be8jntdl1di5j"
 GameAudio="*uid://cai0xysbnvblb"
 GameInput="*uid://bcostohgf3pbx"
 Network="*uid://c6nbvphrpvamb"

@@ -8,15 +8,15 @@ func _physics_process(_delta: float) -> void:
 
 
 func _handle_movement() -> void:
-	var actor_id: int = GameSystem.actor_id
+	var actor_id: int = GameActors.actor_id
 	if actor_id == null:
 		return
 
-	var actor: Actor = GameSystem.get_actor(actor_id)
+	var actor: Actor = GameActors.read_actor(actor_id)
 	if actor == null:
 		return
 
-	var map: Map = GameSystem.get_map()
+	var map: Map = GameMaps.read_map()
 	if map == null:
 		return
 

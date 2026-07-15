@@ -15,4 +15,4 @@ func _ready() -> void:
 
 
 func _is_local_actor() -> bool:
-	return true if GameSystem.actor_id == self.id else false
+	return true if GameActors.actor_id == self.id else false
