@@ -12,6 +12,7 @@ metadata/_custom_type_script = "uid://cwj4d6li05mm8"
 [node name="Map" unique_id=1869527112 instance=ExtResource("1_ndw1w")]
 id = 1
 identifier = "Floresta"
+bgm = "theme02"
 start_position = Vector2i(5, 5)
 start_direction = Vector2i(0, 1)
 width = 40

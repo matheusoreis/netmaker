@@ -17,6 +17,7 @@ class_name Map
 
 @export var id: int
 @export var identifier: String
+@export var bgm: String
 @export var start_position: Vector2i
 @export var start_direction: Vector2i
 @export var width: int
@@ -29,6 +30,8 @@ var _collisions: Dictionary[Vector2i, int] = {}
 
 func _ready() -> void:
 	_load_collisions()
+
+	GameAudio.play_bgm(bgm, 0.5)
 
 
 func read_id() -> int:
