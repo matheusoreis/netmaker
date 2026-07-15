@@ -68,6 +68,10 @@ func _get_layers() -> Array[TileMapLayer]:
 	]
 
 
+func get_pixel_size() -> Vector2i:
+	return Vector2i(width * Constants.TILE_SIZE, height * Constants.TILE_SIZE)
+
+
 func _load_collisions() -> void:
 	_collisions.clear()
 

@@ -1,18 +1,7 @@
 extends Scene
-class_name MenuScene
+class_name Menu
 
 
-func _ready() -> void:
-	super()
-
-	GameMaps.load_map("01")
-
-	var map: Map = GameMaps.read_map()
-	if map == null:
-		return
-
-	var actor: Actor = Actor.new(1, "Raizen", "monster13", 4, 4, map.start_position, map.start_direction)
-	actor.name = "Actor1"
-
-	GameActors.add_actor(map, actor)
-	GameActors.actor_id = 1
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_accept"):
+		GameScenes.push_scene("game")
