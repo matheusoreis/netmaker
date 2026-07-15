@@ -14,5 +14,5 @@ func _ready() -> void:
 	var actor: Actor = Actor.new(1, "Raizen", "fighter01", 4, 4, map.start_position, map.start_direction)
 	actor.name = "Actor1"
 
-	GameActors.add_actor(actor)
+	GameActors.add_actor(map, actor)
 	GameActors.actor_id = 1

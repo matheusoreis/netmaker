@@ -6,14 +6,15 @@ var _actors: Dictionary[int, Actor] = {}
 var actor_id: int = -1
 
 
-func add_actor(actor: Actor) -> void:
+func add_actor(map: Map, actor: Actor) -> void:
 	var id: int = actor.id
 
 	if _actors.has(id):
 		return
 
 	_actors[id] = actor
-	add_child(actor)
+
+	map.add_child(actor)
 
 
 func read_actor(id: int) -> Actor:
