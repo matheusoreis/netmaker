@@ -2,6 +2,9 @@ extends Node
 class_name Constants
 
 
+const MAPS_PATH: String = "res://data/maps/"
+
+
 const HOST: String = "127.0.0.1"
 const PORT: int = 7001
 

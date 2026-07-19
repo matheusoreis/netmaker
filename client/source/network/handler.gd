@@ -3,84 +3,118 @@ extends Node
 
 func setup() -> Error:
 	return Network.register([
-		enter_map,
-		player_joined,
-		player_left,
-		player_moved,
-		move_rejected
+		map_data,
+		map_collisions,
+		receive_actors,
+		receive_actor,
+		actor_moved,
+		move_rejected,
+		actor_left,
 	])
 
 
-func enter_map(actor_id: int, data: Array, actors: Array) -> void:
-	GameActors.actor_id = actor_id
-
-	var map_id: int = data[0]
-	var map_name: String = data[1]
-	var start_position: Vector2i = data[2]
-	var start_direction: Vector2i = data[3]
+func map_data(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int) -> void:
+	GameMaps.load_map(id, identifier, bgm, bgs, width, height)
 
 	var scene: Scene = GameScenes.read_current_scene()
-	var map: Map = GameMaps.load_map(map_name)
-	if map:
-		scene.add_child(map)
-
-	for entry: Array in actors:
-		var index: int = entry[0]
-		var id: int = entry[1]
-		var identifier: String = entry[2]
-		var sprite: String = entry[3]
-		var access: int = entry[4]
-		var entry_map_name: String = str(entry[5])  # Pode ser int ou string
-		var position: Vector2i = entry[6]
-		var direction: Vector2i = entry[7]
-
-		var actor: Actor = Actor.new(id, identifier, sprite, 4, 4, position, direction)
-		actor.name = "Actor%d" % id
-
-		if id == actor_id:
-			actor.write_is_local(true)
-			actor.setup_camera(map)
-
-		GameActors.add_actor(actor)
-		map.add_child(actor)
-
-
-func player_joined(peer_id: int, id: int, identifier: String, sprite: String, access: int, map_id: int, position: Vector2i, direction: Vector2i) -> void:
-	# Verificar se o actor já existe (evitar duplicatas)
-	if GameActors.has_actor(id):
+	if scene == null:
 		return
 
-	var actor: Actor = Actor.new(id, identifier, sprite, 4, 4, position, direction)
-	actor.name = "Actor%d" % id
-
-	GameActors.add_actor(actor)
-
-	var map: Map = GameMaps.read_map()
-	if map:
-		map.add_child(actor)
-
-
-func player_left(peer_id: int) -> void:
-	GameActors.remove_actor(peer_id)
-
-
-func player_moved(peer_id: int, direction: Vector2i) -> void:
-	var actor: Actor = GameActors.read_actor(peer_id)
-	if not actor:
+	var map: Map = GameMaps.current_map()
+	if map == null:
 		return
 
-	var map: Map = GameMaps.read_map()
+	scene.add_child(map)
+
+
+func map_collisions(collision_data: Array) -> void:
+	var map: Map = GameMaps.current_map()
+	if map == null:
+		return
+
+	map.set_collisions(collision_data)
+
+
+func receive_actors(actors_data: Array) -> void:
+	var map: Map = GameMaps.current_map()
 	if not map:
 		return
 
-	actor.move_to(map, direction)
+	for actor_data in actors_data:
+		var actor = Actor.new(
+			actor_data[0],  # id
+			actor_data[1],  # identifier
+			actor_data[2],  # spritesheet
+			actor_data[3],  # spritesheet_cols
+			actor_data[4],  # spritesheet_rows
+			actor_data[5],  # map_id
+			actor_data[6],  # map_position
+			actor_data[7],  # map_direction
+			actor_data[8]   # access
+		)
+
+		actor.name = "Actor_%d" % actor.id
+
+		# Usa a flag enviada pelo servidor
+		if actor_data[9]:  # is_local
+			actor.is_local = true
+			actor.setup_camera(map)
+			GameActors.set_local_actor(actor.id)
+
+		GameActors.add_actor(actor.id, actor)
+		map.add_child(actor)
 
 
-func move_rejected(position: Vector2i) -> void:
-	var actor: Actor = GameActors.read_actor(GameActors.actor_id)
+func receive_actor(actor_data: Array) -> void:
+	var map: Map = GameMaps.current_map()
+	if not map:
+		return
+
+	if GameActors.has_actor(actor_data[0]):
+		return
+
+	var actor = Actor.new(
+		actor_data[0],  # id
+		actor_data[1],  # identifier
+		actor_data[2],  # spritesheet
+		actor_data[3],  # spritesheet_cols
+		actor_data[4],  # spritesheet_rows
+		actor_data[5],  # map_id
+		actor_data[6],  # map_position
+		actor_data[7],  # map_direction
+		actor_data[8]   # access
+	)
+
+	actor.name = "Actor_%d" % actor.id
+
+	actor.is_local = false
+
+	GameActors.add_actor(actor.id, actor)
+	map.add_child(actor)
+
+
+func actor_moved(peer_id: int, direction: Vector2i) -> void:
+	var actor: Actor = GameActors.actor(peer_id)
 	if not actor:
 		return
 
-	actor.write_map_position(position)
-	actor.write_visual_offset(Vector2.ZERO)
-	actor._play_idle()
+	actor.move_to(direction)
+
+
+func move_rejected(position: Vector2i) -> void:
+	var actor: Actor = GameActors.local_actor()
+	if not actor:
+		return
+
+	# Volta para a posição anterior
+	actor.map_position = position
+
+
+func actor_left(peer_id: int) -> void:
+	var actor: Actor = GameActors.actor(peer_id)
+	if not actor:
+		return
+
+	# Remove o actor do mapa
+	actor.queue_free()
+	GameActors.remove_actor(peer_id)

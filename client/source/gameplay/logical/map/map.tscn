@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://2hkbiwnp1kre"]
 
-[ext_resource type="Script" uid="uid://bavcmx0pay0a1" path="res://source/gameplay/map/map.gd" id="1_4cnpj"]
+[ext_resource type="Script" uid="uid://bavcmx0pay0a1" path="res://source/gameplay/logical/map/map.gd" id="1_4cnpj"]
 [ext_resource type="TileSet" uid="uid://b7nwh8j8f530r" path="res://data/tilesets/tileset.tres" id="2_b1v8w"]
 
 [node name="Map" type="Node2D" unique_id=1869527112]

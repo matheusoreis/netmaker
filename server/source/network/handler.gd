@@ -5,6 +5,7 @@ func setup() -> Error:
 	return Network.register([
 		join,
 		move,
+		update_map
 	])
 
 
@@ -35,10 +36,10 @@ func join(identifier: String, spritesheet: String) -> void:
 	Sender.map_data(sender_id)
 
 	# Envia os outros para o novo jogador
-	Sender.send_actors(sender_id)
+	Sender.actors(sender_id)
 
 	# Envia para os outros que ele entrou
-	Sender.send_actor(sender_id)
+	Sender.actor(sender_id)
 
 
 func move(direction: Vector2i) -> void:
@@ -57,3 +58,30 @@ func move(direction: Vector2i) -> void:
 		return
 
 	Sender.move(sender_id, direction)
+
+
+func update_map(map_id: int, collision_data: Array) -> void:
+	var sender_id: int = Network.sender_id()
+
+	var actor: Actor = GameActors.actor(sender_id)
+	if actor == null or actor.access != Enums.ActorAccess.ADMINISTRATOR:
+		return
+
+	var map: Map = GameMaps.map(map_id)
+	if map == null:
+		return
+
+	map.set_collisions(collision_data)
+
+	var collision_resource = MapCollisionData.new()
+	collision_resource.from_map(map)
+
+	var path: String = Constants.MAPS_PATH + "collisions/map_%d.tres" % map_id
+	var error = ResourceSaver.save(collision_resource, path)
+
+	if error != OK:
+		return
+
+	print("[MAP] Colisões do mapa %d salvas com sucesso." % map_id)
+
+	Sender.map_collisions(sender_id)

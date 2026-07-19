@@ -5,7 +5,7 @@ class_name Game
 func _ready() -> void:
 	super()
 
-	Network.exec(&"join", ["Raizen", "fighter01"])
+	Sender.join("Raizen", "fighter01")
 #
 	#GameMaps.load_map("01")
 #

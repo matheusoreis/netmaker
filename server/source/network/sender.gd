@@ -15,6 +15,19 @@ func map_data(peer_id: int) -> void:
 	])
 
 
+func map_collisions(peer_id: int) -> void:
+	var actor: Actor = GameActors.actor(peer_id)
+	if actor == null:
+		return
+
+	var map: Map = GameMaps.map(actor.map_id)
+	if not map:
+		return
+
+	var collision_data = map.collisions_data()
+	Network.exec(peer_id, "map_collisions", [collision_data])
+
+
 func actors(peer_id: int) -> void:
 	var actor: Actor = GameActors.actor(peer_id)
 	if actor == null:
@@ -30,9 +43,11 @@ func actors(peer_id: int) -> void:
 			actor_data.spritesheet,
 			actor_data.spritesheet_cols,
 			actor_data.spritesheet_rows,
+			actor_data.map_id,
 			actor_data.map_position,
 			actor_data.map_direction,
-			actor_data.access
+			actor_data.access,
+			actor_data.id == peer_id
 		])
 
 	Network.exec(peer_id, "receive_actors", [actors_data])
@@ -52,6 +67,7 @@ func actor(peer_id: int) -> void:
 		actor.spritesheet,
 		actor.spritesheet_cols,
 		actor.spritesheet_rows,
+		actor.map_id,
 		actor.map_position,
 		actor.map_direction,
 		actor.access

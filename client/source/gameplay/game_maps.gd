@@ -1,32 +1,31 @@
 extends Node
 
 
-const MAPS_PATH: String = "res://data/maps/"
-
-
 var _current_map: Map = null
 
 
-func load_map(map_name: String) -> Map:
-	var path: String = MAPS_PATH + map_name + ".tscn"
+func load_map(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int) -> void:
+	var path: String = Constants.MAPS_PATH + "map_%d.tscn" % id
 
 	if not ResourceLoader.exists(path):
 		push_error("Mapa não encontrado: ", path)
-		return null
+		return
 
 	var map_scene: PackedScene = load(path)
 	var map: Map = map_scene.instantiate()
 
-	var old_map: Map = _current_map
+	map.setup(id, identifier, bgm, bgs, width, height)
+	_set_current_map(map)
+
+
+func _set_current_map(map: Map) -> void:
+	if _current_map:
+		_current_map.queue_free()
+
 	_current_map = map
 
-	if old_map:
-		old_map.queue_free()
 
-	return map
-
-
-func read_map() -> Map:
+func current_map() -> Map:
 	return _current_map
 
 

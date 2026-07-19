@@ -5,34 +5,38 @@ class_name Character
 var id: int
 var identifier: String
 
-var sprite_identifier: String
+var spritesheet: String
 var spritesheet_cols: int = 4
 var spritesheet_rows: int = 4
 
-var _map_position: Vector2i
+var map_id: int
+var map_position: Vector2i
+var map_direction: Vector2i
 
-var _visual_anchor: Vector2i = Vector2i.ZERO
-var _visual_offset: Vector2 = Vector2.ZERO
-
-var _direction: Vector2i
+var visual_anchor: Vector2i = Vector2i.ZERO
+var visual_offset: Vector2 = Vector2.ZERO
 
 var _animator: CharacterAnimator
 var _nameplate: CharacterNameplate
 
 
-func _init(id: int, identifier: String, sprite_identifier: String, spritesheet_cols: int, spritesheet_rows: int) -> void:
-	self.name = "Actor%d" % id
+func _init(id: int, identifier: String, spritesheet: String, spritesheet_cols: int, spritesheet_rows: int, map_id: int, map_position: Vector2i, map_direction: Vector2i) -> void:
+	self.name = "Actor_%d" % id
 
 	self.id = id
 	self.identifier = identifier
 
-	self.sprite_identifier = sprite_identifier
+	self.spritesheet = spritesheet
 	self.spritesheet_cols = spritesheet_cols
 	self.spritesheet_rows = spritesheet_rows
 
+	self.map_id = map_id
+	self.map_position = map_position
+	self.map_direction = map_direction
+
 
 func _ready() -> void:
-	var texture: Texture2D = _load_entity_texture(sprite_identifier)
+	var texture: Texture2D = _load_entity_texture(spritesheet)
 	if texture == null:
 		return
 
@@ -40,53 +44,30 @@ func _ready() -> void:
 	_animator.name = "Animator"
 	add_child(_animator)
 
-	_nameplate = CharacterNameplate.new(identifier, read_overhead_anchor())
+	_nameplate = CharacterNameplate.new(identifier, overhead_anchor())
 	_nameplate.name = "Nameplate"
 	add_child(_nameplate)
 
 	_register_animations()
+	_play_idle()
 
 
 func _physics_process(_delta: float) -> void:
-	var target: Vector2 = Vector2(_map_position * Constants.TILE_SIZE) + _visual_offset
+	var target: Vector2 = Vector2(map_position * Constants.TILE_SIZE) + visual_offset
 	position = target.round()
 
 
-func read_overhead_anchor() -> Vector2:
+func overhead_anchor() -> Vector2:
 	var sprite_height: float = _calculate_sprite_height()
-	return Vector2(Constants.TILE_SIZE / 2.0, _visual_anchor.y - sprite_height)
+	return Vector2(Constants.TILE_SIZE / 2.0, visual_anchor.y - sprite_height)
 
 
-func read_map_position() -> Vector2i:
-	return _map_position
-
-
-func read_direction() -> Vector2i:
-	return _direction
-
-
-func read_visual_offset() -> Vector2:
-	return _visual_offset
-
-
-func read_animator() -> CharacterAnimator:
+func animator() -> CharacterAnimator:
 	return _animator
 
 
-func read_nameplate() -> CharacterNameplate:
+func nameplate() -> CharacterNameplate:
 	return _nameplate
-
-
-func write_map_position(value: Vector2i) -> void:
-	_map_position = value
-
-
-func write_direction(value: Vector2i) -> void:
-	_direction = value
-
-
-func write_visual_offset(value: Vector2) -> void:
-	_visual_offset = value
 
 
 func _calculate_sprite_height() -> float:
@@ -111,6 +92,11 @@ func _register_animations() -> void:
 	_animator.register("idle_right", 8, 8, 1.0, true)
 	_animator.register("idle_up", 12, 12, 1.0, true)
 
+	_animator.register("walk_down", 0, 3, 6, true)
+	_animator.register("walk_left", 4, 7, 6, true)
+	_animator.register("walk_right", 8, 11, 6, true)
+	_animator.register("walk_up", 12, 15, 6, true)
+
 
 func _play_idle() -> void:
 	if not _animator:
@@ -120,17 +106,26 @@ func _play_idle() -> void:
 	_animator.play(animation)
 
 
+func _play_walk() -> void:
+	if not _animator:
+		return
+
+	_animator.play(_animation_name("walk"))
+
+
 func _animation_name(prefix: String) -> String:
 	var row: String = ""
-	match _direction:
-		Vector2i.DOWN:
-			row = "down"
-		Vector2i.LEFT:
-			row = "left"
-		Vector2i.RIGHT:
-			row = "right"
-		Vector2i.UP:
+	match map_direction:
+		Vector2i(0, -1):
 			row = "up"
+		Vector2i(0, 1):
+			row = "down"
+		Vector2i(-1, 0):
+			row = "left"
+		Vector2i(1, 0):
+			row = "right"
+		_:
+			row = "down"
 
 	return prefix + "_" + row
 
