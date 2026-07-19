@@ -2,10 +2,15 @@ extends RefCounted
 class_name Constants
 
 
+const MAPS_PATH: String = "res://data/maps/"
+
+
 const HOST: String = "*"
 const PORT: int = 7001
 
 const MAX_PEERS: int = 100
+
+const TILE_SIZE: int = 32
 
 const CELL_COLLISION_NONE: int = 0
 const CELL_COLLISION_FULL_BLOCK: int = 1

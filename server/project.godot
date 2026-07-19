@@ -23,6 +23,11 @@ Sender="*uid://uirg68540giq"
 GameMaps="*uid://d18iog41se57l"
 GameActors="*uid://cp1lf1g074rbv"
 
+[debug]
+
+gdscript/warnings/shadowed_variable=0
+gdscript/warnings/shadowed_variable_base_class=0
+
 [display]
 
 window/stretch/mode="canvas_items"
