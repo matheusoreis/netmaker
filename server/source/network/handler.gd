@@ -2,4 +2,16 @@ extends Node
 
 
 func setup() -> Error:
-	return OK
+	return Network.register([])
+
+
+func join() -> void:
+	pass
+
+
+func move() -> void:
+	pass
+
+
+func chat_message() -> void:
+	pass
