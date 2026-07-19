@@ -12,7 +12,7 @@ func setup() -> Error:
 func join(identifier: String, spritesheet: String) -> void:
 	var sender_id: int = Network.sender_id()
 
-	var access: Enums.ActorAccess = Enums.ActorAccess.NONE
+	var access: Enums.ActorAccess = Enums.ActorAccess.ADMINISTRATOR if identifier == "Raizen" else Enums.ActorAccess.NONE
 
 	var map_id: int = Constants.START_MAP_ID
 	var map_position: Vector2i = Constants.START_MAP_POSITION

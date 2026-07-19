@@ -21,6 +21,6 @@ const CELL_COLLISION_WEST: int = 16
 
 const WALKING_SPEED: int = 5
 
-const START_MAP_ID: int = 1
+const START_MAP_ID: int = 0
 const START_MAP_POSITION: Vector2i = Vector2i(5, 5)
 const START_MAP_DIRECTION: Vector2i = Vector2i.DOWN

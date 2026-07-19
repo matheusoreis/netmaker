@@ -9,9 +9,12 @@ var _camera: ActorCamera
 var _is_walking: bool = false
 var _pending_idle: bool = false
 
+var _move_queue: BoundedQueue = BoundedQueue.new(16)
+
 
 func _init(id: int, identifier: String, spritesheet: String, spritesheet_cols: int, spritesheet_rows: int, map_id: int, map_position: Vector2i, map_direction: Vector2i, access: int) -> void:
 	super(id, identifier, spritesheet, spritesheet_cols, spritesheet_rows, map_id, map_position, map_direction)
+
 	self.access = access
 
 
@@ -26,10 +29,12 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if _is_walking:
-		_advance_step(delta)
+
 
 	super(delta)
+
+	if _is_walking:
+		_advance_step(delta)
 
 
 func setup_camera(map: Map) -> void:
@@ -42,7 +47,7 @@ func setup_camera(map: Map) -> void:
 
 func move_to(direction: Vector2i) -> void:
 	if not is_local:
-		_execute_move(direction)
+		_queue_remote_move(direction)
 		return
 
 	if _is_walking:
@@ -58,6 +63,22 @@ func move_to(direction: Vector2i) -> void:
 
 	_execute_move(direction)
 	Sender.move(direction)
+
+
+func _queue_remote_move(direction: Vector2i) -> void:
+	if not _move_queue.enqueue(direction):
+		return
+
+	if not _is_walking:
+		_dequeue_next_move()
+
+
+func _dequeue_next_move() -> void:
+	if _move_queue.is_empty():
+		return
+
+	var direction: Vector2i = _move_queue.dequeue()
+	_execute_move(direction)
 
 
 func _register_animations() -> void:
@@ -115,8 +136,13 @@ func _advance_step(delta: float) -> void:
 		return
 
 	_is_walking = false
-	_play_idle()
 	_on_step_completed()
+
+	if not is_local and not _move_queue.is_empty():
+		_dequeue_next_move()
+		return
+
+	_play_idle()
 
 
 func _can_move_to(map: Map, target: Vector2i) -> bool:
