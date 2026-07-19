@@ -20,6 +20,8 @@ config/icon="res://icon.svg"
 Network="*uid://gpu2ohksco46"
 Handler="*uid://dj3ahkudgxd6q"
 Sender="*uid://uirg68540giq"
+GameMaps="*uid://d18iog41se57l"
+GameActors="*uid://cp1lf1g074rbv"
 
 [display]
 
