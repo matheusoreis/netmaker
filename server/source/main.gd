@@ -3,8 +3,6 @@ class_name Main
 
 
 func _ready() -> void:
-	GameLoader.load_all_maps()
-
 	Network.client_connected.connect(
 		_on_client_connected
 	)
@@ -12,6 +10,8 @@ func _ready() -> void:
 	Network.client_disconnected.connect(
 		_on_client_disconnected
 	)
+
+	_load_data()
 
 	if not setup_network():
 		push_error("[MAIN] Falha ao iniciar o servidor de rede.")
@@ -24,6 +24,10 @@ func _ready() -> void:
 
 func _physics_process(_delta: float) -> void:
 	Network.poll()
+
+
+func _load_data() -> void:
+	GameMaps.load_all_maps()
 
 
 func setup_network() -> bool:

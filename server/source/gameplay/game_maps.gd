@@ -1,6 +1,27 @@
 extends Node
 
+
 var _maps: Dictionary[int, Map] = {}
+
+
+func load_all_maps() -> void:
+	var dir = DirAccess.open(Constants.MAPS_PATH)
+	if not dir:
+		push_error("[MAP] Não foi possível abrir o diretório: ", Constants.MAPS_PATH)
+		return
+
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+
+	while file_name != "":
+		if file_name.ends_with(".tres") and file_name.begins_with("map_"):
+			var map_id = int(file_name.substr(4, 3))
+			load_map(map_id)
+		file_name = dir.get_next()
+
+	print("[MAP] %d Mapa(s) carregados com sucesso." % [_maps.size()])
+
+	dir.list_dir_end()
 
 
 func load_map(map_id: int) -> Map:
@@ -30,9 +51,6 @@ func load_map(map_id: int) -> Map:
 	if ResourceLoader.exists(collision_path):
 		var collision_resource: MapCollisionData = load(collision_path)
 		map.import_collisions(collision_resource)
-		print("[MAP] Mapa %s carregado com colisões." % [map_data.identifier])
-	else:
-		print("[MAP] Mapa %s carregado sem colisões." % [map_data.identifier])
 
 	_maps[map_id] = map
 	return map
