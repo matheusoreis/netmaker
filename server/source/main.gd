@@ -69,3 +69,20 @@ func _on_client_connected(peer_id: int) -> void:
 
 func _on_client_disconnected(peer_id: int) -> void:
 	print("[NETWORK] Cliente %d desconectado." % peer_id)
+
+	var actor: Actor = GameActors.actor(peer_id)
+	if actor == null:
+		return
+
+	var map: Map = GameMaps.map(actor.map_id)
+	if map == null:
+		return
+
+	# Remove do mapa
+	map.vacate(actor.map_position)
+
+	# Remove do cache
+	GameActors.remove_actor(peer_id)
+
+	# Notifica os outros
+	Sender.left(peer_id)

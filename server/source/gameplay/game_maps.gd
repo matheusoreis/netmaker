@@ -100,3 +100,11 @@ func get_all_map_ids() -> Array[int]:
 
 	dir.list_dir_end()
 	return ids
+
+
+func clear_map_blockers(map_id: int) -> void:
+	var map: Map = _maps.get(map_id)
+	if map == null:
+		return
+
+	map.clear_blockers()
