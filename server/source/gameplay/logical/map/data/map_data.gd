@@ -11,6 +11,3 @@ class_name MapData
 
 @export var width: int
 @export var height: int
-
-@export var start_position: Vector2i
-@export var start_direction: Vector2i

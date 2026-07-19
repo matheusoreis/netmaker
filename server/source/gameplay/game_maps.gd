@@ -1,6 +1,5 @@
 extends Node
 
-
 var _maps: Dictionary[int, Map] = {}
 
 
@@ -8,14 +7,14 @@ func load_map(map_id: int) -> Map:
 	if _maps.has(map_id):
 		return _maps[map_id]
 
-	var map_data_path: String = Constants.MAPS_PATH + "map_%d.tres" % str(map_id)
+	var map_data_path: String = Constants.MAPS_PATH + "map_%d.tres" % map_id
 	if not ResourceLoader.exists(map_data_path):
-		push_error("Mapa não encontrado: ", map_data_path)
+		push_error("[MAP] Mapa não encontrado: ", map_data_path)
 		return null
 
-	var map_data: Resource = load(map_data_path)
+	var map_data: MapData = load(map_data_path)
 	if not map_data:
-		push_error("Falha ao carregar mapa: ", map_data_path)
+		push_error("[MAP] Falha ao carregar mapa: ", map_data_path)
 		return null
 
 	var map = Map.new(
@@ -27,10 +26,13 @@ func load_map(map_id: int) -> Map:
 		map_data.height
 	)
 
-	var collision_path: String = Constants.MAPS_PATH + "collisions/map_%d.tres" % str(map_id)
+	var collision_path: String = Constants.MAPS_PATH + "collisions/map_%d.tres" % map_id
 	if ResourceLoader.exists(collision_path):
 		var collision_resource: MapCollisionData = load(collision_path)
 		map.import_collisions(collision_resource)
+		print("[MAP] Mapa %s carregado com colisões." % [map_data.identifier])
+	else:
+		print("[MAP] Mapa %s carregado sem colisões." % [map_data.identifier])
 
 	_maps[map_id] = map
 	return map
@@ -55,3 +57,28 @@ func unload_all() -> void:
 
 func loaded_maps() -> Array[int]:
 	return _maps.keys()
+
+
+func map_exists(map_id: int) -> bool:
+	var path: String = Constants.MAPS_PATH + "map_%d.tres" % map_id
+	return ResourceLoader.exists(path)
+
+
+func get_all_map_ids() -> Array[int]:
+	var ids: Array[int] = []
+	var dir = DirAccess.open(Constants.MAPS_PATH)
+	if not dir:
+		return ids
+
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+
+	while file_name != "":
+		if file_name.ends_with(".tres") and file_name.begins_with("map_"):
+			var map_id = int(file_name.substr(4, 3))
+			ids.append(map_id)
+
+		file_name = dir.get_next()
+
+	dir.list_dir_end()
+	return ids

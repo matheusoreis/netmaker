@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="MapData" format=3 uid="uid://2e48rcf13v7"]
+
+[ext_resource type="Script" uid="uid://dipigj7qh64li" path="res://source/gameplay/logical/map/data/map_data.gd" id="1_m6w8d"]
+
+[resource]
+script = ExtResource("1_m6w8d")
+id = 1
+identifier = "Floresta"
+bgm = "theme01"
+bgs = "theme02"
+width = 24
+height = 48
+metadata/_custom_type_script = "uid://dipigj7qh64li"

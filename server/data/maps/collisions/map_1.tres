@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="MapCollisionData" format=3 uid="uid://mmf25jbax74x"]
+
+[ext_resource type="Script" uid="uid://b70wq850cwul5" path="res://source/gameplay/logical/map/data/map_collision.gd" id="1_dpob3"]
+
+[resource]
+script = ExtResource("1_dpob3")
+metadata/_custom_type_script = "uid://b70wq850cwul5"

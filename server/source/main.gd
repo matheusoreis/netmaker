@@ -3,6 +3,8 @@ class_name Main
 
 
 func _ready() -> void:
+	GameLoader.load_all_maps()
+
 	Network.client_connected.connect(
 		_on_client_connected
 	)
