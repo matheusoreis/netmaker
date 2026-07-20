@@ -121,7 +121,7 @@ func _execute_move(direction: Vector2i) -> void:
 
 	var map: Map = GameMaps.current_map()
 	if map:
-		map.vacate(old_position)
+		map.vacate(old_position, id)
 		map.occupy(new_position, id)
 
 	_is_walking = true

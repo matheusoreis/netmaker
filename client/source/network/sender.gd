@@ -10,4 +10,4 @@ func move(direction: Vector2i) -> void:
 
 
 func update_map(map: Map) -> void:
-	Network.exec("update_map", [map.id, map.collisions_data()])
+	Network.exec("update_map", [map.id, map.collisions()])

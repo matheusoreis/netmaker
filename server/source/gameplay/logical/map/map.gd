@@ -36,17 +36,12 @@ func collision_flag(cell: Vector2i) -> int:
 	return _collisions.get(cell, Constants.CELL_COLLISION_NONE)
 
 
-func collisions_data() -> Array:
-	var data: Array = []
-	for cell: Vector2i in _collisions:
-		data.push_back([cell.x, cell.y, _collisions[cell]])
-	return data
+func collisions() -> Dictionary[Vector2i, int]:
+	return _collisions.duplicate()
 
 
-func set_collisions(data: Array) -> void:
-	_collisions.clear()
-	for entry: Array in data:
-		_collisions[Vector2i(entry[0], entry[1])] = entry[2]
+func set_collisions(data: Dictionary[Vector2i, int]) -> void:
+	_collisions = data.duplicate()
 
 
 func export_collisions() -> MapCollisionData:
@@ -59,35 +54,46 @@ func import_collisions(resource: MapCollisionData) -> void:
 	resource.apply_to_map(self)
 
 
-func is_within_bounds(pos: Vector2i) -> bool:
-	return pos.x >= 0 and pos.x < width and pos.y >= 0 and pos.y < height
+func clear_blockers() -> void:
+	_blockers.clear()
+
+
+func clear_collisions() -> void:
+	_collisions.clear()
+
+
+func is_within_bounds(position: Vector2i) -> bool:
+	return position.x >= 0 and position.x < width and position.y >= 0 and position.y < height
 
 
 func is_solid(cell: Vector2i) -> bool:
 	return (collision_flag(cell) & Constants.CELL_COLLISION_FULL_BLOCK) != 0
 
 
-func is_blocked(pos: Vector2i) -> bool:
-	return _blockers.has(pos)
+func is_blocked(position: Vector2i) -> bool:
+	return _blockers.has(position)
 
 
 func to_screen(cell: Vector2i) -> Vector2:
 	return Vector2(cell.x * Constants.TILE_SIZE, cell.y * Constants.TILE_SIZE)
 
 
-func to_tile(screen_pos: Vector2) -> Vector2i:
+func to_tile(screen_position: Vector2) -> Vector2i:
 	return Vector2i(
-		int(screen_pos.x / Constants.TILE_SIZE),
-		int(screen_pos.y / Constants.TILE_SIZE)
+		int(screen_position.x / Constants.TILE_SIZE),
+		int(screen_position.y / Constants.TILE_SIZE)
 	)
 
 
-func occupy(pos: Vector2i, entity_id: int) -> void:
-	_blockers[pos] = entity_id
+func occupy(position: Vector2i, entity_id: int) -> void:
+	_blockers[position] = entity_id
 
 
-func vacate(pos: Vector2i) -> void:
-	_blockers.erase(pos)
+func vacate(position: Vector2i, entity_id: int) -> void:
+	if _blockers.get(position, -1) != entity_id:
+		return
+
+	_blockers.erase(position)
 
 
 func can_pass(from: Vector2i, direction: Vector2i) -> bool:
@@ -109,8 +115,12 @@ func can_pass(from: Vector2i, direction: Vector2i) -> bool:
 		return false
 
 	var direction_flag: int = _direction_to_flag(direction)
+	var opposite_flag: int = _direction_to_flag(-direction)
 
 	if (from_flag & direction_flag) != 0:
+		return false
+
+	if (to_flag & opposite_flag) != 0:
 		return false
 
 	if abs(direction.x) == 1 and abs(direction.y) == 1:

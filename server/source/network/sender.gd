@@ -24,7 +24,7 @@ func map_collisions(peer_id: int) -> void:
 	if not map:
 		return
 
-	var collision_data = map.collisions_data()
+	var collision_data: Dictionary[Vector2i, int] = map.collisions()
 	Network.exec(peer_id, "map_collisions", [collision_data])
 
 
@@ -33,7 +33,7 @@ func actors(peer_id: int) -> void:
 	if actor == null:
 		return
 
-	var actors: Array[Actor] = GameActors.get_map_actors(actor.map_id)
+	var actors: Array[Actor] = GameActors.in_map(actor.map_id)
 
 	var actors_data: Array = []
 	for actor_data in actors:
@@ -58,7 +58,7 @@ func actor(peer_id: int) -> void:
 	if actor == null:
 		return
 
-	var other_peers: Array[int] = GameActors.get_actors_in_map(actor.map_id)
+	var other_peers: Array[int] = GameActors.peer_ids_in_map(actor.map_id)
 	other_peers.erase(peer_id)
 
 	var actor_data = [
@@ -82,7 +82,7 @@ func move(peer_id: int, direction: Vector2i) -> void:
 	if actor == null:
 		return
 
-	var targets: Array[int] = GameActors.get_actors_in_map(actor.map_id)
+	var targets: Array[int] = GameActors.peer_ids_in_map(actor.map_id)
 	targets.erase(peer_id)
 
 	Network.exec(targets, "actor_moved", [peer_id, direction])
@@ -101,7 +101,7 @@ func left(peer_id: int) -> void:
 	if actor == null:
 		return
 
-	var targets: Array[int] = GameActors.get_actors_in_map(actor.map_id)
+	var targets: Array[int] = GameActors.peer_ids_in_map(actor.map_id)
 	targets.erase(peer_id)
 
 	for target in targets:

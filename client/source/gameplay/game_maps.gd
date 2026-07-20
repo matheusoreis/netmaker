@@ -1,6 +1,5 @@
 extends Node
 
-
 var _current_map: Map = null
 
 

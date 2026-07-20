@@ -27,7 +27,7 @@ func map_data(id: int, identifier: String, bgm: String, bgs: String, width: int,
 	scene.add_child(map)
 
 
-func map_collisions(collision_data: Array) -> void:
+func map_collisions(collision_data: Dictionary) -> void:
 	var map: Map = GameMaps.current_map()
 	if map == null:
 		return
@@ -106,7 +106,6 @@ func move_rejected(position: Vector2i) -> void:
 	if not actor:
 		return
 
-	# Volta para a posição anterior
 	actor.map_position = position
 
 
@@ -115,6 +114,5 @@ func actor_left(peer_id: int) -> void:
 	if not actor:
 		return
 
-	# Remove o actor do mapa
 	actor.queue_free()
 	GameActors.remove_actor(peer_id)

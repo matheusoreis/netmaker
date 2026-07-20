@@ -13,7 +13,6 @@ func join(identifier: String, spritesheet: String) -> void:
 	var sender_id: int = Network.sender_id()
 
 	var access: Enums.ActorAccess = Enums.ActorAccess.ADMINISTRATOR if identifier == "Raizen" else Enums.ActorAccess.NONE
-
 	var map_id: int = Constants.START_MAP_ID
 	var map_position: Vector2i = Constants.START_MAP_POSITION
 	var map_direction: Vector2i = Constants.START_MAP_DIRECTION
@@ -29,8 +28,11 @@ func join(identifier: String, spritesheet: String) -> void:
 		access
 	)
 
-	# Spawna o novo jogador no servidor
-	GameActors.add_actor(sender_id, actor)
+	# Coloca o ator no mapa usando a abstração
+	GameMaps.place_occupant(map_id, map_position, sender_id)
+
+	# Adiciona o ator no gerenciador
+	GameActors.place(sender_id, actor)
 
 	# Envia os dados do mapa para o novo jogador
 	Sender.map_data(sender_id)
@@ -53,14 +55,32 @@ func move(direction: Vector2i) -> void:
 	if not map:
 		return
 
-	if not GameActors.move_actor(sender_id, direction, map):
+	if not map.can_pass(actor.map_position, direction):
 		Sender.move_rejected(sender_id)
 		return
 
-	Sender.move(sender_id, direction)
+	# Calcula nova posição
+	var new_position: Vector2i = actor.map_position + direction
+
+	# Remove da posição antiga
+	GameMaps.remove_occupant(actor.map_id, actor.map_position, sender_id)
+
+	# Coloca na nova posição
+	GameMaps.place_occupant(actor.map_id, new_position, sender_id)
+
+	# Atualiza a posição no ator
+	if GameActors.move(sender_id, new_position, direction):
+		Sender.move(sender_id, direction)
+		return
+
+	# Rollback em caso de falha
+	GameMaps.remove_occupant(actor.map_id, new_position, sender_id)
+	GameMaps.place_occupant(actor.map_id, actor.map_position, sender_id)
+
+	Sender.move_rejected(sender_id)
 
 
-func update_map(map_id: int, collision_data: Array) -> void:
+func update_map(map_id: int, collision_data: Dictionary) -> void:
 	var sender_id: int = Network.sender_id()
 
 	var actor: Actor = GameActors.actor(sender_id)
@@ -80,8 +100,9 @@ func update_map(map_id: int, collision_data: Array) -> void:
 	var error = ResourceSaver.save(collision_resource, path)
 
 	if error != OK:
+		push_error("[MAP] Falha ao salvar colisões do mapa %d: %s" % [map_id, error_string(error)])
 		return
 
 	print("[MAP] Colisões do mapa %d salvas com sucesso." % map_id)
 
-	Sender.map_collisions(sender_id)
+	Sender.map_collisions(map_id)

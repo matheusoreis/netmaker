@@ -27,7 +27,7 @@ func _physics_process(_delta: float) -> void:
 
 
 func _load_data() -> void:
-	GameMaps.load_all_maps()
+	GameMaps.load_all()
 
 
 func setup_network() -> bool:
@@ -71,18 +71,10 @@ func _on_client_disconnected(peer_id: int) -> void:
 	print("[NETWORK] Cliente %d desconectado." % peer_id)
 
 	var actor: Actor = GameActors.actor(peer_id)
-	if actor == null:
+	if not actor:
 		return
 
-	var map: Map = GameMaps.map(actor.map_id)
-	if map == null:
-		return
-
-	# Remove do mapa
-	map.vacate(actor.map_position)
-
-	# Remove do cache
-	GameActors.remove_actor(peer_id)
-
-	# Notifica os outros
 	Sender.left(peer_id)
+
+	GameMaps.remove_occupant(actor.map_id, actor.map_position, peer_id)
+	GameActors.remove(peer_id)
