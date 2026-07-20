@@ -27,11 +27,3 @@ func _init(id: int, identifier: String, spritesheet: String, spritesheet_cols: i
 	self.map_id = map_id
 	self.map_position = map_position
 	self.map_direction = map_direction
-
-
-func set_position(new_position: Vector2i) -> void:
-	map_position = new_position
-
-
-func set_direction(new_direction: Vector2i) -> void:
-	map_direction = new_direction

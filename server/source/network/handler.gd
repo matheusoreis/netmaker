@@ -28,10 +28,7 @@ func join(identifier: String, spritesheet: String) -> void:
 		access
 	)
 
-	# Coloca o ator no mapa usando a abstração
-	GameMaps.place_occupant(map_id, map_position, sender_id)
-
-	# Adiciona o ator no gerenciador
+	# Coloca o ator no gerenciador (que já sincroniza a ocupação no mapa)
 	GameActors.place(sender_id, actor)
 
 	# Envia os dados do mapa para o novo jogador
@@ -47,11 +44,11 @@ func join(identifier: String, spritesheet: String) -> void:
 func move(direction: Vector2i) -> void:
 	var sender_id: int = Network.sender_id()
 
-	var actor = GameActors.actor(sender_id)
+	var actor: Actor = GameActors.actor(sender_id)
 	if not actor:
 		return
 
-	var map = GameMaps.map(actor.map_id)
+	var map: Map = GameMaps.map(actor.map_id)
 	if not map:
 		return
 
@@ -59,25 +56,15 @@ func move(direction: Vector2i) -> void:
 		Sender.move_rejected(sender_id)
 		return
 
-	# Calcula nova posição
 	var new_position: Vector2i = actor.map_position + direction
 
-	# Remove da posição antiga
-	GameMaps.remove_occupant(actor.map_id, actor.map_position, sender_id)
-
-	# Coloca na nova posição
-	GameMaps.place_occupant(actor.map_id, new_position, sender_id)
-
-	# Atualiza a posição no ator
-	if GameActors.move(sender_id, new_position, direction):
-		Sender.move(sender_id, direction)
+	# GameActors.move() já sincroniza a ocupação (remove da posição antiga,
+	# ocupa a nova) e só retorna false se o ator não existir mais.
+	if not GameActors.move(sender_id, new_position, direction):
+		Sender.move_rejected(sender_id)
 		return
 
-	# Rollback em caso de falha
-	GameMaps.remove_occupant(actor.map_id, new_position, sender_id)
-	GameMaps.place_occupant(actor.map_id, actor.map_position, sender_id)
-
-	Sender.move_rejected(sender_id)
+	Sender.move(sender_id, direction)
 
 
 func update_map(map_id: int, collision_data: Dictionary) -> void:

@@ -76,5 +76,4 @@ func _on_client_disconnected(peer_id: int) -> void:
 
 	Sender.left(peer_id)
 
-	GameMaps.remove_occupant(actor.map_id, actor.map_position, peer_id)
 	GameActors.remove(peer_id)

@@ -12,17 +12,20 @@ var bgs: String
 var width: int
 var height: int
 
-var _blockers: Dictionary[Vector2i, int] = {}
+var actor_collision: bool = true
+
+var _actor_positions: Dictionary[Vector2i, Array] = {}
 var _collisions: Dictionary[Vector2i, int] = {}
 
 
-func _init(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int) -> void:
+func _init(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int, actor_collision: bool = true) -> void:
 	self.id = id
 	self.identifier = identifier
 	self.bgm = bgm
 	self.bgs = bgs
 	self.width = width
 	self.height = height
+	self.actor_collision = actor_collision
 
 
 func pixel_size() -> Vector2i:
@@ -54,8 +57,8 @@ func import_collisions(resource: MapCollisionData) -> void:
 	resource.apply_to_map(self)
 
 
-func clear_blockers() -> void:
-	_blockers.clear()
+func clear_actors() -> void:
+	_actor_positions.clear()
 
 
 func clear_collisions() -> void:
@@ -70,8 +73,16 @@ func is_solid(cell: Vector2i) -> bool:
 	return (collision_flag(cell) & Constants.CELL_COLLISION_FULL_BLOCK) != 0
 
 
-func is_blocked(position: Vector2i) -> bool:
-	return _blockers.has(position)
+func has_actor_at(position: Vector2i) -> bool:
+	return _actor_positions.has(position)
+
+
+## Retorna os peer_ids de todos os atores presentes nessa célula
+## (pode ter mais de um, ex: dois jogadores que entraram no mesmo spawn).
+func actors_at(position: Vector2i) -> Array[int]:
+	var occupants: Array[int] = []
+	occupants.assign(_actor_positions.get(position, []))
+	return occupants
 
 
 func to_screen(cell: Vector2i) -> Vector2:
@@ -85,15 +96,24 @@ func to_tile(screen_position: Vector2) -> Vector2i:
 	)
 
 
-func occupy(position: Vector2i, entity_id: int) -> void:
-	_blockers[position] = entity_id
+func place_actor(position: Vector2i, peer_id: int) -> void:
+	if not _actor_positions.has(position):
+		_actor_positions[position] = [] as Array[int]
+
+	var occupants: Array = _actor_positions[position]
+	if not occupants.has(peer_id):
+		occupants.append(peer_id)
 
 
-func vacate(position: Vector2i, entity_id: int) -> void:
-	if _blockers.get(position, -1) != entity_id:
+func remove_actor(position: Vector2i, peer_id: int) -> void:
+	if not _actor_positions.has(position):
 		return
 
-	_blockers.erase(position)
+	var occupants: Array = _actor_positions[position]
+	occupants.erase(peer_id)
+
+	if occupants.is_empty():
+		_actor_positions.erase(position)
 
 
 func can_pass(from: Vector2i, direction: Vector2i) -> bool:
@@ -102,7 +122,7 @@ func can_pass(from: Vector2i, direction: Vector2i) -> bool:
 	if not is_within_bounds(from) or not is_within_bounds(to):
 		return false
 
-	if is_blocked(to):
+	if actor_collision and has_actor_at(to):
 		return false
 
 	var from_flag: int = collision_flag(from)
