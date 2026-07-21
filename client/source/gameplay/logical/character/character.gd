@@ -19,6 +19,10 @@ var visual_offset: Vector2 = Vector2.ZERO
 var _animator: CharacterAnimator
 var _nameplate: CharacterNameplate
 
+var _is_walking: bool = false
+var _pending_idle: bool = false
+var _move_queue: BoundedQueue = BoundedQueue.new(32)
+
 
 func _init(id: int, identifier: String, spritesheet: String, spritesheet_cols: int, spritesheet_rows: int, map_id: int, map_position: Vector2i, map_direction: Vector2i) -> void:
 	self.name = "Actor_%d" % id
@@ -43,6 +47,7 @@ func _ready() -> void:
 	_animator = CharacterAnimator.new(texture, spritesheet_cols, spritesheet_rows)
 	_animator.name = "Animator"
 	add_child(_animator)
+	_animator.animation_ended.connect(_on_animation_ended)
 
 	_nameplate = CharacterNameplate.new(identifier, overhead_anchor())
 	_nameplate.name = "Nameplate"
@@ -52,9 +57,12 @@ func _ready() -> void:
 	_play_idle()
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	var target: Vector2 = Vector2(map_position * Constants.TILE_SIZE) + visual_offset
 	position = target.round()
+
+	if _is_walking:
+		_advance_step(delta)
 
 
 func overhead_anchor() -> Vector2:
@@ -68,6 +76,61 @@ func animator() -> CharacterAnimator:
 
 func nameplate() -> CharacterNameplate:
 	return _nameplate
+
+
+func move_to(direction: Vector2i) -> void:
+	if not _move_queue.enqueue(direction):
+		return
+
+	if not _is_walking:
+		_dequeue_next_move()
+
+
+func _dequeue_next_move() -> void:
+	if _move_queue.is_empty():
+		return
+
+	var direction: Vector2i = _move_queue.dequeue()
+	_execute_move(direction)
+
+
+func _execute_move(direction: Vector2i) -> void:
+	var old_position: Vector2i = map_position
+	var new_position: Vector2i = old_position + direction
+
+	visual_offset = Vector2(-direction * Constants.TILE_SIZE)
+	map_direction = direction
+	map_position = new_position
+
+	_sync_map_occupancy(old_position, new_position)
+
+	_is_walking = true
+	_play_walk()
+
+
+func _advance_step(delta: float) -> void:
+	var step: float = Constants.WALKING_SPEED * delta * Constants.TILE_SIZE
+
+	visual_offset = visual_offset.move_toward(Vector2.ZERO, step)
+	if not visual_offset.is_zero_approx():
+		return
+
+	_is_walking = false
+	_on_step_completed()
+
+	if not _move_queue.is_empty():
+		_dequeue_next_move()
+		return
+
+	_play_idle()
+
+
+func _sync_map_occupancy(_old_position: Vector2i, _new_position: Vector2i) -> void:
+	pass
+
+
+func _on_step_completed() -> void:
+	pass
 
 
 func _calculate_sprite_height() -> float:
@@ -102,15 +165,27 @@ func _play_idle() -> void:
 	if not _animator:
 		return
 
-	var animation: String = _animation_name("idle")
-	_animator.play(animation)
+	var anim_name: String = _animation_name("idle")
+
+	if _animator.is_playing():
+		_pending_idle = true
+		_animator.finish()
+	else:
+		_animator.play(anim_name)
 
 
 func _play_walk() -> void:
 	if not _animator:
 		return
 
+	_pending_idle = false
 	_animator.play(_animation_name("walk"))
+
+
+func _on_animation_ended(_anim_name: String) -> void:
+	if _pending_idle and not _is_walking:
+		_pending_idle = false
+		_animator.play(_animation_name("idle"))
 
 
 func _animation_name(prefix: String) -> String:
