@@ -11,7 +11,7 @@ func map_data(peer_id: int) -> void:
 		return
 
 	Network.exec(peer_id, "map_data", [
-		map.id, map.identifier, map.bgm, map.bgs, map.width, map.height
+		map.id, map.identifier, map.bgm, map.bgs, map.width, map.height, map.actor_collision
 	])
 
 

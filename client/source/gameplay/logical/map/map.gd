@@ -25,13 +25,14 @@ func _ready() -> void:
 	_load_collisions_from_tiles()
 
 
-func setup(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int) -> void:
+func setup(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int, actor_collision: bool) -> void:
 	self.id = id
 	self.identifier = identifier
 	self.bgm = bgm
 	self.bgs = bgs
 	self.width = width
 	self.height = height
+	self.actor_collision = actor_collision
 
 	GameAudio.play_bgm(bgm)
 	GameAudio.play_bgs(bgs)

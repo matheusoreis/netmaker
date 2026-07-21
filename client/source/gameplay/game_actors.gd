@@ -11,8 +11,12 @@ func add_actor(actor_id: int, actor: Actor) -> void:
 
 
 func remove_actor(actor_id: int) -> void:
-	if _actors.has(actor_id):
-		_actors.erase(actor_id)
+	var target: Actor = _actors.get(actor_id)
+	if not target:
+		return
+
+	_actors.erase(actor_id)
+	target.queue_free()
 
 
 func actor(actor_id: int) -> Actor:
@@ -34,16 +38,16 @@ func local_actor() -> Actor:
 func get_actors_in_map(map_id: int) -> Array[int]:
 	var ids: Array[int] = []
 	for actor_id: int in _actors:
-		var actor = _actors[actor_id]
-		if actor.map_id == map_id:
+		var target: Actor = _actors[actor_id]
+		if target.map_id == map_id:
 			ids.append(actor_id)
 	return ids
 
 
 func clear_all() -> void:
-	for actor_id in _actors:
-		var actor = _actors[actor_id]
-		actor.queue_free()
+	for actor_id: int in _actors:
+		var target: Actor = _actors[actor_id]
+		target.queue_free()
 
 	_actors.clear()
 	_local_actor_id = -1

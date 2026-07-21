@@ -13,8 +13,8 @@ func setup() -> Error:
 	])
 
 
-func map_data(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int) -> void:
-	GameMaps.load_map(id, identifier, bgm, bgs, width, height)
+func map_data(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int, actor_collision: bool) -> void:
+	GameMaps.load_map(id, identifier, bgm, bgs, width, height, actor_collision)
 
 	var scene: Scene = GameScenes.read_current_scene()
 	if scene == null:

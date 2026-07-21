@@ -1,6 +1,14 @@
 extends Node
 
 
+const _CATEGORY_PATHS: Dictionary[String, String] = {
+	"bgm": "res://assets/sfx/bgm/%s.ogg",
+	"bgs": "res://assets/sfx/bgs/%s.ogg",
+	"me": "res://assets/sfx/me/%s.ogg",
+	"se": "res://assets/sfx/se/%s.ogg",
+}
+
+
 var _bgm_player: AudioStreamPlayer = null
 var _bgs_player: AudioStreamPlayer = null
 var _me_player: AudioStreamPlayer = null
@@ -18,53 +26,36 @@ func _ready() -> void:
 
 
 func _setup_players() -> void:
-	_bgm_player = AudioStreamPlayer.new()
-	_bgm_player.name = "BgmPlayer"
-	add_child(_bgm_player)
+	_bgm_player = _make_player("BgmPlayer")
+	_bgs_player = _make_player("BgsPlayer")
+	_me_player = _make_player("MePlayer")
+	_se_player = _make_player("SePlayer")
 
-	_bgs_player = AudioStreamPlayer.new()
-	_bgs_player.name = "BgsPlayer"
-	add_child(_bgs_player)
 
-	_me_player = AudioStreamPlayer.new()
-	_me_player.name = "MePlayer"
-	add_child(_me_player)
-
-	_se_player = AudioStreamPlayer.new()
-	_se_player.name = "SePlayer"
-	add_child(_se_player)
+func _make_player(player_name: String) -> AudioStreamPlayer:
+	var player := AudioStreamPlayer.new()
+	player.name = player_name
+	add_child(player)
+	return player
 
 
 func play_bgm(name: String, volume: float = 1.0, pitch: float = 1.0, loop: bool = true) -> void:
-	if name.is_empty():
-		return
-
-	var path: String = "res://assets/sfx/bgm/%s.ogg" % name
-
-	if not ResourceLoader.exists(path):
-		push_warning("GameAudio: BGM not found: %s" % path)
+	var stream: AudioStream = _load_stream("bgm", name)
+	if not stream:
 		return
 
 	_playing_bgm = name
-	var stream: AudioStream = load(path)
-	_bgm_player.stream = stream
-	_bgm_player.volume_db = _linear_to_db(volume)
-	_bgm_player.pitch_scale = pitch
-	_bgm_player.stream.loop = loop
-	_bgm_player.play()
+	_play_on(_bgm_player, stream, volume, pitch, loop)
 
 
 func stop_bgm() -> void:
 	_playing_bgm = ""
-	_bgm_player.stop()
-	_bgm_player.stream = null
+	_stop(_bgm_player)
 
 
 func fade_bgm(time: float) -> void:
 	_playing_bgm = ""
-	var tween = create_tween()
-	tween.tween_property(_bgm_player, "volume_db", -80.0, time)
-	tween.tween_callback(stop_bgm)
+	_fade_out(_bgm_player, time, stop_bgm)
 
 
 func memorize_bgm() -> void:
@@ -80,35 +71,22 @@ func read_playing_bgm() -> String:
 
 
 func play_bgs(name: String, volume: float = 1.0, pitch: float = 1.0, loop: bool = true) -> void:
-	if name.is_empty():
-		return
-
-	var path: String = "res://assets/sfx/bgs/%s.ogg" % name
-
-	if not ResourceLoader.exists(path):
-		push_warning("GameAudio: BGS not found: %s" % path)
+	var stream: AudioStream = _load_stream("bgs", name)
+	if not stream:
 		return
 
 	_playing_bgs = name
-	var stream: AudioStream = load(path)
-	_bgs_player.stream = stream
-	_bgs_player.volume_db = _linear_to_db(volume)
-	_bgs_player.pitch_scale = pitch
-	_bgs_player.stream.loop = loop
-	_bgs_player.play()
+	_play_on(_bgs_player, stream, volume, pitch, loop)
 
 
 func stop_bgs() -> void:
 	_playing_bgs = ""
-	_bgs_player.stop()
-	_bgs_player.stream = null
+	_stop(_bgs_player)
 
 
 func fade_bgs(time: float) -> void:
 	_playing_bgs = ""
-	var tween = create_tween()
-	tween.tween_property(_bgs_player, "volume_db", -80.0, time)
-	tween.tween_callback(stop_bgs)
+	_fade_out(_bgs_player, time, stop_bgs)
 
 
 func memorize_bgs() -> void:
@@ -124,44 +102,56 @@ func read_playing_bgs() -> String:
 
 
 func play_me(name: String, volume: float = 1.0, pitch: float = 1.0) -> void:
-	if name.is_empty():
+	var stream: AudioStream = _load_stream("me", name)
+	if not stream:
 		return
 
-	var path: String = "res://assets/sfx/me/%s.ogg" % name
-
-	if not ResourceLoader.exists(path):
-		push_warning("GameAudio: ME not found: %s" % path)
-		return
-
-	var stream: AudioStream = load(path)
-	_me_player.stream = stream
-	_me_player.volume_db = _linear_to_db(volume)
-	_me_player.pitch_scale = pitch
-	_me_player.stream.loop = false
-	_me_player.play()
+	_play_on(_me_player, stream, volume, pitch, false)
 
 
 func play_se(name: String, volume: float = 1.0, pitch: float = 1.0) -> void:
-	if name.is_empty():
+	var stream: AudioStream = _load_stream("se", name)
+	if not stream:
 		return
 
-	var path: String = "res://assets/sfx/se/%s.ogg" % name
-
-	if not ResourceLoader.exists(path):
-		push_warning("GameAudio: SE not found: %s" % path)
-		return
-
-	var stream: AudioStream = load(path)
-	_se_player.stream = stream
-	_se_player.volume_db = _linear_to_db(volume)
-	_se_player.pitch_scale = pitch
-	_se_player.stream.loop = false
-	_se_player.play()
+	_play_on(_se_player, stream, volume, pitch, false)
 
 
 func stop_se() -> void:
-	_se_player.stop()
-	_se_player.stream = null
+	_stop(_se_player)
+
+
+## Resolve o path de uma categoria (bgm/bgs/me/se) e carrega o stream,
+## avisando (sem quebrar) se o arquivo não existir.
+func _load_stream(category: String, name: String) -> AudioStream:
+	if name.is_empty():
+		return null
+
+	var path: String = _CATEGORY_PATHS[category] % name
+	if not ResourceLoader.exists(path):
+		push_warning("GameAudio: %s não encontrado: %s" % [category.to_upper(), path])
+		return null
+
+	return load(path)
+
+
+func _play_on(player: AudioStreamPlayer, stream: AudioStream, volume: float, pitch: float, loop: bool) -> void:
+	player.stream = stream
+	player.volume_db = _linear_to_db(volume)
+	player.pitch_scale = pitch
+	player.stream.loop = loop
+	player.play()
+
+
+func _stop(player: AudioStreamPlayer) -> void:
+	player.stop()
+	player.stream = null
+
+
+func _fade_out(player: AudioStreamPlayer, time: float, on_complete: Callable) -> void:
+	var tween: Tween = create_tween()
+	tween.tween_property(player, "volume_db", -80.0, time)
+	tween.tween_callback(on_complete)
 
 
 func _linear_to_db(value: float) -> float:

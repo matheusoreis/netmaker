@@ -2,6 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://cdv5cdxuki0bo" path="res://assets/gfx/tileset/gralssland01.png" id="1_5dmno"]
 [ext_resource type="Texture2D" uid="uid://dtmq0uidj6c0v" path="res://assets/gfx/tileset/mountain01.png" id="2_cpcie"]
+[ext_resource type="Texture2D" uid="uid://e7ihun2waghx" path="res://assets/gfx/tileset/autotile01.png" id="3_imymx"]
+[ext_resource type="Texture2D" uid="uid://de4kptet4yovs" path="res://assets/gfx/tileset/autotile02.png" id="4_x3yoi"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ivnpy"]
 texture = ExtResource("1_5dmno")
@@ -576,9 +578,19 @@ texture_region_size = Vector2i(32, 32)
 7:27/0 = 0
 7:27/0/custom_data_0 = 1
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xprah"]
+texture = ExtResource("3_imymx")
+texture_region_size = Vector2i(32, 32)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ivqn1"]
+texture = ExtResource("4_x3yoi")
+texture_region_size = Vector2i(32, 32)
+
 [resource]
 tile_size = Vector2i(32, 32)
 custom_data_layer_0/name = "collision"
 custom_data_layer_0/type = 2
 sources/0 = SubResource("TileSetAtlasSource_ivnpy")
 sources/1 = SubResource("TileSetAtlasSource_nt0td")
+sources/2 = SubResource("TileSetAtlasSource_xprah")
+sources/3 = SubResource("TileSetAtlasSource_ivqn1")

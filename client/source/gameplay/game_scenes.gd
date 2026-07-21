@@ -5,44 +5,35 @@ const SCENES_PATH: String = "res://source/scene/"
 
 
 var _current_scene: Scene = null
+var _current_scene_name: String = ""
 var _scene_stack: Array[String] = []
 
 
 func load_scene(scene_name: String) -> void:
-	var path: String = "%s%s/%s.tscn" % [SCENES_PATH, scene_name, scene_name]
-
-	if not ResourceLoader.exists(path):
-		push_error("Cena não encontrada: ", path)
+	var scene: Scene = _instantiate_scene(scene_name)
+	if not scene:
 		return
-
-	var scene_scene: PackedScene = load(path)
-	var scene: Scene = scene_scene.instantiate()
 
 	if _current_scene:
 		_current_scene.queue_free()
 
 	add_child(scene)
 	_current_scene = scene
+	_current_scene_name = scene_name
 
 
 func push_scene(scene_name: String) -> void:
-	var path: String = "%s%s/%s.tscn" % [SCENES_PATH, scene_name, scene_name]
-
-	if not ResourceLoader.exists(path):
-		push_error("Cena não encontrada: ", path)
+	var scene: Scene = _instantiate_scene(scene_name)
+	if not scene:
 		return
 
-	# Guarda o nome da cena atual na pilha
 	if _current_scene:
-		var current_name: String = _current_scene.name
-		_scene_stack.push_back(current_name)
+		_scene_stack.push_back(_current_scene_name)
 		_current_scene.queue_free()
-
-	var scene_scene: PackedScene = load(path)
-	var scene: Scene = scene_scene.instantiate()
 
 	add_child(scene)
 	_current_scene = scene
+	_current_scene_name = scene_name
 
 
 func pop_scene() -> void:
@@ -67,6 +58,8 @@ func unload_scene() -> void:
 		_current_scene.queue_free()
 		_current_scene = null
 
+	_current_scene_name = ""
+
 
 func clear_all() -> void:
 	_scene_stack.clear()
@@ -75,6 +68,8 @@ func clear_all() -> void:
 		_current_scene.queue_free()
 		_current_scene = null
 
+	_current_scene_name = ""
+
 
 func has_scene_loaded() -> bool:
 	return _current_scene != null
@@ -82,3 +77,14 @@ func has_scene_loaded() -> bool:
 
 func read_scene_stack_size() -> int:
 	return _scene_stack.size()
+
+
+func _instantiate_scene(scene_name: String) -> Scene:
+	var path: String = "%s%s/%s.tscn" % [SCENES_PATH, scene_name, scene_name]
+
+	if not ResourceLoader.exists(path):
+		push_error("Cena não encontrada: ", path)
+		return null
+
+	var scene_scene: PackedScene = load(path)
+	return scene_scene.instantiate()

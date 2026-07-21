@@ -3,7 +3,7 @@ extends Node
 var _current_map: Map = null
 
 
-func load_map(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int) -> void:
+func load_map(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int, actor_collision: bool) -> void:
 	var path: String = Constants.MAPS_PATH + "map_%d.tscn" % id
 
 	if not ResourceLoader.exists(path):
@@ -13,7 +13,7 @@ func load_map(id: int, identifier: String, bgm: String, bgs: String, width: int,
 	var map_scene: PackedScene = load(path)
 	var map: Map = map_scene.instantiate()
 
-	map.setup(id, identifier, bgm, bgs, width, height)
+	map.setup(id, identifier, bgm, bgs, width, height, actor_collision)
 	_set_current_map(map)
 
 
