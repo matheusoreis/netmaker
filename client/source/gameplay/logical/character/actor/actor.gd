@@ -2,7 +2,8 @@ extends Character
 class_name Actor
 
 
-var access: int
+var access: Enums.ActorAccess
+
 var is_local: bool = false
 
 var _camera: ActorCamera
@@ -12,7 +13,7 @@ var _pending_idle: bool = false
 var _move_queue: BoundedQueue = BoundedQueue.new(16)
 
 
-func _init(id: int, identifier: String, spritesheet: String, spritesheet_cols: int, spritesheet_rows: int, map_id: int, map_position: Vector2i, map_direction: Vector2i, access: int) -> void:
+func _init(id: int, identifier: String, spritesheet: String, spritesheet_cols: int, spritesheet_rows: int, map_id: int, map_position: Vector2i, map_direction: Vector2i, access: Enums.ActorAccess) -> void:
 	super(id, identifier, spritesheet, spritesheet_cols, spritesheet_rows, map_id, map_position, map_direction)
 
 	self.access = access
@@ -79,15 +80,6 @@ func _dequeue_next_move() -> void:
 	_execute_move(direction)
 
 
-func _register_animations() -> void:
-	super()
-
-	_animator.register("walk_down", 0, 3, 6, true)
-	_animator.register("walk_left", 4, 7, 6, true)
-	_animator.register("walk_right", 8, 11, 6, true)
-	_animator.register("walk_up", 12, 15, 6, true)
-
-
 func _play_idle() -> void:
 	if not _animator:
 		return
@@ -117,11 +109,10 @@ func _execute_move(direction: Vector2i) -> void:
 	map_direction = direction
 	map_position = new_position
 
-	# Atualiza as posições dos atores no mapa
 	var map: Map = GameMaps.current_map()
 	if map:
-		map.remove_actor(old_position, id)  # Mudou de vacate para remove_actor
-		map.place_actor(new_position, id)   # Mudou de occupy para place_actor
+		map.remove_actor(old_position, id)
+		map.place_actor(new_position, id)
 
 	_is_walking = true
 	_play_walk()
@@ -145,22 +136,8 @@ func _advance_step(delta: float) -> void:
 
 
 func _can_move_to(map: Map, target: Vector2i) -> bool:
-	# O servidor já valida, mas o cliente também precisa para predicção
-	if not map.is_within_bounds(target):
-		return false
-
-	if map.is_solid(target):
-		return false
-
-	# Verifica se tem ator na posição (actor_collision)
-	if map.has_actor_at(target):
-		return false
-
 	var direction: Vector2i = target - map_position
-	if not map.can_pass(map_position, direction):
-		return false
-
-	return true
+	return map.can_pass(map_position, direction)
 
 
 func _on_step_completed() -> void:

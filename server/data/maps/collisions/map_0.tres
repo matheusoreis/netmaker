@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="MapCollisionData" format=3]
+[gd_resource type="Resource" script_class="MapCollisionData" format=3 uid="uid://m1a2nfuiatqy"]
 
-[ext_resource type="Script" path="res://source/gameplay/logical/map/data/map_collision.gd" id="1_3yjdv"]
+[ext_resource type="Script" uid="uid://b70wq850cwul5" path="res://source/gameplay/logical/map/data/map_collision.gd" id="1_3yjdv"]
 
 [resource]
 script = ExtResource("1_3yjdv")
