@@ -29,8 +29,6 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-
-
 	super(delta)
 
 	if _is_walking:
@@ -119,10 +117,11 @@ func _execute_move(direction: Vector2i) -> void:
 	map_direction = direction
 	map_position = new_position
 
+	# Atualiza as posições dos atores no mapa
 	var map: Map = GameMaps.current_map()
 	if map:
-		map.vacate(old_position, id)
-		map.occupy(new_position, id)
+		map.remove_actor(old_position, id)  # Mudou de vacate para remove_actor
+		map.place_actor(new_position, id)   # Mudou de occupy para place_actor
 
 	_is_walking = true
 	_play_walk()
@@ -146,10 +145,15 @@ func _advance_step(delta: float) -> void:
 
 
 func _can_move_to(map: Map, target: Vector2i) -> bool:
+	# O servidor já valida, mas o cliente também precisa para predicção
 	if not map.is_within_bounds(target):
 		return false
 
 	if map.is_solid(target):
+		return false
+
+	# Verifica se tem ator na posição (actor_collision)
+	if map.has_actor_at(target):
 		return false
 
 	var direction: Vector2i = target - map_position

@@ -18,7 +18,7 @@ var _actor_positions: Dictionary[Vector2i, Array] = {}
 var _collisions: Dictionary[Vector2i, int] = {}
 
 
-func _init(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int, actor_collision: bool = true) -> void:
+func _init(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int, actor_collision: bool) -> void:
 	self.id = id
 	self.identifier = identifier
 	self.bgm = bgm
@@ -77,8 +77,6 @@ func has_actor_at(position: Vector2i) -> bool:
 	return _actor_positions.has(position)
 
 
-## Retorna os peer_ids de todos os atores presentes nessa célula
-## (pode ter mais de um, ex: dois jogadores que entraram no mesmo spawn).
 func actors_at(position: Vector2i) -> Array[int]:
 	var occupants: Array[int] = []
 	occupants.assign(_actor_positions.get(position, []))

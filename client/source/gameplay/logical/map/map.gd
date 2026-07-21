@@ -1,27 +1,23 @@
 extends Node2D
 class_name Map
 
-@onready var ground_01: TileMapLayer = %Ground01
-@onready var ground_02: TileMapLayer = %Ground02
-@onready var ground_03: TileMapLayer = %Ground03
 
-@onready var below_01: TileMapLayer = %Below01
-@onready var below_02: TileMapLayer = %Below02
-@onready var below_03: TileMapLayer = %Below03
+@export var id: int
 
-@onready var above_01: TileMapLayer = %Above01
-@onready var above_02: TileMapLayer = %Above02
-@onready var above_03: TileMapLayer = %Above03
+@export var identifier: String
 
+@export var bgm: String
+@export var bgs: String
 
-var id: int
-var identifier: String
-var bgm: String
-var bgs: String
-var width: int
-var height: int
+@export var width: int
+@export var height: int
 
-var _blockers: Dictionary[Vector2i, int] = {}
+@export var actor_collision: bool = true
+
+@export var tilemap_layers: Array[TileMapLayer] = []
+
+var _actor_positions: Dictionary[Vector2i, Array] = {}
+
 var _collisions: Dictionary[Vector2i, int] = {}
 
 
@@ -31,17 +27,21 @@ func _ready() -> void:
 
 func setup(id: int, identifier: String, bgm: String, bgs: String, width: int, height: int) -> void:
 	self.id = id
-
 	self.identifier = identifier
-
 	self.bgm = bgm
 	self.bgs = bgs
-
 	self.width = width
 	self.height = height
 
 	GameAudio.play_bgm(bgm)
 	GameAudio.play_bgs(bgs)
+
+
+func pixel_size() -> Vector2i:
+	return Vector2i(
+		width * Constants.TILE_SIZE,
+		height * Constants.TILE_SIZE
+	)
 
 
 func collision_flag(cell: Vector2i) -> int:
@@ -53,16 +53,21 @@ func collisions() -> Dictionary[Vector2i, int]:
 
 
 func set_collisions(data: Dictionary[Vector2i, int]) -> void:
-	# Substitui as colisões (vindo do servidor)
 	_collisions = data.duplicate()
+
+
+func export_collisions() -> MapCollisionData:
+	var resource = MapCollisionData.new()
+	resource.from_map(self)
+	return resource
 
 
 func import_collisions(resource: MapCollisionData) -> void:
 	resource.apply_to_map(self)
 
 
-func clear_blockers() -> void:
-	_blockers.clear()
+func clear_actors() -> void:
+	_actor_positions.clear()
 
 
 func clear_collisions() -> void:
@@ -77,34 +82,45 @@ func is_solid(cell: Vector2i) -> bool:
 	return (collision_flag(cell) & Constants.CELL_COLLISION_FULL_BLOCK) != 0
 
 
-func is_blocked(position: Vector2i) -> bool:
-	return _blockers.has(position)
+func has_actor_at(position: Vector2i) -> bool:
+	return _actor_positions.has(position)
+
+
+func actors_at(position: Vector2i) -> Array[int]:
+	var occupants: Array[int] = []
+	occupants.assign(_actor_positions.get(position, []))
+	return occupants
 
 
 func to_screen(cell: Vector2i) -> Vector2:
 	return Vector2(cell.x * Constants.TILE_SIZE, cell.y * Constants.TILE_SIZE)
 
 
-func to_tile(screen_pos: Vector2) -> Vector2i:
+func to_tile(screen_position: Vector2) -> Vector2i:
 	return Vector2i(
-		int(screen_pos.x / Constants.TILE_SIZE),
-		int(screen_pos.y / Constants.TILE_SIZE)
+		int(screen_position.x / Constants.TILE_SIZE),
+		int(screen_position.y / Constants.TILE_SIZE)
 	)
 
 
-func read_pixel_size() -> Vector2i:
-	return Vector2i(width * Constants.TILE_SIZE, height * Constants.TILE_SIZE)
+func place_actor(position: Vector2i, peer_id: int) -> void:
+	if not _actor_positions.has(position):
+		_actor_positions[position] = [] as Array[int]
+
+	var occupants: Array = _actor_positions[position]
+	if not occupants.has(peer_id):
+		occupants.append(peer_id)
 
 
-func occupy(position: Vector2i, character_id: int) -> void:
-	_blockers[position] = character_id
-
-
-func vacate(position: Vector2i, character_id: int) -> void:
-	if _blockers.get(position, -1) != character_id:
+func remove_actor(position: Vector2i, peer_id: int) -> void:
+	if not _actor_positions.has(position):
 		return
 
-	_blockers.erase(position)
+	var occupants: Array = _actor_positions[position]
+	occupants.erase(peer_id)
+
+	if occupants.is_empty():
+		_actor_positions.erase(position)
 
 
 func can_pass(from: Vector2i, direction: Vector2i) -> bool:
@@ -113,7 +129,7 @@ func can_pass(from: Vector2i, direction: Vector2i) -> bool:
 	if not is_within_bounds(from) or not is_within_bounds(to):
 		return false
 
-	if is_blocked(to):
+	if actor_collision and has_actor_at(to):
 		return false
 
 	var from_flag: int = collision_flag(from)
@@ -147,7 +163,7 @@ func can_pass(from: Vector2i, direction: Vector2i) -> bool:
 func _load_collisions_from_tiles() -> void:
 	_collisions.clear()
 
-	for layer: TileMapLayer in _get_layers():
+	for layer: TileMapLayer in tilemap_layers:
 		if not layer:
 			continue
 
@@ -156,14 +172,6 @@ func _load_collisions_from_tiles() -> void:
 			if collision_flag != Constants.CELL_COLLISION_NONE:
 				var current_flag: int = _collisions.get(cell, Constants.CELL_COLLISION_NONE)
 				_collisions[cell] = current_flag | collision_flag
-
-
-func _get_layers() -> Array[TileMapLayer]:
-	return [
-		ground_01, ground_02, ground_03,
-		below_01, below_02, below_03,
-		above_01, above_02, above_03,
-	]
 
 
 func _get_collision_from_tile(layer: TileMapLayer, cell: Vector2i) -> int:
@@ -185,12 +193,3 @@ func _direction_to_flag(direction: Vector2i) -> int:
 			return Constants.CELL_COLLISION_WEST
 		_:
 			return Constants.CELL_COLLISION_NONE
-
-
-func clear_all() -> void:
-	for layer: TileMapLayer in _get_layers():
-		if layer:
-			layer.clear()
-
-	_collisions.clear()
-	_blockers.clear()

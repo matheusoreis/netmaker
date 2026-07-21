@@ -7,7 +7,7 @@ func _ready() -> void:
 
 
 func set_map_limits(map: Map) -> void:
-	var pixel_size: Vector2i = map.read_pixel_size()
+	var pixel_size: Vector2i = map.pixel_size()
 
 	limit_left = 0
 	limit_top = 0
