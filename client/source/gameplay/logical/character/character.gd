@@ -16,7 +16,7 @@ var map_direction: Vector2i
 var visual_anchor: Vector2i = Vector2i.ZERO
 var visual_offset: Vector2 = Vector2.ZERO
 
-var _animator: CharacterAnimator
+var _animator: Animator
 var _nameplate: CharacterNameplate
 
 var _is_walking: bool = false
@@ -44,7 +44,7 @@ func _ready() -> void:
 	if texture == null:
 		return
 
-	_animator = CharacterAnimator.new(texture, spritesheet_cols, spritesheet_rows)
+	_animator = Animator.new(texture, spritesheet_cols, spritesheet_rows)
 	_animator.name = "Animator"
 	add_child(_animator)
 	_animator.animation_ended.connect(_on_animation_ended)
@@ -70,7 +70,7 @@ func overhead_anchor() -> Vector2:
 	return Vector2(Constants.TILE_SIZE / 2.0, visual_anchor.y - sprite_height)
 
 
-func animator() -> CharacterAnimator:
+func animator() -> Animator:
 	return _animator
 
 
