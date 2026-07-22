@@ -34,8 +34,8 @@ func setup(id: int, identifier: String, bgm: String, bgs: String, width: int, he
 	self.height = height
 	self.actor_collision = actor_collision
 
-	GameAudio.play_bgm(bgm)
-	GameAudio.play_bgs(bgs)
+	GameAudio.play_bgm(bgm, 0.01)
+	GameAudio.play_bgs(bgs, 0.01)
 
 
 func pixel_size() -> Vector2i:

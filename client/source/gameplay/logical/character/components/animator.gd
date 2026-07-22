@@ -1,23 +1,37 @@
 extends Node2D
 class_name CharacterAnimator
 
-
 signal animation_started(anim_name: String)
 signal animation_ended(anim_name: String)
 
 
-var _animations: Dictionary = {}
-var _current_name: String = ""
-var _anim_first: int = 0
-var _anim_last: int = 0
-var _anim_fps: float = 6.0
-var _anim_loop: bool = true
-var _current_frame: int = 0
-var _accumulator: float = 0.0
-var _playing: bool = false
-var _should_finish: bool = false
-var _eager: bool = true
+class AnimationData:
+	var first: int
+	var last: int
+	var fps: float
+	var loop: bool
 
+	func _init(first: int, last: int, fps: float = 6.0, loop: bool = true) -> void:
+		self.first = first
+		self.last = last
+		self.fps = fps
+		self.loop = loop
+
+
+class AnimationState:
+	var name: String = ""
+	var playing: bool = false
+	var should_finish: bool = false
+	var first: int = 0
+	var last: int = 0
+	var fps: float = 6.0
+	var loop: bool = true
+	var current_frame: int = 0
+	var accumulator: float = 0.0
+
+
+var _animations: Dictionary = {}
+var _state: AnimationState = AnimationState.new()
 var _sprite: Sprite2D = null
 var _cols: int = 4
 var _rows: int = 8
@@ -27,18 +41,12 @@ func _init(texture: Texture2D, cols: int, rows: int) -> void:
 	_cols = cols
 	_rows = rows
 
-	if _sprite:
-		_sprite.queue_free()
-
 	_sprite = Sprite2D.new()
 	_sprite.name = "Sprite"
 	_sprite.hframes = cols
 	_sprite.vframes = rows
-
-	texture.set_meta("filter", CanvasItem.TEXTURE_FILTER_NEAREST)
 	_sprite.texture = texture
 	_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-
 	_sprite.offset = _calculate_visual_anchor(texture, cols, rows)
 	_sprite.centered = false
 
@@ -46,218 +54,121 @@ func _init(texture: Texture2D, cols: int, rows: int) -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if not _playing:
+	if not _state.playing:
 		return
 
-	var frame_duration: float = 1.0 / _anim_fps
-	_accumulator += delta
+	var frame_duration: float = 1.0 / _state.fps
+	_state.accumulator += delta
 
-	while _accumulator >= frame_duration:
-		_accumulator -= frame_duration
-		_advance_frame(frame_duration)
+	while _state.accumulator >= frame_duration:
+		_state.accumulator -= frame_duration
+		_advance_frame()
 
 
 func register(anim_name: String, first: int, last: int, fps: float = 6.0, loop: bool = true) -> void:
-	_animations[anim_name] = {
-		"first": first,
-		"last": last,
-		"fps": fps,
-		"loop": loop,
-	}
+	_animations[anim_name] = AnimationData.new(first, last, fps, loop)
 
 
 func play(anim_name: String) -> void:
 	if not _animations.has(anim_name):
 		return
 
-	var data: Dictionary = _animations[anim_name]
-	var changed: bool = anim_name != _current_name
+	var data: AnimationData = _animations[anim_name]
+	var changed: bool = anim_name != _state.name
 
-	_anim_first = data["first"]
-	_anim_last = data["last"]
-	_anim_fps = data["fps"]
-	_anim_loop = data["loop"]
-	_should_finish = false
+	_state.name = anim_name
+	_state.first = data.first
+	_state.last = data.last
+	_state.fps = data.fps
+	_state.loop = data.loop
+	_state.should_finish = false
+	_state.playing = true
 
-	var should_reset: bool = changed or not _playing
-	_current_name = anim_name
-	_playing = true
-
-	if not should_reset:
-		return
-
-	_current_frame = _anim_first
-	_accumulator = (1.0 / _anim_fps) * 0.5 if _eager else 0.0
-	_apply_frame()
-	animation_started.emit(anim_name)
+	if changed or _state.current_frame < _state.first or _state.current_frame > _state.last:
+		_state.current_frame = _state.first
+		_state.accumulator = 0.0
+		_apply_frame()
+		animation_started.emit(anim_name)
 
 
 func finish() -> void:
-	if _playing:
-		_should_finish = true
+	if _state.playing:
+		_state.should_finish = true
 
 
 func stop() -> void:
-	_playing = false
-	_should_finish = false
-	_accumulator = 0.0
+	_state.playing = false
+	_state.should_finish = false
+	_state.accumulator = 0.0
 
 
 func is_playing(anim_name: String = "") -> bool:
 	if anim_name == "":
-		return _playing
-	return _playing and _current_name == anim_name
+		return _state.playing
+	return _state.playing and _state.name == anim_name
 
 
 func has_animation(anim_name: String) -> bool:
 	return _animations.has(anim_name)
 
 
-func read_animations() -> Dictionary:
-	return _animations
-
-
-func read_current_name() -> String:
-	return _current_name
-
-
-func read_anim_first() -> int:
-	return _anim_first
-
-
-func read_anim_last() -> int:
-	return _anim_last
-
-
-func read_anim_fps() -> float:
-	return _anim_fps
-
-
-func read_anim_loop() -> bool:
-	return _anim_loop
-
-
-func read_current_frame() -> int:
-	return _current_frame
-
-
-func read_accumulator() -> float:
-	return _accumulator
-
-
-func read_playing() -> bool:
-	return _playing
-
-
-func read_should_finish() -> bool:
-	return _should_finish
-
-
-func read_eager() -> bool:
-	return _eager
-
-
 func read_sprite() -> Sprite2D:
 	return _sprite
 
 
-func read_cols() -> int:
-	return _cols
+func read_current_frame() -> int:
+	return _state.current_frame
 
 
-func read_rows() -> int:
-	return _rows
+func read_current_name() -> String:
+	return _state.name
 
 
-func write_animations(value: Dictionary) -> void:
-	_animations = value
+func read_playing() -> bool:
+	return _state.playing
 
 
-func write_current_name(value: String) -> void:
-	_current_name = value
+func read_animations() -> Dictionary:
+	return _animations
 
 
-func write_anim_first(value: int) -> void:
-	_anim_first = value
+func read_animation_data(anim_name: String) -> AnimationData:
+	if _animations.has(anim_name):
+		return _animations[anim_name]
+	return null
 
 
-func write_anim_last(value: int) -> void:
-	_anim_last = value
-
-
-func write_anim_fps(value: float) -> void:
-	_anim_fps = value
-
-
-func write_anim_loop(value: bool) -> void:
-	_anim_loop = value
-
-
-func write_current_frame(value: int) -> void:
-	_current_frame = value
-
-
-func write_accumulator(value: float) -> void:
-	_accumulator = value
-
-
-func write_playing(value: bool) -> void:
-	_playing = value
-
-
-func write_should_finish(value: bool) -> void:
-	_should_finish = value
-
-
-func write_eager(value: bool) -> void:
-	_eager = value
-
-
-func write_sprite(value: Sprite2D) -> void:
-	_sprite = value
-
-
-func write_cols(value: int) -> void:
-	_cols = value
-
-
-func write_rows(value: int) -> void:
-	_rows = value
-
-
-func _advance_frame(frame_duration: float) -> void:
-	if _should_finish:
-		_current_frame = _anim_first
-		_accumulator = frame_duration * 0.5 if _eager else 0.0
-		_playing = false
-		_should_finish = false
+func _advance_frame() -> void:
+	if _state.should_finish:
+		_state.current_frame = _state.first
+		_state.playing = false
+		_state.should_finish = false
 		_apply_frame()
-		animation_ended.emit(_current_name)
+		animation_ended.emit(_state.name)
 		return
 
-	var next_frame: int = _current_frame + 1
+	var next_frame: int = _state.current_frame + 1
 
-	if next_frame > _anim_last:
-		if not _anim_loop:
-			_current_frame = _anim_last
-			_playing = false
+	if next_frame > _state.last:
+		if not _state.loop:
+			_state.current_frame = _state.last
+			_state.playing = false
 			_apply_frame()
-			animation_ended.emit(_current_name)
+			animation_ended.emit(_state.name)
 			return
-		next_frame = _anim_first
+		next_frame = _state.first
 
-	_current_frame = next_frame
+	_state.current_frame = next_frame
 	_apply_frame()
 
 
 func _apply_frame() -> void:
 	if _sprite:
-		_sprite.frame = _current_frame
+		_sprite.frame = _state.current_frame
 
 
 func _calculate_visual_anchor(texture: Texture2D, cols: int, rows: int) -> Vector2i:
 	var frame_size: Vector2 = texture.get_size() / Vector2(cols, rows)
 	var offset_x: int = floori((Constants.TILE_SIZE - frame_size.x) / 2.0)
 	var offset_y: int = floori(Constants.TILE_SIZE - frame_size.y)
-
 	return Vector2i(offset_x, offset_y)
