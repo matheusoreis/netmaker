@@ -2,30 +2,37 @@ extends RefCounted
 class_name MapModule
 
 
+## Mapas carregados na memória.
 var _maps: Dictionary[int, Map] = {}
 
 
+## Retorna um mapa pelo ID.
 func map(map_id: int) -> Map:
 	return _maps.get(map_id)
 
 
+## Verifica se um mapa está carregado.
 func has(map_id: int) -> bool:
 	return _maps.has(map_id)
 
 
+## Retorna a quantidade de mapas carregados.
 func count() -> int:
 	return _maps.size()
 
 
+## Retorna todos os mapas carregados.
 func all() -> Array[Map]:
 	return _maps.values()
 
 
+## Carrega todos os mapas disponíveis em disco.
 func load_all_from_disk() -> void:
 	for map_id: int in _scan_directory_ids():
 		load_from_disk(map_id)
 
 
+## Carrega um mapa do disco.
 func load_from_disk(map_id: int) -> bool:
 	if has(map_id):
 		return true
@@ -64,6 +71,7 @@ func load_from_disk(map_id: int) -> bool:
 	return true
 
 
+## Atualiza as colisões de um mapa e salva as alterações em disco.
 func update_collisions(map_id: int, new_collisions: Dictionary[Vector2i, int]) -> void:
 	var map: Map = map(map_id)
 	if not map:
@@ -86,6 +94,7 @@ func update_collisions(map_id: int, new_collisions: Dictionary[Vector2i, int]) -
 		return
 
 
+## Retorna os IDs dos mapas disponíveis em disco.
 func _scan_directory_ids() -> Array[int]:
 	var ids: Array[int] = []
 	var dir: DirAccess = DirAccess.open(Constants.MAPS_DATA_DIRECTORY)
