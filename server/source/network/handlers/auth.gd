@@ -3,10 +3,12 @@ class_name AuthHandler
 
 
 var _network: Network
+var _auth_service: AuthService
 
 
-func _init(network: Network) -> void:
+func _init(network: Network, auth_service: AuthService) -> void:
 	_network = network
+	_auth_service = auth_service
 
 
 func register() -> Error:
@@ -17,27 +19,37 @@ func register() -> Error:
 
 
 func unregister() -> Error:
-	return _network.register([
+	return _network.unregister([
 		sign_in,
 		sign_up
 	])
 
 
-func sign_in(email: String, password: String, major_version: int, minor_version: int, revision_version: int) -> void:
+func sign_in(email: String, password: String) -> void:
 	var sender_id: int = _network.sender_id()
 
-	if not _is_valid_version(major_version, minor_version, revision_version):
-		_network.exec(sender_id, &"alert", ["INVALID_VERSION"])
+	if _auth_service.is_signed_in(sender_id):
+		_network.exec(sender_id, &"alert", ["ALREADY_LOGGED_IN"])
 		return
 
+	var result: Array = await _auth_service.sign_in(sender_id, email, password)
+	if result[0] != OK:
+		_network.exec(sender_id, &"alert", [result[1]])
+		return
 
-func sign_up(email: String, password: String, major_version: int, minor_version: int, revision_version: int) -> void:
+	_network.exec(sender_id, &"sign_in")
+
+
+func sign_up(email: String, password: String, password_confirm: String) -> void:
 	var sender_id: int = _network.sender_id()
 
-	if not _is_valid_version(major_version, minor_version, revision_version):
-		_network.exec(sender_id, &"alert", ["INVALID_VERSION"])
+	if _auth_service.is_signed_in(sender_id):
+		_network.exec(sender_id, &"alert", ["ALREADY_LOGGED_IN"])
 		return
 
+	var result: Array = await _auth_service.sign_up(sender_id, email, password, password_confirm)
+	if result[0] != OK:
+		_network.exec(sender_id, &"alert", [result[1]])
+		return
 
-func _is_valid_version(major: int, minor: int, revision: int) -> bool:
-	return (major == Constants.MAJOR_VERSION and minor == Constants.MINOR_VERSION and revision == Constants.REVISION_VERSION)
+	_network.exec(sender_id, &"sign_up")

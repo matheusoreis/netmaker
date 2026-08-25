@@ -1,5 +1,5 @@
-extends Node
-class_name AccountRepository
+extends RefCounted
+class_name CharacterRepository
 
 
 var _database: Database
@@ -28,6 +28,7 @@ func setup_schema() -> void:
 			created_at INTEGER NOT NULL,
 			updated_at INTEGER NOT NULL,
 			FOREIGN KEY(account) REFERENCES accounts(id) ON DELETE CASCADE,
+			FOREIGN KEY(map) REFERENCES maps(id) ON DELETE RESTRICT,
 			UNIQUE(account, identifier)
 		)
 	""")

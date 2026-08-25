@@ -12,7 +12,7 @@ var cell: Vector2i
 var facing: Vector2i
 
 
-func _init() -> void:
+func _init(id: int, identifier: String, spritesheet: String, map: int, cell: Vector2i, facing: Vector2i) -> void:
 	self.id = id
 	self.identifier = identifier
 
@@ -21,3 +21,14 @@ func _init() -> void:
 	self.map = map
 	self.cell = cell
 	self.facing = facing
+
+
+func to_array() -> Array:
+	return [
+		self.id,
+		self.identifier,
+		self.spritesheet,
+		self.map,
+		self.cell,
+		self.facing
+	]

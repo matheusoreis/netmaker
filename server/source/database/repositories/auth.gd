@@ -50,7 +50,7 @@ func sign_in(email: String, password: String) -> Array:
 	if model.banned_at > 0:
 		return [ERR_UNAUTHORIZED, "ACCOUNT_BANNED"]
 
-	if not Sha256.new().verify_password(password, model.password):
+	if not Sha256.new().verify_value(password, model.password):
 		return [ERR_UNAUTHORIZED, "INCORRECT_PASSWORD"]
 
 	var account: Account = Account.new(
@@ -85,7 +85,7 @@ func sign_up(email: String, password: String, password_confirm: String) -> Array
 	if existing != null and existing > 0:
 		return [ERR_ALREADY_EXISTS, "EMAIL_ALREADY_REGISTERED"]
 
-	var hashed: String = Sha256.new().hash_password(password)
+	var hashed: String = Sha256.new().hash_value(password)
 	var now: int = _database.now()
 
 	var result: Error = await _database.exec(

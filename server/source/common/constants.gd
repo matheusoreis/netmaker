@@ -22,8 +22,8 @@ const MAX_PEERS: int = 100
 
 ## Versão do servidor.
 const MAJOR_VERSION: int = 1
-const MINOR_VERSION: int = 0
-const REVISION_VERSION: int = 0
+const MINOR_VERSION: int = 68
+const REVISION_VERSION: int = 64
 
 ## Tamanho de cada célula do mapa.
 const CELL_SIZE: int = 32
