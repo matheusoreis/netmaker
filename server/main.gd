@@ -35,6 +35,8 @@ func _ready() -> void:
 		_on_peer_disconnected
 	)
 
+	_map_module.load_all_from_disk()
+
 
 ## Processa os eventos.
 func _physics_process(_delta: float) -> void:

@@ -1,5 +1,8 @@
 extends Node
 
+## Diretório dos dados do mapa
+const MAPS_DATA_DIRECTORY: String = "res://data/maps/"
+
 
 ## Endereço no qual o servidor irá escutar.
 const HOST: String = "0.0.0.0"
