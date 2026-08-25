@@ -4,6 +4,14 @@ extends Node
 const MAPS_DATA_DIRECTORY: String = "res://data/maps/"
 
 
+## Caminho do arquivo do banco de dados.
+const DATABASE_PATH: String = "user://database/"
+## Nome do arquivo do banco de dados.
+const DATABASE_FILENAME: String = "database"
+## Tempo de polling do banco de dados.
+const DATABASE_POLL_TIME: int = 1
+
+
 ## Endereço no qual o servidor irá escutar.
 const HOST: String = "0.0.0.0"
 ## Porta TCP/UDP utilizada pelo servidor.

@@ -2,9 +2,11 @@ extends Node2D
 class_name Main
 
 
+## Gerencia a comunicação com o banco de dados.
+var _database: Database
+
 ## Gerencia a comunicação de rede do servidor.
 var _network: Network
-
 
 ## Módulos responsáveis pelos dados do servidor.
 var _account_module: AccountModule
@@ -20,6 +22,9 @@ var _map_handler: MapHandler
 
 ## Inicializa os módulos e configura a rede.
 func _ready() -> void:
+	if not _setup_database():
+		return
+
 	_account_module = AccountModule.new()
 	_character_module = CharacterModule.new()
 	_map_module = MapModule.new()
@@ -40,18 +45,42 @@ func _ready() -> void:
 
 ## Processa os eventos.
 func _physics_process(_delta: float) -> void:
+	if _database:
+		_database.poll(Constants.DATABASE_POLL_TIME)
+
 	if _network:
 		_network.poll()
+
+
+## Inicializa o banco de dados.
+func _setup_database() -> bool:
+	_database = Database.new()
+
+	print("Iniciando banco de dados em %s%s.db" % [
+		Constants.DATABASE_PATH,
+		Constants.DATABASE_FILENAME
+	])
+
+	var err: Error = _database.create(
+		Constants.DATABASE_PATH,
+		Constants.DATABASE_FILENAME
+	)
+
+	if err!= OK:
+		push_error("Erro ao iniciar o banco de dados (%s)." % error_string(err))
+		return false
+
+	print("Banco de dados iniciado com sucesso!")
+	return true
 
 
 ## Inicializa o servidor de rede.
 func _setup_network() -> bool:
 	_network = Network.new()
 
-	print("Iniciando servidor em %s:%d (máx. %d peers)..." % [
+	print("Iniciando servidor em %s:%d" % [
 		Constants.HOST,
 		Constants.PORT,
-		Constants.MAX_PEERS,
 	])
 
 	var err: Error = _network.start(Constants.HOST, Constants.PORT, Constants.MAX_PEERS)

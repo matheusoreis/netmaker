@@ -42,9 +42,9 @@ func _init() -> void:
 	_aslet = Aslet.new()
 
 
-func poll() -> void:
+func poll(time: int) -> void:
 	if _aslet:
-		_aslet.poll(Constants.DATABASE_POLL_TIME)
+		_aslet.poll(time)
 
 
 func create(path: String, filename: String, wal: bool = false) -> Error:
