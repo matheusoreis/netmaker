@@ -15,6 +15,8 @@ var _network: Multiplayer.Server
 
 ## Inicializa a rede e conecta os sinais do servidor.
 func _init() -> void:
+	_network = Multiplayer.Server.new()
+
 	_network.peer_connected.connect(
 		func(peer_id: int) -> void:
 			peer_connected.emit(peer_id)
@@ -24,8 +26,6 @@ func _init() -> void:
 		func(peer_id: int) -> void:
 			peer_disconnected.emit(peer_id)
 	)
-
-	_network = Multiplayer.Server.new()
 
 
 ## Inicia o servidor.
