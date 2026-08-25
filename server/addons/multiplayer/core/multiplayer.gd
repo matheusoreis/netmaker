@@ -162,8 +162,8 @@ class Client extends Multiplayer:
 
 
 class Server extends Multiplayer:
-	signal client_connected(peer_id: int)
-	signal client_disconnected(peer_id: int)
+	signal peer_connected(peer_id: int)
+	signal peer_disconnected(peer_id: int)
 
 	var _peers: Dictionary[int, ENetPacketPeer]
 	var _sender_id: int
@@ -176,9 +176,9 @@ class Server extends Multiplayer:
 		_next_id = 0
 
 
-	func start(address: String = "0.0.0.0", port: int = 4242, max_clients: int = 10) -> Error:
+	func start(address: String = "0.0.0.0", port: int = 4242, max_peers: int = 10) -> Error:
 		_enet_host = ENetConnection.new()
-		var err: Error = _enet_host.create_host_bound(address, port, max_clients)
+		var err: Error = _enet_host.create_host_bound(address, port, max_peers)
 		if err != OK:
 			return err
 		return OK
@@ -256,14 +256,14 @@ class Server extends Multiplayer:
 
 				_peers[peer_id] = peer
 				_next_id += 1
-				client_connected.emit(peer_id)
+				peer_connected.emit(peer_id)
 
 			ENetConnection.EventType.EVENT_DISCONNECT:
 				var peer: ENetPacketPeer = ev[1] as ENetPacketPeer
 				var peer_id: int = peer.get_meta('peer_id') as int
 
 				_peers.erase(peer_id)
-				client_disconnected.emit(peer_id)
+				peer_disconnected.emit(peer_id)
 
 			ENetConnection.EventType.EVENT_RECEIVE:
 				var peer: ENetPacketPeer = ev[1] as ENetPacketPeer
