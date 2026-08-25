@@ -15,6 +15,10 @@ run/main_scene="uid://drudltwprakwm"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://assets/gfx/icon.svg"
 
+[autoload]
+
+Constants="*uid://o7r508uthpg2"
+
 [debug]
 
 gdscript/warnings/shadowed_variable=0
