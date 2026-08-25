@@ -2,4 +2,4 @@ extends RefCounted
 class_name AccountModule
 
 
-var _accounts: Dictionary = {}
+var _accounts: Dictionary[int, Account] = {}

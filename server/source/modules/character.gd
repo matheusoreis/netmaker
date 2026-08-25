@@ -2,4 +2,4 @@ extends RefCounted
 class_name CharacterModule
 
 
-var _characters: Dictionary = {}
+var _characters: Dictionary[int, Character] = {}
