@@ -11,8 +11,9 @@ config_version=5
 [application]
 
 config/name="client"
+run/main_scene="uid://c8gs4ledvyyor"
 config/features=PackedStringArray("4.7", "Mobile")
-config/icon="res://icon.svg"
+config/icon="res://assets/icon.svg"
 
 [debug]
 
