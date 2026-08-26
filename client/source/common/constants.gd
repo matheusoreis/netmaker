@@ -1,0 +1,39 @@
+extends Node
+
+
+## Diretório dos dados do mapa
+const MAPS_DATA_DIRECTORY: String = "res://data/maps/"
+
+## Endereço no qual o cliente irá escutar.
+const HOST: String = "0.0.0.0"
+## Porta TCP/UDP utilizada pelo cliente.
+const PORT: int = 7001
+
+## Versão do cliente.
+const MAJOR_VERSION: int = 1
+const MINOR_VERSION: int = 68
+const REVISION_VERSION: int = 64
+
+## Tamanho de cada célula do mapa.
+const CELL_SIZE: int = 32
+
+## Nenhum bloqueio.
+const CELL_NONE: int = 0
+## Bloqueia a célula inteira.
+const CELL_FULL_BLOCK: int = 1
+## Bloqueia o lado de cima da célula.
+const CELL_UP: int = 2
+## Bloqueia o lado direito da célula.
+const CELL_RIGHT: int = 4
+## Bloqueia o lado de baixo da célula.
+const CELL_DOWN: int = 8
+## Bloqueia o lado esquerdo da célula.
+const CELL_LEFT: int = 16
+
+## Sprites disponíveis para criar os personagens.
+const AVALIABLE_SPRITES: Array[String] = ["red", "blue"]
+
+## Regras de validação dos dados de usuário.
+const IDENTIFIER_REGEX: String = "^[a-zA-Z0-9]{4,}$"
+const EMAIL_REGEX: String = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+const PASSWORD_REGEX: String = "^(?=.*[0-9])(?=.*[!@#$%^&*(),.?\":{}|<>]).{4,}$"
