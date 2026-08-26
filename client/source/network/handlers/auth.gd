@@ -31,7 +31,6 @@ func sign_in() -> void:
 	menu.show_interface(&"Characterlist")
 
 
-
 func sign_up() -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
