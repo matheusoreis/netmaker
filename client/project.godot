@@ -18,6 +18,7 @@ config/icon="res://assets/icon.svg"
 [autoload]
 
 Constants="*uid://bgn57ritklo0c"
+Network="*uid://c6nbvphrpvamb"
 
 [debug]
 
