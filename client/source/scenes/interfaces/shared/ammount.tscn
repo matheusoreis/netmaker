@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://cvcyjo516yh14"]
+
+[ext_resource type="Script" uid="uid://o5vamaud5w5e" path="res://source/scenes/interfaces/shared/ammount.gd" id="1_ygd2y"]
+
+[node name="Ammount" type="PanelContainer" unique_id=889400727]
+custom_minimum_size = Vector2(400, 150)
+script = ExtResource("1_ygd2y")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1606134059]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox1" type="VBoxContainer" parent="Margin" unique_id=40843919]
+layout_mode = 2
+
+[node name="Message" type="Label" parent="Margin/VBox1" unique_id=742700620]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(380, 95)
+layout_mode = 2
+size_flags_vertical = 3
+autowrap_mode = 2
+
+[node name="Ammount" type="SpinBox" parent="Margin/VBox1" unique_id=1507418053]
+unique_name_in_owner = true
+layout_mode = 2
+rounded = true
+
+[node name="HBox1" type="HBoxContainer" parent="Margin/VBox1" unique_id=1798296887]
+layout_mode = 2
+
+[node name="Confirm" type="Button" parent="Margin/VBox1/HBox1" unique_id=1386666064]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Confirmar"
+
+[node name="Cancel" type="Button" parent="Margin/VBox1/HBox1" unique_id=1345366218]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancelar"

@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://b3kp5ypwadvdm"]
+
+[ext_resource type="Script" uid="uid://d1s14erahmh7x" path="res://source/scenes/interfaces/shared/confirmation.gd" id="1_n2rfx"]
+
+[node name="Confirmation" type="PanelContainer" unique_id=889400727]
+custom_minimum_size = Vector2(400, 150)
+offset_right = 400.0
+offset_bottom = 150.0
+script = ExtResource("1_n2rfx")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1584173543]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox1" type="VBoxContainer" parent="Margin" unique_id=2045680005]
+layout_mode = 2
+
+[node name="Message" type="Label" parent="Margin/VBox1" unique_id=335182315]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(380, 95)
+layout_mode = 2
+size_flags_vertical = 3
+autowrap_mode = 2
+
+[node name="HBox1" type="HBoxContainer" parent="Margin/VBox1" unique_id=1919336909]
+layout_mode = 2
+
+[node name="Confirm" type="Button" parent="Margin/VBox1/HBox1" unique_id=1167152936]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Confirmar"
+
+[node name="Cancel" type="Button" parent="Margin/VBox1/HBox1" unique_id=536934467]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancelar"
+
+[connection signal="pressed" from="Margin/VBox1/HBox1/Confirm" to="." method="_on_confirm_pressed"]
+[connection signal="pressed" from="Margin/VBox1/HBox1/Cancel" to="." method="_on_cancel_pressed"]

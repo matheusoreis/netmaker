@@ -27,7 +27,8 @@ func alert(code: String) -> void:
 	if scene == null:
 		return
 
-	# TODO: Mostrar a mensagem
+	var alert: AlertInterface = scene.get_interface(&"Alert")
+	alert.setup(tr(code))
 
 	scene.show_interface(&"Alert")
 
@@ -41,12 +42,13 @@ func confirmation(code: String) -> void:
 	if scene == null:
 		return
 
-	# TODO: Mostrar a mensagem
+	var alert: ConfirmationInterface = scene.get_interface(&"Confirmation")
+	alert.setup(tr(code))
 
 	scene.show_interface(&"Confirmation")
 
 
-func ammount(code: String) -> void:
+func ammount(code: String, min_value: int, max_value: int) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
 		return
@@ -55,6 +57,7 @@ func ammount(code: String) -> void:
 	if scene == null:
 		return
 
-	# TODO: Mostrar a mensagem
+	var alert: AmmountInterface = scene.get_interface(&"Ammount")
+	alert.setup(tr(code), min_value, max_value)
 
 	scene.show_interface(&"Ammount")
