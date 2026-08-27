@@ -1,6 +1,25 @@
 [gd_scene format=3 uid="uid://2hkbiwnp1kre"]
 
 [ext_resource type="Script" uid="uid://bavcmx0pay0a1" path="res://source/gameplay/map/map.gd" id="1_4cnpj"]
+[ext_resource type="TileSet" uid="uid://c0cfdhhiuvmuc" path="res://data/maps/tilesets/outside.tres" id="2_b1v8w"]
 
 [node name="Map" type="Node2D" unique_id=2097209850]
 script = ExtResource("1_4cnpj")
+
+[node name="Ground1" type="TileMapLayer" parent="." unique_id=858440107]
+tile_set = ExtResource("2_b1v8w")
+
+[node name="Ground2" type="TileMapLayer" parent="." unique_id=1984765217]
+tile_set = ExtResource("2_b1v8w")
+
+[node name="Below1" type="TileMapLayer" parent="." unique_id=532050641]
+tile_set = ExtResource("2_b1v8w")
+
+[node name="Below2" type="TileMapLayer" parent="." unique_id=383286584]
+tile_set = ExtResource("2_b1v8w")
+
+[node name="Above1" type="TileMapLayer" parent="." unique_id=220051804]
+tile_set = ExtResource("2_b1v8w")
+
+[node name="Above2" type="TileMapLayer" parent="." unique_id=133608791]
+tile_set = ExtResource("2_b1v8w")
