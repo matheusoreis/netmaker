@@ -55,11 +55,11 @@ func enter_map() -> void:
 		_network.exec(sender_id, &"alert", ["NO_CHARACTER_SELECTED"])
 		return
 
-	_send_enter_map(sender_id)
+	_enter_map(sender_id)
 
 
 func leave_map(peer_id: int) -> void:
-	_send_leave_map(peer_id)
+	_leave_map(peer_id)
 
 
 func move_character(direction: Vector2i) -> void:
@@ -94,7 +94,7 @@ func _apply_warp(peer_id: int, character: Character, current_map: Map) -> void:
 	if warp.is_empty():
 		return
 
-	_send_leave_map(peer_id)
+	_leave_map(peer_id)
 
 	var success: bool = await _character_service.warp_character(
 		peer_id,
@@ -133,7 +133,7 @@ func _send_map_data(peer_id: int, map: Map) -> void:
 	_network.exec(peer_id, &"map_data", map_data)
 
 
-func _send_enter_map(peer_id: int) -> void:
+func _enter_map(peer_id: int) -> void:
 	var character: Character = _character_service.get_character(peer_id)
 	if character == null:
 		return
@@ -150,7 +150,7 @@ func _send_enter_map(peer_id: int) -> void:
 		_network.exec(targets, &"character_to_characters", [character_data])
 
 
-func _send_leave_map(peer_id: int) -> void:
+func _leave_map(peer_id: int) -> void:
 	if not _character_service.has_character(peer_id):
 		return
 
