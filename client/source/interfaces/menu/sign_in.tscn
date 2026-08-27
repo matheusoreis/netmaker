@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dochocuwisn0k"]
 
-[ext_resource type="Script" uid="uid://dpuidurqbxqkb" path="res://source/scenes/interfaces/menu/sign_in.gd" id="1_ts64p"]
+[ext_resource type="Script" uid="uid://dpuidurqbxqkb" path="res://source/interfaces/menu/sign_in.gd" id="1_ts64p"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ts64p"]
 

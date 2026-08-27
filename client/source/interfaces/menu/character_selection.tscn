@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cb5b04nm5ce00"]
 
-[ext_resource type="Script" uid="uid://shybg1u8208p" path="res://source/scenes/interfaces/menu/character_selection.gd" id="1_xy61f"]
+[ext_resource type="Script" uid="uid://shybg1u8208p" path="res://source/interfaces/menu/character_selection.gd" id="1_xy61f"]
 [ext_resource type="Texture2D" uid="uid://tq5ys180ye5x" path="res://assets/gfx/characters/fighter01.png" id="2_ab7oy"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ts64p"]

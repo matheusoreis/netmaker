@@ -1,16 +1,16 @@
 [gd_scene format=3 uid="uid://bjas5mav1pgqx"]
 
-[ext_resource type="PackedScene" uid="uid://mi6ddf1qrg1g" path="res://source/scenes/scene.tscn" id="1_54byq"]
-[ext_resource type="Script" uid="uid://c0q1fxt83b1hm" path="res://source/scenes/menu.gd" id="2_uaqul"]
-[ext_resource type="PackedScene" uid="uid://dochocuwisn0k" path="res://source/scenes/interfaces/menu/sign_in.tscn" id="3_75wag"]
-[ext_resource type="PackedScene" uid="uid://b5wjq1qxwuovf" path="res://source/scenes/interfaces/menu/sign_up.tscn" id="4_ukmck"]
-[ext_resource type="PackedScene" uid="uid://c23xdt56mashs" path="res://source/scenes/interfaces/shared/alert.tscn" id="5_bjqtk"]
-[ext_resource type="PackedScene" uid="uid://cb5b04nm5ce00" path="res://source/scenes/interfaces/menu/character_selection.tscn" id="5_p5jyp"]
-[ext_resource type="PackedScene" uid="uid://b3kp5ypwadvdm" path="res://source/scenes/interfaces/shared/confirmation.tscn" id="6_p5jyp"]
-[ext_resource type="PackedScene" uid="uid://6231kadkto4s" path="res://source/scenes/interfaces/menu/character_creation.tscn" id="6_y1lfg"]
+[ext_resource type="PackedScene" uid="uid://mi6ddf1qrg1g" path="res://source/scenes/scene.tscn" id="1_84cb5"]
+[ext_resource type="Script" uid="uid://c0q1fxt83b1hm" path="res://source/scenes/menu/menu.gd" id="2_ljnse"]
+[ext_resource type="PackedScene" uid="uid://dochocuwisn0k" path="res://source/interfaces/menu/sign_in.tscn" id="3_x43fh"]
+[ext_resource type="PackedScene" uid="uid://b5wjq1qxwuovf" path="res://source/interfaces/menu/sign_up.tscn" id="4_avf52"]
+[ext_resource type="PackedScene" uid="uid://cb5b04nm5ce00" path="res://source/interfaces/menu/character_selection.tscn" id="5_xxs2j"]
+[ext_resource type="PackedScene" uid="uid://6231kadkto4s" path="res://source/interfaces/menu/character_creation.tscn" id="6_sy4t4"]
+[ext_resource type="PackedScene" uid="uid://c23xdt56mashs" path="res://source/interfaces/shared/alert.tscn" id="7_vp1g1"]
+[ext_resource type="PackedScene" uid="uid://b3kp5ypwadvdm" path="res://source/interfaces/shared/confirmation.tscn" id="8_th6ov"]
 
-[node name="Menu" unique_id=549394526 node_paths=PackedStringArray("_interfaces") instance=ExtResource("1_54byq")]
-script = ExtResource("2_uaqul")
+[node name="Menu" unique_id=549394526 node_paths=PackedStringArray("_interfaces") instance=ExtResource("1_84cb5")]
+script = ExtResource("2_ljnse")
 _interfaces = {
 &"Alert": NodePath("Canvas/Alert"),
 &"CharacterCreation": NodePath("Canvas/CharacterCreation"),
@@ -22,7 +22,7 @@ _interfaces = {
 
 [node name="Canvas" type="CanvasLayer" parent="." index="0" unique_id=1039849190]
 
-[node name="SignIn" parent="Canvas" index="0" unique_id=889400727 instance=ExtResource("3_75wag")]
+[node name="SignIn" parent="Canvas" index="0" unique_id=889400727 instance=ExtResource("3_x43fh")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -35,7 +35,7 @@ offset_bottom = 116.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SignUp" parent="Canvas" index="1" unique_id=1387835510 instance=ExtResource("4_ukmck")]
+[node name="SignUp" parent="Canvas" index="1" unique_id=1387835510 instance=ExtResource("4_avf52")]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -49,7 +49,7 @@ offset_bottom = 147.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CharacterSelection" parent="Canvas" index="2" unique_id=583046120 instance=ExtResource("5_p5jyp")]
+[node name="CharacterSelection" parent="Canvas" index="2" unique_id=583046120 instance=ExtResource("5_xxs2j")]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -63,7 +63,7 @@ offset_bottom = 101.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CharacterCreation" parent="Canvas" index="3" unique_id=2016206107 instance=ExtResource("6_y1lfg")]
+[node name="CharacterCreation" parent="Canvas" index="3" unique_id=2016206107 instance=ExtResource("6_sy4t4")]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -77,7 +77,7 @@ offset_bottom = 132.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Alert" parent="Canvas" index="4" unique_id=1774741571 instance=ExtResource("5_bjqtk")]
+[node name="Alert" parent="Canvas" index="4" unique_id=1774741571 instance=ExtResource("7_vp1g1")]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -91,7 +91,7 @@ offset_bottom = 75.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Confirmation" parent="Canvas" index="5" unique_id=2010567444 instance=ExtResource("6_p5jyp")]
+[node name="Confirmation" parent="Canvas" index="5" unique_id=2010567444 instance=ExtResource("8_th6ov")]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5

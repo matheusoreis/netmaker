@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c23xdt56mashs"]
 
-[ext_resource type="Script" uid="uid://bvridci174vn6" path="res://source/scenes/interfaces/shared/alert.gd" id="1_40bdm"]
+[ext_resource type="Script" uid="uid://bvridci174vn6" path="res://source/interfaces/shared/alert.gd" id="1_40bdm"]
 
 [node name="Alert" type="PanelContainer" unique_id=889400727]
 custom_minimum_size = Vector2(400, 150)

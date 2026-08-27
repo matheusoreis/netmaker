@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://6231kadkto4s"]
 
-[ext_resource type="Script" uid="uid://dwx5421x4oxcy" path="res://source/scenes/interfaces/menu/character_creation.gd" id="1_he07l"]
+[ext_resource type="Script" uid="uid://dwx5421x4oxcy" path="res://source/interfaces/menu/character_creation.gd" id="1_he07l"]
 [ext_resource type="Texture2D" uid="uid://tq5ys180ye5x" path="res://assets/gfx/characters/fighter01.png" id="2_vikuq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xy61f"]

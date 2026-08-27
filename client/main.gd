@@ -77,11 +77,11 @@ func _on_disconnected() -> void:
 
 
 func go_to_menu() -> void:
-	_change_scene("res://source/scenes/menu.tscn")
+	_change_scene("res://source/scenes/menu/menu.tscn")
 
 
 func go_to_game() -> void:
-	_change_scene("res://source/scenes/game.tscn")
+	_change_scene("res://source/scenes/game/game.tscn")
 
 
 func _change_scene(scene_path: String) -> void:

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cvcyjo516yh14"]
 
-[ext_resource type="Script" uid="uid://o5vamaud5w5e" path="res://source/scenes/interfaces/shared/ammount.gd" id="1_ygd2y"]
+[ext_resource type="Script" uid="uid://o5vamaud5w5e" path="res://source/interfaces/shared/ammount.gd" id="1_ygd2y"]
 
 [node name="Ammount" type="PanelContainer" unique_id=889400727]
 custom_minimum_size = Vector2(400, 150)
