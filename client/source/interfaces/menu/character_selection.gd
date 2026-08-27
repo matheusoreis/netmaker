@@ -75,6 +75,17 @@ func _get_character_id(character: Array) -> int:
 	return character[0] if character.size() > 0 else -1
 
 
+func _show_alert(menu: Menu, message: String) -> void:
+	var alert: AlertInterface = menu.get_interface(&"Alert")
+
+	alert.confirmed.connect(func() -> void:
+		menu.hide_interface(&"Alert")
+	, CONNECT_ONE_SHOT)
+
+	alert.setup(message)
+	menu.show_interface(&"Alert")
+
+
 func _on_back_pressed() -> void:
 	if _current_index > 0:
 		_current_index -= 1
@@ -97,7 +108,12 @@ func _on_new_pressed() -> void:
 
 
 func _on_select_pressed() -> void:
+	var menu: Menu = _main.current_scene
+	if menu == null:
+		return
+
 	if _is_empty_slot():
+		_show_alert(menu, "Nenhum personagem selecionado!")
 		return
 
 	var character_id: int = _get_character_id(_characters[_current_index])
@@ -111,6 +127,7 @@ func _on_delete_pressed() -> void:
 		return
 
 	if _is_empty_slot():
+		_show_alert(menu, "Nenhum personagem selecionado!")
 		return
 
 	var character_id: int = _get_character_id(_characters[_current_index])

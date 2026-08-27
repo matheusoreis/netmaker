@@ -38,7 +38,7 @@ func _is_png_file(dir: DirAccess, file_name: String) -> bool:
 
 func _try_load_sprite(file_name: String) -> void:
 	var full_path: String = Constants.CHARACTER_SPRITE_DIRECTORY + file_name
-	var texture := load(full_path) as CompressedTexture2D
+	var texture: CompressedTexture2D = load(full_path)
 	if not texture:
 		return
 
@@ -52,6 +52,24 @@ func _update_preview() -> void:
 
 	var atlas: AtlasTexture = %Preview.texture
 	atlas.atlas = _sprites[_current_index]
+
+
+func _show_alert(menu: Menu, message: String) -> void:
+	var alert: AlertInterface = menu.get_interface(&"Alert")
+
+	alert.confirmed.connect(func() -> void:
+		menu.hide_interface(&"Alert")
+	, CONNECT_ONE_SHOT)
+
+	alert.setup(message)
+	menu.show_interface(&"Alert")
+
+
+func _validate_identifier(identifier: String) -> String:
+	if identifier.is_empty():
+		return "Informe o nome e tente novamente!"
+
+	return ""
 
 
 func _on_back_pressed() -> void:
@@ -79,10 +97,10 @@ func _on_confirm_pressed() -> void:
 		return
 
 	var identifier: String = %Identifier.text
-	if identifier.is_empty():
-		var alert: AlertInterface = menu.get_interface(&"Alert")
-		alert.setup("Informe o nome e tente novamente!")
-		menu.show_interface(&"Alert")
+
+	var error: String = _validate_identifier(identifier)
+	if not error.is_empty():
+		_show_alert(menu, error)
 		return
 
 	var selected_name: String = _sprite_names[_current_index]
