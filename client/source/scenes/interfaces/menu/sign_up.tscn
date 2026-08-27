@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://b5wjq1qxwuovf"]
+
+[ext_resource type="Script" uid="uid://c7t3xxojpnpr1" path="res://source/scenes/interfaces/menu/sign_up.gd" id="1_v5275"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v5275"]
+
+[node name="SignUp" type="PanelContainer" unique_id=889400727]
+custom_minimum_size = Vector2(400, 150)
+offset_right = 400.0
+offset_bottom = 150.0
+script = ExtResource("1_v5275")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=937304364]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox1" type="VBoxContainer" parent="Margin" unique_id=646773393]
+layout_mode = 2
+
+[node name="Close" type="Button" parent="Margin/VBox1" unique_id=211189768]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="Label" type="Label" parent="Margin/VBox1" unique_id=1088789518]
+layout_mode = 2
+text = "Email"
+
+[node name="Email" type="LineEdit" parent="Margin/VBox1" unique_id=1286250832]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Margin/VBox1" unique_id=1456933549]
+layout_mode = 2
+text = "Senha"
+
+[node name="Password" type="LineEdit" parent="Margin/VBox1" unique_id=1987798371]
+unique_name_in_owner = true
+layout_mode = 2
+secret = true
+
+[node name="Label3" type="Label" parent="Margin/VBox1" unique_id=160601422]
+layout_mode = 2
+text = "Senha"
+
+[node name="Password2" type="LineEdit" parent="Margin/VBox1" unique_id=1842860850]
+unique_name_in_owner = true
+layout_mode = 2
+secret = true
+
+[node name="HSeparator" type="HSeparator" parent="Margin/VBox1" unique_id=339334362]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxEmpty_v5275")
+
+[node name="SignUp" type="Button" parent="Margin/VBox1" unique_id=173533169]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cadastrar"
+
+[connection signal="pressed" from="Margin/VBox1/Close" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="Margin/VBox1/SignUp" to="." method="_on_sign_up_pressed"]

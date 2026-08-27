@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://dochocuwisn0k"]
+
+[ext_resource type="Script" uid="uid://dpuidurqbxqkb" path="res://source/scenes/interfaces/menu/sign_in.gd" id="1_ts64p"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ts64p"]
+
+[node name="SignIn" type="PanelContainer" unique_id=889400727]
+custom_minimum_size = Vector2(400, 150)
+offset_right = 400.0
+offset_bottom = 150.0
+script = ExtResource("1_ts64p")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1084229609]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox1" type="VBoxContainer" parent="Margin" unique_id=1317354249]
+layout_mode = 2
+
+[node name="Close" type="Button" parent="Margin/VBox1" unique_id=1829683226]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="Label" type="Label" parent="Margin/VBox1" unique_id=1205254139]
+layout_mode = 2
+text = "Email"
+
+[node name="Email" type="LineEdit" parent="Margin/VBox1" unique_id=48172242]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Margin/VBox1" unique_id=1979469915]
+layout_mode = 2
+text = "Senha"
+
+[node name="Password" type="LineEdit" parent="Margin/VBox1" unique_id=1758133747]
+unique_name_in_owner = true
+layout_mode = 2
+secret = true
+
+[node name="HSeparator" type="HSeparator" parent="Margin/VBox1" unique_id=1981810209]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ts64p")
+
+[node name="HBox1" type="HBoxContainer" parent="Margin/VBox1" unique_id=1057116952]
+layout_mode = 2
+
+[node name="SignIn" type="Button" parent="Margin/VBox1/HBox1" unique_id=1328008297]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Acessar"
+
+[node name="SignUp" type="Button" parent="Margin/VBox1/HBox1" unique_id=1025037720]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cadastrar"
+
+[connection signal="pressed" from="Margin/VBox1/Close" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="Margin/VBox1/HBox1/SignIn" to="." method="_on_sign_in_pressed"]
+[connection signal="pressed" from="Margin/VBox1/HBox1/SignUp" to="." method="_on_sign_up_pressed"]

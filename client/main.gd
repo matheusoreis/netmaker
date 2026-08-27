@@ -58,19 +58,19 @@ func _setup_handlers() -> bool:
 
 
 func _on_connected() -> void:
-	print("Conectado ao servidor.")
+	go_to_menu()
 
 
 func _on_disconnected() -> void:
-	print("Desconectado do servidor.")
+	go_to_menu()
 
 
 func go_to_menu() -> void:
-	_change_scene("res://source/scenes/menu/menu.tscn")
+	_change_scene("res://source/scenes/menu.tscn")
 
 
 func go_to_game() -> void:
-	_change_scene("res://source/scenes/game/game.tscn")
+	_change_scene("res://source/scenes/game.tscn")
 
 
 func _change_scene(scene_path: String) -> void:
@@ -78,5 +78,4 @@ func _change_scene(scene_path: String) -> void:
 	var scene: Node = packed.instantiate()
 
 	current_scene = scene
-
 	add_child(scene)

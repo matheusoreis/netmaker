@@ -5,7 +5,7 @@ extends Node
 const MAPS_DATA_DIRECTORY: String = "res://data/maps/"
 
 ## Endereço no qual o cliente irá escutar.
-const HOST: String = "0.0.0.0"
+const HOST: String = "127.0.0.1"
 ## Porta TCP/UDP utilizada pelo cliente.
 const PORT: int = 7001
 

@@ -2,6 +2,73 @@
 
 [ext_resource type="PackedScene" uid="uid://mi6ddf1qrg1g" path="res://source/scenes/scene.tscn" id="1_54byq"]
 [ext_resource type="Script" uid="uid://c0q1fxt83b1hm" path="res://source/scenes/menu.gd" id="2_uaqul"]
+[ext_resource type="PackedScene" uid="uid://dochocuwisn0k" path="res://source/scenes/interfaces/menu/sign_in.tscn" id="3_75wag"]
+[ext_resource type="PackedScene" uid="uid://b5wjq1qxwuovf" path="res://source/scenes/interfaces/menu/sign_up.tscn" id="4_ukmck"]
+[ext_resource type="PackedScene" uid="uid://c23xdt56mashs" path="res://source/scenes/interfaces/shared/alert.tscn" id="5_bjqtk"]
+[ext_resource type="PackedScene" uid="uid://b3kp5ypwadvdm" path="res://source/scenes/interfaces/shared/confirmation.tscn" id="6_p5jyp"]
 
-[node name="Scene" unique_id=549394526 instance=ExtResource("1_54byq")]
+[node name="Menu" unique_id=549394526 node_paths=PackedStringArray("_interfaces") instance=ExtResource("1_54byq")]
 script = ExtResource("2_uaqul")
+_interfaces = {
+&"Alert": NodePath("Canvas/Alert"),
+&"Confirmation": NodePath("Canvas/Confirmation"),
+&"SignIn": NodePath("Canvas/SignIn"),
+&"SignUp": NodePath("Canvas/SignUp")
+}
+
+[node name="Canvas" type="CanvasLayer" parent="." index="0" unique_id=1039849190]
+
+[node name="SignIn" parent="Canvas" index="0" unique_id=889400727 instance=ExtResource("3_75wag")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -116.5
+offset_right = 200.0
+offset_bottom = 116.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SignUp" parent="Canvas" index="1" unique_id=1387835510 instance=ExtResource("4_ukmck")]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -147.5
+offset_right = 200.0
+offset_bottom = 147.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Alert" parent="Canvas" index="2" unique_id=1774741571 instance=ExtResource("5_bjqtk")]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -75.0
+offset_right = 200.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Confirmation" parent="Canvas" index="3" unique_id=2010567444 instance=ExtResource("6_p5jyp")]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -75.0
+offset_right = 200.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
