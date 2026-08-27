@@ -3,7 +3,7 @@ class_name Character
 
 
 var _queue: Queue
-var _animator: EntityAnimator
+var _animator: CharacterAnimator
 
 var _movement_offset: Vector2 = Vector2.ZERO
 var _is_transitioning: bool = false
@@ -20,7 +20,7 @@ func setup(
 	super.setup(id, identifier, spritesheet, map, cell, facing)
 
 	_queue = Queue.new(Constants.MAX_PENDING_MOVES)
-	_animator = EntityAnimator.new(%Sprite2D)
+	_animator = CharacterAnimator.new(%Sprite2D)
 
 	_load_texture()
 	_calculate_sprite_offset()
@@ -108,6 +108,7 @@ func _process_transition(delta: float) -> void:
 	_movement_offset = _movement_offset.move_toward(Vector2.ZERO, speed)
 
 	_position_sync()
+
 	_animator.on_move_progress(_movement_offset)
 	_animator.sync(facing)
 

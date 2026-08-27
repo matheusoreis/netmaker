@@ -1,5 +1,5 @@
 extends RefCounted
-class_name EntityAnimator
+class_name CharacterAnimator
 
 
 enum StepFrame {
@@ -27,7 +27,7 @@ func on_move_started() -> void:
 
 
 func on_move_progress(movement_offset: Vector2) -> void:
-	var walked_enough := movement_offset.length() > (Constants.CELL_SIZE * Constants.ANIMATION_STEP_THRESHOLD)
+	var walked_enough: bool = movement_offset.length() > (Constants.CELL_SIZE * Constants.ANIMATION_STEP_THRESHOLD)
 	_current_frame = _last_step_frame if walked_enough else StepFrame.IDLE
 
 
@@ -39,7 +39,7 @@ func sync(facing: Vector2i) -> void:
 	if _sprite.texture == null:
 		return
 
-	var resolved_facing := _resolve_cardinal(facing)
+	var resolved_facing: Vector2i = _resolve_cardinal(facing)
 	var row: int = Constants.DIRECTION_SPRITE_ROW[resolved_facing]
 
 	_sprite.frame = row * _sprite.hframes + _current_frame
