@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://6231kadkto4s"]
+
+[ext_resource type="Script" uid="uid://dwx5421x4oxcy" path="res://source/scenes/interfaces/menu/character_creation.gd" id="1_he07l"]
+[ext_resource type="Texture2D" uid="uid://tq5ys180ye5x" path="res://assets/gfx/characters/fighter01.png" id="2_vikuq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xy61f"]
+atlas = ExtResource("2_vikuq")
+region = Rect2(0, 0, 32, 48)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ts64p"]
+
+[node name="CharacterCreation" type="PanelContainer" unique_id=889400727]
+custom_minimum_size = Vector2(200, 150)
+offset_right = 200.0
+offset_bottom = 203.0
+script = ExtResource("1_he07l")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1084229609]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox1" type="VBoxContainer" parent="Margin" unique_id=1317354249]
+layout_mode = 2
+
+[node name="Close" type="Button" parent="Margin/VBox1" unique_id=118291995]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="Label" type="Label" parent="Margin/VBox1" unique_id=1052831807]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Identificador"
+vertical_alignment = 1
+
+[node name="Identifier" type="LineEdit" parent="Margin/VBox1" unique_id=1738839674]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBox1" type="HBoxContainer" parent="Margin/VBox1" unique_id=1057116952]
+layout_mode = 2
+
+[node name="Back" type="Button" parent="Margin/VBox1/HBox1" unique_id=1328008297]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+
+[node name="Preview" type="TextureRect" parent="Margin/VBox1/HBox1" unique_id=547990574]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+offset_transform_enabled = true
+offset_transform_scale = Vector2(2, 2)
+texture = SubResource("AtlasTexture_xy61f")
+expand_mode = 1
+stretch_mode = 3
+
+[node name="Next" type="Button" parent="Margin/VBox1/HBox1" unique_id=1025037720]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+
+[node name="HSeparator" type="HSeparator" parent="Margin/VBox1" unique_id=1981810209]
+layout_mode = 2
+theme_override_constants/separation = 10
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ts64p")
+
+[node name="Confirm" type="Button" parent="Margin/VBox1" unique_id=1083516038]
+layout_mode = 2
+text = "Novo"
+
+[connection signal="pressed" from="Margin/VBox1/Close" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="Margin/VBox1/HBox1/Back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="Margin/VBox1/HBox1/Next" to="." method="_on_next_pressed"]
+[connection signal="pressed" from="Margin/VBox1/Confirm" to="." method="_on_confirm_pressed"]
