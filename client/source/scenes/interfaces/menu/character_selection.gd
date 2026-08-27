@@ -4,7 +4,7 @@ class_name CharacterSelection
 
 var _main: Main
 
-var _characters: Array[Array] = []
+var _characters: Array = []
 var _current_index: int = 0
 
 
@@ -13,7 +13,7 @@ func _ready() -> void:
 	_update_display()
 
 
-func update_characters(characters: Array[Array]) -> void:
+func update_characters(characters: Array) -> void:
 	_characters = characters
 	_current_index = 0
 	_update_display()

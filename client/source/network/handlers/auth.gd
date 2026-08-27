@@ -28,7 +28,7 @@ func sign_in() -> void:
 	Network.exec(&"list_characters")
 
 	menu.hide_interface(&"SignIn")
-	menu.show_interface(&"Characterlist")
+	menu.show_interface(&"CharacterSelection")
 
 
 func sign_up() -> void:
@@ -43,4 +43,4 @@ func sign_up() -> void:
 	Network.exec(&"list_characters")
 
 	menu.hide_interface(&"SignUp")
-	menu.show_interface(&"Characterlist")
+	menu.show_interface(&"CharacterSelection")

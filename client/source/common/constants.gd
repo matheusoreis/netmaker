@@ -1,8 +1,11 @@
 extends Node
 
 
-## Diretório dos dados do mapa
+## Diretório dos dados
 const MAPS_DATA_DIRECTORY: String = "res://data/maps/"
+
+## Diretório dos gráficos
+const CHARACTER_SPRITE_DIRECTORY: String = "res://assets/gfx/characters/"
 
 ## Endereço no qual o cliente irá escutar.
 const HOST: String = "127.0.0.1"
@@ -11,8 +14,8 @@ const PORT: int = 7001
 
 ## Versão do cliente.
 const MAJOR_VERSION: int = 1
-const MINOR_VERSION: int = 68
-const REVISION_VERSION: int = 64
+const MINOR_VERSION: int = 0
+const REVISION_VERSION: int = 0
 
 ## Tamanho de cada célula do mapa.
 const CELL_SIZE: int = 32

@@ -29,7 +29,8 @@ func list_characters(characters: Array) -> void:
 	if menu == null:
 		return
 
-	# TODO: Configurar a UI
+	var selection: CharacterSelection = menu.get_interface(&"CharacterSelection")
+	selection.update_characters(characters)
 
 	menu.hide_interface(&"CharacterCreation")
 	menu.show_interface(&"CharacterSelection")

@@ -14,6 +14,9 @@ func _init() -> void:
 	if not _setup_network():
 		return
 
+	if not _setup_handlers():
+		return
+
 	Network.connected.connect(_on_connected)
 	Network.disconnected.connect(_on_disconnected)
 
@@ -35,21 +38,29 @@ func _setup_network() -> bool:
 
 func _setup_handlers() -> bool:
 	_action_handler = ActionHandler.new()
-	var action: Error = _auth_handler.register()
+	add_child(_action_handler)
+
+	var action: Error = _action_handler.register()
 	if action != OK:
 		return false
 
 	_auth_handler = AuthHandler.new()
+	add_child(_auth_handler)
+
 	var auth_err: Error = _auth_handler.register()
 	if auth_err != OK:
 		return false
 
 	_character_handler = CharacterHandler.new()
+	add_child(_character_handler)
+
 	var character_err: Error = _character_handler.register()
 	if character_err != OK:
 		return false
 
 	_map_handler = MapHandler.new()
+	add_child(_map_handler)
+
 	var map_err: Error = _map_handler.register()
 	if map_err != OK:
 		return false
@@ -76,6 +87,12 @@ func go_to_game() -> void:
 func _change_scene(scene_path: String) -> void:
 	var packed: PackedScene = load(scene_path)
 	var scene: Node = packed.instantiate()
+
+	if current_scene != null:
+		current_scene.queue_free()
+
+	var class_name_str: String = scene.get_script().get_global_name()
+	scene.name = class_name_str
 
 	current_scene = scene
 	add_child(scene)
