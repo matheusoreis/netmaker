@@ -5,3 +5,6 @@
 
 [node name="Character" unique_id=829598516 instance=ExtResource("1_a2yrd")]
 script = ExtResource("2_sqm7k")
+
+[node name="Sprite2D" parent="." index="0" unique_id=1935286420]
+unique_name_in_owner = true

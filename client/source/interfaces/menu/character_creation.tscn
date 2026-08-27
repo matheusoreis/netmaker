@@ -5,7 +5,7 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xy61f"]
 atlas = ExtResource("2_vikuq")
-region = Rect2(0, 0, 32, 48)
+region = Rect2(32, 0, 32, 48)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ts64p"]
 

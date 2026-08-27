@@ -40,3 +40,19 @@ const AVALIABLE_SPRITES: Array[String] = ["fighter01", "fighter02"]
 const IDENTIFIER_REGEX: String = "^[a-zA-Z0-9]{4,}$"
 const EMAIL_REGEX: String = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
 const PASSWORD_REGEX: String = "^(?=.*[0-9])(?=.*[!@#$%^&*(),.?\":{}|<>]).{4,}$"
+
+
+const SPRITESHEET_COLUMNS: int = 3
+const SPRITESHEET_ROWS: int = 4
+
+const DIRECTION_SPRITE_ROW: Dictionary[Vector2i, int] = {
+	Vector2i.DOWN: 0,
+	Vector2i.LEFT: 1,
+	Vector2i.RIGHT: 2,
+	Vector2i.UP: 3,
+}
+
+const ANIMATION_STEP_THRESHOLD: float = 0.5
+const MAX_PENDING_MOVES: int = 32
+
+const WALKING_SPEED: float = 5.0

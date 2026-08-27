@@ -4,3 +4,7 @@
 
 [node name="Entity" type="Node2D" unique_id=829598516]
 script = ExtResource("1_02phn")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1935286420]
+hframes = 4
+vframes = 4
