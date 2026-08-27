@@ -42,7 +42,7 @@ const CELL_DOWN: int = 8
 const CELL_LEFT: int = 16
 
 ## Mapa inicial dos jogadores.
-const START_MAP: int = 0
+const START_MAP: int = 1
 ## Posição inicial dos jogadores.
 const START_MAP_POSITION: Vector2i = Vector2i(1, 1)
 ## Direção inicial dos jogadores.

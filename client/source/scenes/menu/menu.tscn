@@ -21,7 +21,6 @@ _interfaces = {
 }
 
 [node name="Canvas" type="CanvasLayer" parent="." index="0" unique_id=1039849190]
-visible = false
 
 [node name="SignIn" parent="Canvas" index="0" unique_id=889400727 instance=ExtResource("3_x43fh")]
 anchors_preset = 8

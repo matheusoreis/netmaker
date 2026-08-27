@@ -28,6 +28,10 @@ func setup(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i
 
 
 func import_collisions(collisions: Dictionary) -> void:
+	if collisions.is_empty():
+		_load_collisions_from_tiles()
+		return
+
 	self.collisions.assign(collisions)
 
 

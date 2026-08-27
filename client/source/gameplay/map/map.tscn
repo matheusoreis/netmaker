@@ -4,6 +4,7 @@
 [ext_resource type="TileSet" uid="uid://c0cfdhhiuvmuc" path="res://data/maps/tilesets/outside.tres" id="2_b1v8w"]
 
 [node name="Map" type="Node2D" unique_id=2097209850]
+y_sort_enabled = true
 script = ExtResource("1_4cnpj")
 
 [node name="Ground1" type="TileMapLayer" parent="." unique_id=858440107]
@@ -19,7 +20,9 @@ tile_set = ExtResource("2_b1v8w")
 tile_set = ExtResource("2_b1v8w")
 
 [node name="Above1" type="TileMapLayer" parent="." unique_id=220051804]
+y_sort_enabled = true
 tile_set = ExtResource("2_b1v8w")
 
 [node name="Above2" type="TileMapLayer" parent="." unique_id=133608791]
+y_sort_enabled = true
 tile_set = ExtResource("2_b1v8w")

@@ -2,6 +2,14 @@ extends RefCounted
 class_name CharacterAnimator
 
 
+const DIRECTION_SPRITE_ROW: Dictionary[Vector2i, int] = {
+	Vector2i.DOWN: 0,
+	Vector2i.LEFT: 1,
+	Vector2i.RIGHT: 2,
+	Vector2i.UP: 3,
+}
+
+
 enum StepFrame {
 	LEFT_STEP = 0,
 	IDLE = 1,
@@ -40,13 +48,13 @@ func sync(facing: Vector2i) -> void:
 		return
 
 	var resolved_facing: Vector2i = _resolve_cardinal(facing)
-	var row: int = Constants.DIRECTION_SPRITE_ROW[resolved_facing]
+	var row: int = DIRECTION_SPRITE_ROW[resolved_facing]
 
 	_sprite.frame = row * _sprite.hframes + _current_frame
 
 
 func _resolve_cardinal(facing: Vector2i) -> Vector2i:
-	if Constants.DIRECTION_SPRITE_ROW.has(facing):
+	if DIRECTION_SPRITE_ROW.has(facing):
 		return facing
 
 	if absi(facing.x) > absi(facing.y):

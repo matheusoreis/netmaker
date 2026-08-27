@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cjalwvbcpext2" path="res://source/gameplay/map/entity/entity.gd" id="1_02phn"]
 
 [node name="Entity" type="Node2D" unique_id=829598516]
+y_sort_enabled = true
 script = ExtResource("1_02phn")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1935286420]
