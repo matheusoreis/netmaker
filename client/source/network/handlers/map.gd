@@ -136,6 +136,8 @@ func character_data(character_data: Array) -> void:
 	game.current_map.add_character(character)
 	game.current_character = character
 
+	character.start_warp_cooldown()
+
 
 func character_to_characters(character_data: Array) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
@@ -230,6 +232,12 @@ func _unload_current_map(game: Game) -> void:
 	if game.current_map == null:
 		return
 
-	game.current_map.queue_free()
+	var old_map: Map = game.current_map
+
 	game.current_map = null
 	game.current_character = null
+
+	if old_map.get_parent():
+		old_map.get_parent().remove_child(old_map)
+
+	old_map.free()

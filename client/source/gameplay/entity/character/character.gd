@@ -8,6 +8,8 @@ var _animator: CharacterAnimator
 var _movement_offset: Vector2 = Vector2.ZERO
 var _is_transitioning: bool = false
 
+var _warp_cooldown: float = 0.0
+
 
 func setup(
 	id: int,
@@ -32,10 +34,25 @@ func setup(
 func _physics_process(delta: float) -> void:
 	_update_movement(delta)
 	_position_sync()
+	_update_warp_cooldown(delta)
 
 
 func is_transitioning() -> bool:
 	return _is_transitioning
+
+
+func is_warping() -> bool:
+	return _warp_cooldown > 0.0
+
+
+func start_warp_cooldown() -> void:
+	_warp_cooldown = Constants.WARP_COOLDOWN
+	_queue.clear()
+
+
+func _update_warp_cooldown(delta: float) -> void:
+	if _warp_cooldown > 0.0:
+		_warp_cooldown = max(_warp_cooldown - delta, 0.0)
 
 
 func move(direction: Vector2i) -> void:

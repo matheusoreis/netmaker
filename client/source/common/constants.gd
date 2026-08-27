@@ -48,3 +48,4 @@ const ANIMATION_STEP_THRESHOLD: float = 0.5
 const MAX_PENDING_MOVES: int = 32
 
 const WALKING_SPEED: float = 5.0
+const WARP_COOLDOWN: float = 0.3

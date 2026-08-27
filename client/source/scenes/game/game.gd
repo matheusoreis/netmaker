@@ -21,6 +21,9 @@ func _handle_movement() -> void:
 	if current_character.is_transitioning():
 		return
 
+	if current_character.is_warping():
+		return
+
 	var direction: Vector2i = Vector2i.ZERO
 	if Input.is_action_pressed("move_up"):
 		direction = Vector2i.UP

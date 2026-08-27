@@ -30,6 +30,10 @@ func alert(code: String) -> void:
 
 	scene.show_interface(&"Alert")
 
+	alert.confirmed.connect(
+		func() -> void: scene.hide_interface(&"Alert")
+	, CONNECT_ONE_SHOT)
+
 
 func confirmation(code: String) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
