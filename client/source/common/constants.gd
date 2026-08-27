@@ -31,7 +31,7 @@ const CELL_DOWN: int = 8
 const CELL_LEFT: int = 16
 
 ## Sprites disponíveis para criar os personagens.
-const AVALIABLE_SPRITES: Array[String] = ["red", "blue"]
+const AVALIABLE_SPRITES: Array[String] = ["fighter01", "fighter02"]
 
 ## Regras de validação dos dados de usuário.
 const IDENTIFIER_REGEX: String = "^[a-zA-Z0-9]{4,}$"

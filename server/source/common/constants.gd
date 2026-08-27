@@ -49,7 +49,7 @@ const START_MAP_POSITION: Vector2i = Vector2i(1, 1)
 const START_MAP_FACING: Vector2i = Vector2i.DOWN
 
 ## Sprites disponíveis para criar os personagens.
-const AVALIABLE_SPRITES: Array[String] = ["red", "blue"]
+const AVALIABLE_SPRITES: Array[String] = ["fighter01", "fighter02"]
 
 ## Regras de validação dos dados de usuário.
 const IDENTIFIER_REGEX: String = "^[a-zA-Z0-9]{4,}$"
