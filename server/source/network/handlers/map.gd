@@ -45,21 +45,7 @@ func map_data() -> void:
 		_network.exec(sender_id, &"alert", ["MAP_NOT_FOUND"])
 		return
 
-	var targets: Array = _character_service.get_peers_in_map(map.id)
-	targets.erase(sender_id)
-
-	var characters: Array = []
-	for target_id in targets:
-		var other: Character = _character_service.get_character(target_id)
-		if other:
-			var data: Array = other.to_array()
-			data[0] = target_id
-			characters.append(data)
-
-	var map_data: Array = map.to_array()
-	map_data.append(characters)
-
-	_network.exec(sender_id, &"map_data", map_data)
+	_send_map_data(sender_id, map)
 
 
 func enter_map() -> void:
@@ -69,30 +55,11 @@ func enter_map() -> void:
 		_network.exec(sender_id, &"alert", ["NO_CHARACTER_SELECTED"])
 		return
 
-	var character: Character = _character_service.get_character(sender_id)
-	var character_data: Array = character.to_array()
-	character_data[0] = sender_id
-
-	_network.exec(sender_id, &"character_data", [character_data])
-
-	var targets: Array = _character_service.get_peers_in_map(character.map)
-	targets.erase(sender_id)
-
-	if not targets.is_empty():
-		_network.exec(targets, &"character_to_characters", [character_data])
+	_send_enter_map(sender_id)
 
 
 func leave_map(peer_id: int) -> void:
-	if not _character_service.has_character(peer_id):
-		return
-
-	var character: Character = _character_service.get_character(peer_id)
-
-	var targets: Array = _character_service.get_peers_in_map(character.map)
-	targets.erase(peer_id)
-
-	if not targets.is_empty():
-		_network.exec(targets, &"character_left", [peer_id])
+	_send_leave_map(peer_id)
 
 
 func move_character(direction: Vector2i) -> void:
@@ -117,3 +84,80 @@ func move_character(direction: Vector2i) -> void:
 
 	if not targets.is_empty():
 		_network.exec(targets, &"move_character", [sender_id, direction])
+
+	if map.has_warp(character.cell):
+		await _apply_warp(sender_id, character, map)
+
+
+func _apply_warp(peer_id: int, character: Character, current_map: Map) -> void:
+	var warp: Dictionary = await _map_service.validate_warp(current_map.id, character.cell)
+	if warp.is_empty():
+		return
+
+	_send_leave_map(peer_id)
+
+	var success: bool = await _character_service.warp_character(
+		peer_id,
+		warp["to_map_id"],
+		warp["to_cell"],
+		warp["to_facing"]
+	)
+
+	if not success:
+		return
+
+	var new_map: Map = _map_service.get_map(warp["to_map_id"])
+	if new_map == null:
+		return
+
+	_network.exec(peer_id, &"warp_map", [new_map.id])
+
+	_send_map_data(peer_id, new_map)
+
+
+func _send_map_data(peer_id: int, map: Map) -> void:
+	var targets: Array = _character_service.get_peers_in_map(map.id)
+	targets.erase(peer_id)
+
+	var characters: Array = []
+	for target_id in targets:
+		var other: Character = _character_service.get_character(target_id)
+		if other:
+			var data: Array = other.to_array()
+			data[0] = target_id
+			characters.append(data)
+
+	var map_data: Array = map.to_array()
+	map_data.append(characters)
+
+	_network.exec(peer_id, &"map_data", map_data)
+
+
+func _send_enter_map(peer_id: int) -> void:
+	var character: Character = _character_service.get_character(peer_id)
+	if character == null:
+		return
+
+	var character_data: Array = character.to_array()
+	character_data[0] = peer_id
+
+	_network.exec(peer_id, &"character_data", [character_data])
+
+	var targets: Array = _character_service.get_peers_in_map(character.map)
+	targets.erase(peer_id)
+
+	if not targets.is_empty():
+		_network.exec(targets, &"character_to_characters", [character_data])
+
+
+func _send_leave_map(peer_id: int) -> void:
+	if not _character_service.has_character(peer_id):
+		return
+
+	var character: Character = _character_service.get_character(peer_id)
+
+	var targets: Array = _character_service.get_peers_in_map(character.map)
+	targets.erase(peer_id)
+
+	if not targets.is_empty():
+		_network.exec(targets, &"character_left", [peer_id])

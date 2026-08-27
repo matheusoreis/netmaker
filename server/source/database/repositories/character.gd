@@ -177,6 +177,18 @@ func update_character_position(character_id: int, cell: Vector2i, facing: Vector
 	return [OK, null]
 
 
+func update_character_map(character_id: int, map_id: int, cell: Vector2i, facing: Vector2i) -> Array:
+	var result: Error = await _database.exec(
+		"UPDATE characters SET map = ?, cell_x = ?, cell_y = ?, facing_x = ?, facing_y = ? WHERE id = ?",
+		[map_id, cell.x, cell.y, facing.x, facing.y, character_id]
+	)
+
+	if result != OK:
+		return [ERR_DATABASE_CANT_WRITE, "DATABASE_ERROR"]
+
+	return [OK, null]
+
+
 func update_access(character_id: int) -> Array:
 	var result: Error = await _database.exec(
 		"UPDATE characters SET access_at = ? WHERE id = ?",

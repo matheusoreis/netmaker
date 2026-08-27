@@ -9,7 +9,8 @@ func register() -> Error:
 		character_to_characters,
 		move_character,
 		correct_movement,
-		character_left
+		character_left,
+		warp_map
 	])
 
 
@@ -20,7 +21,8 @@ func unregister() -> Error:
 		character_to_characters,
 		move_character,
 		correct_movement,
-		character_left
+		character_left,
+		warp_map
 	])
 
 
@@ -29,8 +31,14 @@ func map_data(id: int, identifier: String, bgm: String, bgs: String, size: Vecto
 	if main == null:
 		return
 
+	var game: Game = main.current_scene
+	if game == null:
+		return
+
+	_unload_current_map(game)
+
 	var map_path: String = Constants.MAPS_DATA_DIRECTORY + "%d.tscn" % id
-	var character_path: String = "res://source/gameplay/map/entity/character/character.tscn"
+	var character_path: String = "res://source/gameplay/entity/character/character.tscn"
 
 	if not ResourceLoader.exists(map_path):
 		push_error("Mapa não encontrado: ", map_path)
@@ -70,10 +78,6 @@ func map_data(id: int, identifier: String, bgm: String, bgs: String, size: Vecto
 
 		map_instance.add_character(character)
 
-	var game: Game = main.current_scene
-	if game == null:
-		return
-
 	game.current_map = map_instance
 	game.add_child(map_instance)
 
@@ -93,7 +97,7 @@ func character_data(character_data: Array) -> void:
 	if map == null:
 		return
 
-	var character_path: String = "res://source/gameplay/map/entity/character/character.tscn"
+	var character_path: String = "res://source/gameplay/entity/character/character.tscn"
 
 	if not ResourceLoader.exists(character_path):
 		push_error("Cena do personagem não encontrada: ", character_path)
@@ -142,7 +146,7 @@ func character_to_characters(character_data: Array) -> void:
 	if game == null:
 		return
 
-	var character_path: String = "res://source/gameplay/map/entity/character/character.tscn"
+	var character_path: String = "res://source/gameplay/entity/character/character.tscn"
 
 	if not ResourceLoader.exists(character_path):
 		push_error("Cena do personagem não encontrada: ", character_path)
@@ -208,3 +212,24 @@ func character_left(id: int) -> void:
 		return
 
 	game.current_map.remove_character(id)
+
+
+func warp_map(_map_id: int) -> void:
+	var main: Main = get_tree().root.get_node("./Main")
+	if main == null:
+		return
+
+	var game: Game = main.current_scene
+	if game == null:
+		return
+
+	_unload_current_map(game)
+
+
+func _unload_current_map(game: Game) -> void:
+	if game.current_map == null:
+		return
+
+	game.current_map.queue_free()
+	game.current_map = null
+	game.current_character = null

@@ -86,6 +86,25 @@ func move_character(peer_id: int, direction: Vector2i, map: Map) -> bool:
 	return true
 
 
+func warp_character(peer_id: int, to_map_id: int, to_cell: Vector2i, to_facing: Vector2i) -> bool:
+	var character: Character = _character_module.character(peer_id)
+	if character == null:
+		return false
+
+	character.map = to_map_id
+	character.cell = to_cell
+	character.facing = to_facing
+
+	var result: Array = await _character_repository.update_character_map(
+		character.id,
+		to_map_id,
+		to_cell,
+		to_facing
+	)
+
+	return result[0] == OK
+
+
 func save_character_position(peer_id: int) -> void:
 	var character: Character = _character_module.character(peer_id)
 	if character == null:

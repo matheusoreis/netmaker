@@ -99,3 +99,26 @@ class MapCollisionModel extends Models:
 			self.cell_y,
 			self.flag
 		]
+
+
+class MapWarpModel extends Models:
+	var map_id: int
+	var from_cell_x: int
+	var from_cell_y: int
+	var to_map_id: int
+	var to_cell_x: int
+	var to_cell_y: int
+	var to_facing_x: int
+	var to_facing_y: int
+
+	func to_array() -> Array:
+		return [
+			self.map_id,
+			self.from_cell_x,
+			self.from_cell_y,
+			self.to_map_id,
+			self.to_cell_x,
+			self.to_cell_y,
+			self.to_facing_x,
+			self.to_facing_y
+		]

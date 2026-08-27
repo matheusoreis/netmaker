@@ -9,7 +9,9 @@ var bgm: String
 var bgs: String
 
 var size: Vector2i
+
 var collisions: Dictionary[Vector2i, int]
+var warps: Dictionary[Vector2i, Dictionary]
 
 var characters: Dictionary[int, Character]
 
@@ -26,6 +28,10 @@ func _init(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i
 
 func import_collisions(collisions: Dictionary) -> void:
 	self.collisions.assign(collisions)
+
+
+func import_warps(warps: Dictionary) -> void:
+	self.warps.assign(warps)
 
 
 func pixel_size() -> Vector2i:
@@ -50,6 +56,14 @@ func collision_flag(cell: Vector2i) -> int:
 
 func is_solid(cell: Vector2i) -> bool:
 	return (collision_flag(cell) & Constants.CELL_FULL_BLOCK) != 0
+
+
+func has_warp(cell: Vector2i) -> bool:
+	return warps.has(cell)
+
+
+func get_warp(cell: Vector2i) -> Dictionary:
+	return warps.get(cell, {})
 
 
 func can_pass(from: Vector2i, direction: Vector2i) -> bool:
