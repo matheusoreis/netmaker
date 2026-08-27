@@ -138,7 +138,7 @@ func get_collisions(map_id: int) -> Dictionary[Vector2i, int]:
 	return collisions
 
 
-func update_collisions(map_id: int, collisions: Dictionary[Vector2i, int]) -> bool:
+func update_collisions(map_id: int, collisions: Array) -> bool:
 	var delete_result: Error = await _database.exec(
 		"DELETE FROM map_collisions WHERE map_id = ?",
 		[map_id]
@@ -150,8 +150,10 @@ func update_collisions(map_id: int, collisions: Dictionary[Vector2i, int]) -> bo
 	if collisions.is_empty():
 		return true
 
-	for cell in collisions:
-		var flag: int = collisions[cell]
+	for entry in collisions:
+		var cell: Vector2i = entry[0]
+		var flag: int = entry[1]
+
 		var result: Error = await _database.exec(
 			"INSERT INTO map_collisions (map_id, cell_x, cell_y, flag) VALUES (?, ?, ?, ?)",
 			[map_id, cell.x, cell.y, flag]
@@ -160,6 +162,7 @@ func update_collisions(map_id: int, collisions: Dictionary[Vector2i, int]) -> bo
 			return false
 
 	return true
+
 
 
 func get_warps(map_id: int) -> Dictionary[Vector2i, Dictionary]:
@@ -231,3 +234,31 @@ func warp_exists(map_id: int, cell_x: int, cell_y: int) -> bool:
 		[map_id, cell_x, cell_y]
 	)
 	return result != null and result > 0
+
+
+func update_warps(map_id: int, warps: Array) -> bool:
+	var delete_result: Error = await _database.exec(
+		"DELETE FROM map_warps WHERE map_id = ?",
+		[map_id]
+	)
+
+	if delete_result != OK:
+		return false
+
+	if warps.is_empty():
+		return true
+
+	for entry in warps:
+		var from_cell: Vector2i = entry[0]
+		var to_map_id: int = entry[1]
+		var to_cell: Vector2i = entry[2]
+		var to_facing: Vector2i = entry[3]
+
+		var result: Error = await _database.exec(
+			"INSERT INTO map_warps (map_id, from_cell_x, from_cell_y, to_map_id, to_cell_x, to_cell_y, to_facing_x, to_facing_y) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+			[map_id, from_cell.x, from_cell.y, to_map_id, to_cell.x, to_cell.y, to_facing.x, to_facing.y]
+		)
+		if result != OK:
+			return false
+
+	return true

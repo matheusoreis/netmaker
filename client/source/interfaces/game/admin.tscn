@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://f66bidd43jmf"]
+
+[ext_resource type="Script" uid="uid://dmucjy2n0jso4" path="res://source/interfaces/game/admin.gd" id="1_cduyi"]
+
+[node name="Admin" type="PanelContainer" unique_id=889400727]
+custom_minimum_size = Vector2(400, 112)
+offset_right = 400.0
+offset_bottom = 112.0
+script = ExtResource("1_cduyi")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=937304364]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox1" type="VBoxContainer" parent="Margin" unique_id=646773393]
+layout_mode = 2
+
+[node name="Close" type="Button" parent="Margin/VBox1" unique_id=211189768]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="VBox1" type="VBoxContainer" parent="Margin/VBox1" unique_id=223158080]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Margin/VBox1/VBox1" unique_id=393124192]
+layout_mode = 2
+text = "Mapa"
+
+[node name="UpdateMap" type="Button" parent="Margin/VBox1/VBox1" unique_id=1886303719]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Atualizar Mapa"
+
+[connection signal="pressed" from="Margin/VBox1/Close" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="Margin/VBox1/VBox1/UpdateMap" to="." method="_on_update_map_pressed"]

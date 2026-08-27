@@ -86,13 +86,17 @@ func reload_map(map_id: int) -> bool:
 	return await load_map(map_id)
 
 
-func update_collisions(map_id: int, new_collisions: Dictionary[Vector2i, int]) -> bool:
+func update_collisions(map_id: int, new_collisions: Array) -> bool:
 	var map: Map = _map_module.map(map_id)
 	if not map:
 		push_error("Mapa %d não encontrado" % map_id)
 		return false
 
-	map.import_collisions(new_collisions)
+	var collisions_dict: Dictionary[Vector2i, int] = {}
+	for entry in new_collisions:
+		collisions_dict[entry[0]] = entry[1]
+
+	map.import_collisions(collisions_dict)
 
 	var success: bool = await _map_repository.update_collisions(map_id, new_collisions)
 	if not success:
@@ -172,4 +176,29 @@ func delete_warps_by_map(map_id: int) -> bool:
 		return false
 
 	await reload_map(map_id)
+	return true
+
+
+func update_warps(map_id: int, new_warps: Array) -> bool:
+	var map: Map = _map_module.map(map_id)
+	if not map:
+		push_error("Mapa %d não encontrado" % map_id)
+		return false
+
+	var warps_dict: Dictionary[Vector2i, Dictionary] = {}
+	for entry in new_warps:
+		var from_cell: Vector2i = entry[0]
+		warps_dict[from_cell] = {
+			"to_map_id": entry[1],
+			"to_cell": entry[2],
+			"to_facing": entry[3]
+		}
+
+	map.import_warps(warps_dict)
+
+	var success: bool = await _map_repository.update_warps(map_id, new_warps)
+	if not success:
+		push_error("Falha ao salvar warps do mapa %d" % map_id)
+		return false
+
 	return true

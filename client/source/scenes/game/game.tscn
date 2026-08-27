@@ -2,6 +2,56 @@
 
 [ext_resource type="PackedScene" uid="uid://mi6ddf1qrg1g" path="res://source/scenes/scene.tscn" id="1_apbe7"]
 [ext_resource type="Script" uid="uid://c5ik0qve1dc4w" path="res://source/scenes/game/game.gd" id="2_o5nun"]
+[ext_resource type="PackedScene" uid="uid://f66bidd43jmf" path="res://source/interfaces/game/admin.tscn" id="3_xh4q7"]
+[ext_resource type="PackedScene" uid="uid://c23xdt56mashs" path="res://source/interfaces/shared/alert.tscn" id="4_2v631"]
+[ext_resource type="PackedScene" uid="uid://b3kp5ypwadvdm" path="res://source/interfaces/shared/confirmation.tscn" id="5_lop5m"]
 
-[node name="Game" unique_id=549394526 instance=ExtResource("1_apbe7")]
+[node name="Game" unique_id=549394526 node_paths=PackedStringArray("_interfaces") instance=ExtResource("1_apbe7")]
 script = ExtResource("2_o5nun")
+_interfaces = {
+&"Admin": NodePath("Canvas/Admin"),
+&"Alert": NodePath("Canvas/Alert"),
+&"Confirmation": NodePath("Canvas/Confirmation")
+}
+
+[node name="Canvas" type="CanvasLayer" parent="." index="0" unique_id=898533364]
+
+[node name="Admin" parent="Canvas" index="0" unique_id=889400727 instance=ExtResource("3_xh4q7")]
+visible = false
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -145.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Alert" parent="Canvas" index="1" unique_id=71231727 instance=ExtResource("4_2v631")]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -75.0
+offset_right = 200.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Confirmation" parent="Canvas" index="2" unique_id=1452963636 instance=ExtResource("5_lop5m")]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -75.0
+offset_right = 200.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2

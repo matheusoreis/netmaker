@@ -36,9 +36,6 @@ func toggle_interface(identifier: StringName) -> void:
 
 	interface.visible = not interface.visible
 
-	if interface.visible and interface is Control:
-		(interface as Control).bring_to_front()
-
 
 func show_interface(identifier: StringName) -> void:
 	var interface: Control = get_interface(identifier)

@@ -21,6 +21,7 @@ func register() -> Error:
 		map_data,
 		enter_map,
 		move_character,
+		update_map,
 	])
 
 
@@ -29,6 +30,7 @@ func unregister() -> Error:
 		map_data,
 		enter_map,
 		move_character,
+		update_map,
 	])
 
 
@@ -87,6 +89,32 @@ func move_character(direction: Vector2i) -> void:
 
 	if map.has_warp(character.cell):
 		await _apply_warp(sender_id, character, map)
+
+
+func update_map(collisions: Array, warps: Array) -> void:
+	var sender_id: int = _network.sender_id()
+
+	var account: Account = _auth_service.get_account(sender_id)
+	if account == null or not account.is_admin():
+		_network.exec(sender_id, &"alert", ["UNAUTHORIZED"])
+		return
+
+	var character: Character = _character_service.get_character(sender_id)
+	if character == null:
+		return
+
+	if not _map_service.has_map(character.map):
+		_network.exec(sender_id, &"alert", ["MAP_NOT_FOUND"])
+		return
+
+	var collisions_success: bool = await _map_service.update_collisions(character.map, collisions)
+	var warps_success: bool = await _map_service.update_warps(character.map, warps)
+
+	if not collisions_success or not warps_success:
+		_network.exec(sender_id, &"alert", ["MAP_UPDATE_FAILED"])
+		return
+
+	_network.exec(sender_id, &"alert", ["MAP_UPDATED"])
 
 
 func _apply_warp(peer_id: int, character: Character, current_map: Map) -> void:
