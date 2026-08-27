@@ -6,7 +6,6 @@ func register() -> Error:
 	return Network.register([
 		alert,
 		confirmation,
-		ammount
 	])
 
 
@@ -14,7 +13,6 @@ func unregister() -> Error:
 	return Network.unregister([
 		alert,
 		confirmation,
-		ammount
 	])
 
 
@@ -46,18 +44,3 @@ func confirmation(code: String) -> void:
 	alert.setup(tr(code))
 
 	scene.show_interface(&"Confirmation")
-
-
-func ammount(code: String, min_value: int, max_value: int) -> void:
-	var main: Main = get_tree().root.get_node("./Main")
-	if main == null:
-		return
-
-	var scene: Scene = main.current_scene
-	if scene == null:
-		return
-
-	var alert: AmmountInterface = scene.get_interface(&"Ammount")
-	alert.setup(tr(code), min_value, max_value)
-
-	scene.show_interface(&"Ammount")
