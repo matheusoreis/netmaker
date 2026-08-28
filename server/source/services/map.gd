@@ -102,10 +102,6 @@ func update_map(
 			push_error("Falha ao salvar dados do mapa %d" % map_id)
 			return false
 
-	if not await _map_repository.touch_version(map_id):
-		push_error("Falha ao salvar dados do mapa %d" % map_id)
-		return false
-
 	var collisions_dict: Dictionary[Vector2i, int] = {}
 	for entry in new_collisions:
 		collisions_dict[entry[0]] = entry[1]
@@ -124,7 +120,6 @@ func update_map(
 	map.size = size
 	map.import_collisions(collisions_dict)
 	map.import_warps(warps_dict)
-	map.version += 1
 
 	return true
 
@@ -151,8 +146,7 @@ func _load_map_from_model(map_model: Models.MapModel) -> void:
 		map_model.identifier,
 		map_model.bgm,
 		map_model.bgs,
-		Vector2i(map_model.size_x, map_model.size_y),
-		map_model.version
+		Vector2i(map_model.size_x, map_model.size_y)
 	)
 
 	var collisions: Dictionary[Vector2i, int] = await _map_repository.get_collisions(map_model.id)

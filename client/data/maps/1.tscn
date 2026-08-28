@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://36sbqpamkx11"]
 
 [ext_resource type="PackedScene" uid="uid://2hkbiwnp1kre" path="res://source/gameplay/map/map.tscn" id="1_u3yom"]
-[ext_resource type="Script" uid="uid://k5thasxwd25r" path="res://source/gameplay/map/components/warp.gd" id="2_tnne1"]
+[ext_resource type="Script" uid="uid://k5thasxwd25r" path="res://source/gameplay/map/resources/warp.gd" id="2_tnne1"]
 
 [sub_resource type="Resource" id="Resource_1qch1"]
 script = ExtResource("2_tnne1")
@@ -16,7 +16,7 @@ script = ExtResource("2_tnne1")
 from_cell = Vector2i(35, 20)
 to_map_id = 2
 to_cell = Vector2i(0, 20)
-to_facing = Vector2i(-1, 0)
+to_facing = Vector2i(1, 0)
 metadata/_custom_type_script = "uid://k5thasxwd25r"
 
 [node name="Map" unique_id=2097209850 node_paths=PackedStringArray("tilemap_layers") instance=ExtResource("1_u3yom")]

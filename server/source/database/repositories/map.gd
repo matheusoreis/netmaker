@@ -19,7 +19,6 @@ func setup_schema() -> void:
 			identifier TEXT NOT NULL UNIQUE,
 			bgm TEXT NOT NULL,
 			bgs TEXT NOT NULL,
-			version INTEGER NOT NULL DEFAULT 1,
 			size_x INTEGER NOT NULL DEFAULT 80,
 			size_y INTEGER NOT NULL DEFAULT 34,
 			created_at INTEGER NOT NULL,
@@ -70,7 +69,7 @@ func setup_schema() -> void:
 
 func get_all_maps() -> Array[Models.MapModel]:
 	var rows: Array[Models] = await _database.rows(
-		"SELECT id, identifier, bgm, bgs, version, size_x, size_y, created_at, updated_at FROM maps ORDER BY id",
+		"SELECT id, identifier, bgm, bgs, size_x, size_y, created_at, updated_at FROM maps ORDER BY id",
 		[],
 		Models.MapModel
 	)
@@ -84,7 +83,7 @@ func get_all_maps() -> Array[Models.MapModel]:
 
 func get_map(map_id: int) -> Models.MapModel:
 	var model: Models = await _database.row(
-		"SELECT id, identifier, bgm, bgs, version, size_x, size_y, created_at, updated_at FROM maps WHERE id = ?",
+		"SELECT id, identifier, bgm, bgs, size_x, size_y, created_at, updated_at FROM maps WHERE id = ?",
 		[map_id],
 		Models.MapModel
 	)
@@ -96,7 +95,7 @@ func create_map(id: int, identifier: String, bgm: String, bgs: String, size: Vec
 	var now: int = _database.now()
 
 	var result: Error = await _database.exec(
-		"INSERT INTO maps (id, identifier, bgm, bgs, version, size_x, size_y, created_at, updated_at) VALUES (?, ?, ?, ?, 1, ?, ?, ?, ?)",
+		"INSERT INTO maps (id, identifier, bgm, bgs, size_x, size_y, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 		[id, identifier, bgm, bgs, size.x, size.y, now, now]
 	)
 
@@ -127,15 +126,6 @@ func delete_map(map_id: int) -> bool:
 	var result: Error = await _database.exec(
 		"DELETE FROM maps WHERE id = ?",
 		[map_id]
-	)
-
-	return result == OK
-
-
-func touch_version(map_id: int) -> bool:
-	var result: Error = await _database.exec(
-		"UPDATE maps SET version = version + 1, updated_at = ? WHERE id = ?",
-		[_database.now(), map_id]
 	)
 
 	return result == OK

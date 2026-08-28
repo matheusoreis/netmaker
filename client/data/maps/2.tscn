@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://chwttu7rjvg1t"]
 
 [ext_resource type="PackedScene" uid="uid://2hkbiwnp1kre" path="res://source/gameplay/map/map.tscn" id="1_sddxv"]
-[ext_resource type="Script" uid="uid://k5thasxwd25r" path="res://source/gameplay/map/components/warp.gd" id="2_tcvou"]
+[ext_resource type="Script" uid="uid://k5thasxwd25r" path="res://source/gameplay/map/resources/warp.gd" id="2_tcvou"]
 
 [sub_resource type="Resource" id="Resource_tcvou"]
 script = ExtResource("2_tcvou")
