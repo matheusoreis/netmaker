@@ -2,15 +2,18 @@ extends Node2D
 class_name Main
 
 
+## Handlers responsáveis pelas operações do cliente.
 var _action_handler: ActionHandler
 var _auth_handler: AuthHandler
 var _character_handler: CharacterHandler
 var _map_handler: MapHandler
 var _chat_handler: ChatHandler
 
+## Cena atual do jogo.
 var current_scene: Scene
 
 
+## Inicializa o cliente e os gerenciadores.
 func _init() -> void:
 	if not _setup_network():
 		return
@@ -22,6 +25,7 @@ func _init() -> void:
 	Network.disconnected.connect(_on_disconnected)
 
 
+## Configura a conexão de rede.
 func _setup_network() -> bool:
 	print("Iniciando cliente em %s:%d" % [
 		Constants.HOST,
@@ -37,6 +41,7 @@ func _setup_network() -> bool:
 	return true
 
 
+## Configura todos os gerenciadores de handlers.
 func _setup_handlers() -> bool:
 	_action_handler = ActionHandler.new()
 	add_child(_action_handler)
@@ -76,22 +81,27 @@ func _setup_handlers() -> bool:
 	return true
 
 
+## Processa a conexão estabelecida com o servidor.
 func _on_connected() -> void:
 	go_to_menu()
 
 
+## Processa a desconexão do servidor.
 func _on_disconnected() -> void:
 	go_to_menu()
 
 
+## Navega para o menu principal.
 func go_to_menu() -> void:
 	_change_scene("res://source/scenes/menu/menu.tscn")
 
 
+## Navega para a cena do jogo.
 func go_to_game() -> void:
 	_change_scene("res://source/scenes/game/game.tscn")
 
 
+## Troca a cena atual pela cena informada.
 func _change_scene(scene_path: String) -> void:
 	var packed: PackedScene = load(scene_path)
 	var scene: Node = packed.instantiate()
