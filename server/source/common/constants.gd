@@ -55,3 +55,5 @@ const AVALIABLE_SPRITES: Array[String] = ["fighter01", "fighter02"]
 const IDENTIFIER_REGEX: String = "^[a-zA-Z0-9]{4,}$"
 const EMAIL_REGEX: String = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
 const PASSWORD_REGEX: String = "^(?=.*[0-9])(?=.*[!@#$%^&*(),.?\":{}|<>]).{4,}$"
+
+const MAX_CHAT_MESSAGE_LENGTH: int = 200

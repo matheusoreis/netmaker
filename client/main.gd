@@ -6,6 +6,7 @@ var _action_handler: ActionHandler
 var _auth_handler: AuthHandler
 var _character_handler: CharacterHandler
 var _map_handler: MapHandler
+var _chat_handler: ChatHandler
 
 var current_scene: Scene
 
@@ -63,6 +64,13 @@ func _setup_handlers() -> bool:
 
 	var map_err: Error = _map_handler.register()
 	if map_err != OK:
+		return false
+
+	_chat_handler = ChatHandler.new()
+	add_child(_chat_handler)
+
+	var chat_err: Error = _chat_handler.register()
+	if chat_err != OK:
 		return false
 
 	return true

@@ -48,5 +48,9 @@ func get_peers_in_map(map_id: int) -> Array[int]:
 	return result
 
 
+func get_all_peers() -> Array[int]:
+	return _characters.keys()
+
+
 func clear() -> void:
 	_characters.clear()

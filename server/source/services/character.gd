@@ -74,6 +74,10 @@ func get_peers_in_map(map_id: int) -> Array[int]:
 	return _character_module.get_peers_in_map(map_id)
 
 
+func get_all_peers() -> Array[int]:
+	return _character_module.get_all_peers()
+
+
 func move_character(peer_id: int, direction: Vector2i, map: Map) -> bool:
 	var character: Character = _character_module.character(peer_id)
 	if character == null:

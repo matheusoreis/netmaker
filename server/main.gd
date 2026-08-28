@@ -27,6 +27,7 @@ var _map_service: MapService
 var _auth_handler: AuthHandler
 var _character_handler: CharacterHandler
 var _map_handler: MapHandler
+var _chat_handler: ChatHandler
 
 
 ## Inicializa os módulos e configura a rede.
@@ -136,6 +137,11 @@ func _setup_handlers() -> bool:
 	_map_handler = MapHandler.new(_network, _auth_service, _character_service, _map_service)
 	var map_err: Error = _map_handler.register()
 	if map_err != OK:
+		return false
+
+	_chat_handler = ChatHandler.new(_network, _character_service)
+	var chat_err: Error = _chat_handler.register()
+	if chat_err != OK:
 		return false
 
 	return true

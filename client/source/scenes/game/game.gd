@@ -6,6 +6,9 @@ var current_map: Map
 var current_character: Character
 
 
+var chat_active: bool = false
+
+
 func _ready() -> void:
 	Network.exec(&"map_data")
 
@@ -22,6 +25,9 @@ func _handle_movement() -> void:
 		return
 
 	if current_character.is_warping():
+		return
+
+	if chat_active:
 		return
 
 	if Input.is_action_just_pressed("admin"):

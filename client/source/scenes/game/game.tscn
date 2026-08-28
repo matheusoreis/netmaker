@@ -5,12 +5,14 @@
 [ext_resource type="PackedScene" uid="uid://f66bidd43jmf" path="res://source/interfaces/game/admin.tscn" id="3_xh4q7"]
 [ext_resource type="PackedScene" uid="uid://c23xdt56mashs" path="res://source/interfaces/shared/alert.tscn" id="4_2v631"]
 [ext_resource type="PackedScene" uid="uid://b3kp5ypwadvdm" path="res://source/interfaces/shared/confirmation.tscn" id="5_lop5m"]
+[ext_resource type="PackedScene" uid="uid://drrnwxogg6yfi" path="res://source/interfaces/game/chat.tscn" id="6_lop5m"]
 
 [node name="Game" unique_id=549394526 node_paths=PackedStringArray("_interfaces") instance=ExtResource("1_apbe7")]
 script = ExtResource("2_o5nun")
 _interfaces = {
 &"Admin": NodePath("Canvas/Admin"),
 &"Alert": NodePath("Canvas/Alert"),
+&"Chat": NodePath("Canvas/Chat"),
 &"Confirmation": NodePath("Canvas/Confirmation")
 }
 
@@ -55,3 +57,5 @@ offset_right = 200.0
 offset_bottom = 75.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Chat" parent="Canvas" index="3" unique_id=2065655684 instance=ExtResource("6_lop5m")]
