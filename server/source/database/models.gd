@@ -70,6 +70,7 @@ class MapModel extends Models:
 	var identifier: String
 	var bgm: String
 	var bgs: String
+	var version: int
 	var size_x: int
 	var size_y: int
 	var created_at: int

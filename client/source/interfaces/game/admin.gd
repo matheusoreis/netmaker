@@ -39,10 +39,11 @@ func _on_update_map_pressed() -> void:
 
 	_show_confirmation(game, "Enviar o mapa ao servidor?",
 		func() -> void:
-			var collisions: Array = game.current_map.export_collisions()
-			var warps: Array = game.current_map.export_warps()
+			var map: Map = game.current_map
 
-			Network.exec(&"update_map", [collisions, warps])
+			var collisions: Array = map.export_collisions()
+			var warps: Array = map.export_warps()
 
+			Network.exec(&"update_map", [map.identifier, map.bgm, map.bgs, map.size, collisions, warps])
 			game.hide_interface(&"Confirmation")
 	)

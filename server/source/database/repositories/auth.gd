@@ -5,15 +5,15 @@ class_name AuthRepository
 var _database: Database
 
 
-func _init(database: Database) -> void:
+func setup(database: Database) -> void:
 	_database = database
 
 	if _database:
-		setup_schema()
+		await setup_schema()
 
 
 func setup_schema() -> void:
-	_database.exec("""
+	await _database.exec("""
 		CREATE TABLE IF NOT EXISTS accounts (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			email TEXT NOT NULL UNIQUE,
@@ -26,7 +26,7 @@ func setup_schema() -> void:
 		)
 	""")
 
-	_database.exec("""
+	await _database.exec("""
 		CREATE INDEX IF NOT EXISTS idx_accounts_email ON accounts(email)
 	""")
 

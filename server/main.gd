@@ -31,7 +31,7 @@ var _map_handler: MapHandler
 
 ## Inicializa os módulos e configura a rede.
 func _ready() -> void:
-	if not _setup_database():
+	if not await _setup_database():
 		return
 
 	_setup_modules()
@@ -76,9 +76,14 @@ func _setup_database() -> bool:
 		push_error("Erro ao iniciar o banco de dados (%s)." % error_string(err))
 		return false
 
-	_auth_repository = AuthRepository.new(_database)
-	_character_repository = CharacterRepository.new(_database)
-	_map_repository = MapRepository.new(_database)
+	_auth_repository = AuthRepository.new()
+	await _auth_repository.setup(_database)
+
+	_character_repository = CharacterRepository.new()
+	await _character_repository.setup(_database)
+
+	_map_repository = MapRepository.new()
+	await _map_repository.setup(_database)
 
 	print("Banco de dados iniciado com sucesso!")
 	return true

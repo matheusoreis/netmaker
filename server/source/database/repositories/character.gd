@@ -5,15 +5,15 @@ class_name CharacterRepository
 var _database: Database
 
 
-func _init(database: Database) -> void:
+func setup(database: Database) -> void:
 	_database = database
 
 	if database:
-		setup_schema()
+		await setup_schema()
 
 
 func setup_schema() -> void:
-	_database.exec("""
+	await _database.exec("""
 		CREATE TABLE IF NOT EXISTS characters (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			account INTEGER NOT NULL,
@@ -33,15 +33,15 @@ func setup_schema() -> void:
 		)
 	""")
 
-	_database.exec("""
+	await _database.exec("""
 		CREATE INDEX IF NOT EXISTS idx_characters_account ON characters(account)
 	""")
 
-	_database.exec("""
+	await _database.exec("""
 		CREATE INDEX IF NOT EXISTS idx_characters_identifier ON characters(identifier)
 	""")
 
-	_database.exec("""
+	await _database.exec("""
 		CREATE INDEX IF NOT EXISTS idx_characters_map ON characters(map)
 	""")
 

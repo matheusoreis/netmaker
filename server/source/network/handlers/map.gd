@@ -91,7 +91,7 @@ func move_character(direction: Vector2i) -> void:
 		await _apply_warp(sender_id, character, map)
 
 
-func update_map(collisions: Array, warps: Array) -> void:
+func update_map(identifier: String, bgm: String, bgs: String, size: Vector2i, collisions: Array, warps: Array) -> void:
 	var sender_id: int = _network.sender_id()
 
 	var account: Account = _auth_service.get_account(sender_id)
@@ -107,10 +107,17 @@ func update_map(collisions: Array, warps: Array) -> void:
 		_network.exec(sender_id, &"alert", ["MAP_NOT_FOUND"])
 		return
 
-	var collisions_success: bool = await _map_service.update_collisions(character.map, collisions)
-	var warps_success: bool = await _map_service.update_warps(character.map, warps)
+	var success: bool = await _map_service.update_map(
+		character.map,
+		identifier,
+		bgm,
+		bgs,
+		size,
+		collisions,
+		warps
+	)
 
-	if not collisions_success or not warps_success:
+	if not success:
 		_network.exec(sender_id, &"alert", ["MAP_UPDATE_FAILED"])
 		return
 
@@ -118,7 +125,7 @@ func update_map(collisions: Array, warps: Array) -> void:
 
 
 func _apply_warp(peer_id: int, character: Character, current_map: Map) -> void:
-	var warp: Dictionary = await _map_service.validate_warp(current_map.id, character.cell)
+	var warp: Dictionary = _map_service.validate_warp(current_map.id, character.cell)
 	if warp.is_empty():
 		return
 

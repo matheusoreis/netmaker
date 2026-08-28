@@ -26,7 +26,7 @@ func unregister() -> Error:
 	])
 
 
-func map_data(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i, collisions: Dictionary, characters: Array) -> void:
+func map_data(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i, version: int, collisions: Dictionary, warps: Dictionary, characters: Array) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
 		return
@@ -54,8 +54,11 @@ func map_data(id: int, identifier: String, bgm: String, bgs: String, size: Vecto
 		push_error("Falha ao instanciar mapa: ", map_path)
 		return
 
+	print(version)
+
 	map_instance.setup(id, identifier, bgm, bgs, size)
 	map_instance.import_collisions(collisions)
+	map_instance.import_warps(warps)
 
 	var packed_character: PackedScene = load(character_path)
 	if not packed_character:

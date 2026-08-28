@@ -8,6 +8,7 @@ var identifier: String
 var bgm: String
 var bgs: String
 
+var version: int
 var size: Vector2i
 
 var collisions: Dictionary[Vector2i, int]
@@ -16,13 +17,14 @@ var warps: Dictionary[Vector2i, Dictionary]
 var characters: Dictionary[int, Character]
 
 
-func _init(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i) -> void:
+func _init(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i, version: int) -> void:
 	self.id = id
 	self.identifier = identifier
 
 	self.bgm = bgm
 	self.bgs = bgs
 
+	self.version = version
 	self.size = size
 
 
@@ -138,7 +140,7 @@ func get_characters_at(cell: Vector2i) -> Array[Character]:
 
 
 func to_array() -> Array:
-	return [id, identifier, bgm, bgs, size, collisions]
+	return [id, identifier, bgm, bgs, size, version, collisions, warps]
 
 
 func _direction_to_flag(direction: Vector2i) -> int:

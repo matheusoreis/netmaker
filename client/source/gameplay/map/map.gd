@@ -11,6 +11,7 @@ var bgs: String
 var size: Vector2i
 
 var collisions: Dictionary[Vector2i, int]
+var warps: Dictionary[Vector2i, Dictionary]
 
 @export_group("Layers")
 @export var tilemap_layers: Array[TileMapLayer] = []
@@ -31,6 +32,7 @@ func setup(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i
 	self.size = size
 
 	collisions.clear()
+	warps.clear()
 
 
 func import_collisions(collisions_data: Dictionary) -> void:
@@ -39,6 +41,23 @@ func import_collisions(collisions_data: Dictionary) -> void:
 		return
 
 	self.collisions.assign(collisions_data)
+
+
+func import_warps(warps_data: Dictionary) -> void:
+	if warps_data.is_empty():
+		_load_warps_from_data()
+		return
+
+	self.warps.assign(warps_data)
+	_sync_warps_data_from_warps()
+
+
+func has_warp(cell: Vector2i) -> bool:
+	return warps.has(cell)
+
+
+func get_warp(cell: Vector2i) -> Dictionary:
+	return warps.get(cell, {})
 
 
 func pixel_size() -> Vector2i:
@@ -143,12 +162,13 @@ func get_characters_at(cell: Vector2i) -> Array[Character]:
 func export_warps() -> Array:
 	var result: Array = []
 
-	for warp: MapWarpData in warps_data:
+	for cell: Vector2i in warps:
+		var warp: Dictionary = warps[cell]
 		result.append([
-			warp.from_cell,
-			warp.to_map_id,
-			warp.to_cell,
-			warp.to_facing
+			cell,
+			warp.get("to_map_id"),
+			warp.get("to_cell"),
+			warp.get("to_facing")
 		])
 
 	return result
@@ -178,6 +198,35 @@ func _load_collisions_from_tiles() -> void:
 			if flag != Constants.CELL_NONE:
 				var current_flag: int = collisions.get(cell, Constants.CELL_NONE)
 				collisions[cell] = current_flag | flag
+
+
+func _load_warps_from_data() -> void:
+	warps.clear()
+
+	for warp: MapWarpData in warps_data:
+		if not warp:
+			continue
+
+		warps[warp.from_cell] = {
+			"to_map_id": warp.to_map_id,
+			"to_cell": warp.to_cell,
+			"to_facing": warp.to_facing
+		}
+
+
+func _sync_warps_data_from_warps() -> void:
+	warps_data.clear()
+
+	for cell: Vector2i in warps:
+		var warp: Dictionary = warps[cell]
+
+		var data := MapWarpData.new()
+		data.from_cell = cell
+		data.to_map_id = warp.get("to_map_id")
+		data.to_cell = warp.get("to_cell")
+		data.to_facing = warp.get("to_facing")
+
+		warps_data.append(data)
 
 
 func _get_collision_from_tile(layer: TileMapLayer, cell: Vector2i) -> int:
