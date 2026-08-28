@@ -2,6 +2,9 @@ extends RefCounted
 class_name Database
 
 
+signal transaction_released()
+
+
 enum Codes {
 	OK = 0, ERROR = 1, INTERNAL = 2, PERM = 3, ABORT = 4, BUSY = 5,
 	LOCKED = 6, NOMEM = 7, READONLY = 8, INTERRUPT = 9, IOERR = 10,
@@ -36,6 +39,8 @@ enum Codes {
 
 var _aslet: Aslet
 var _conn: AsletConn
+
+var _in_transaction: bool = false
 
 
 func _init() -> void:
@@ -123,3 +128,34 @@ func exec(query: String, params: Array = []) -> Error:
 		push_error("[SQLITE] Erro ao executar query: %s" % result[2])
 		return result[0] as Error
 	return OK
+
+
+func begin_transaction() -> bool:
+	while _in_transaction:
+		await transaction_released
+
+	_in_transaction = true
+
+	var result: Error = await exec("BEGIN TRANSACTION")
+	if result != OK:
+		_in_transaction = false
+		transaction_released.emit()
+		return false
+
+	return true
+
+
+func commit_transaction() -> bool:
+	var result: Error = await exec("COMMIT")
+
+	_in_transaction = false
+	transaction_released.emit()
+
+	return result == OK
+
+
+func rollback_transaction() -> void:
+	await exec("ROLLBACK")
+
+	_in_transaction = false
+	transaction_released.emit()
