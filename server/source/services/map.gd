@@ -2,15 +2,19 @@ extends RefCounted
 class_name MapService
 
 
+## Repositório responsável pelos dados dos mapas.
 var _map_repository: MapRepository
+## Módulo que mantém os mapas carregados.
 var _map_module: MapModule
 
 
+## Cria um serviço de mapas.
 func _init(map_repository: MapRepository, map_module: MapModule) -> void:
 	_map_repository = map_repository
 	_map_module = map_module
 
 
+## Carrega todos os mapas do banco de dados.
 func load_all_maps() -> void:
 	var map_models: Array[Models.MapModel] = await _map_repository.get_all_maps()
 
@@ -18,6 +22,7 @@ func load_all_maps() -> void:
 		await _load_map_from_model(map_model)
 
 
+## Carrega um mapa pelo seu identificador.
 func load_map(map_id: int) -> bool:
 	if _map_module.has(map_id):
 		return true
@@ -31,20 +36,24 @@ func load_map(map_id: int) -> bool:
 	return true
 
 
+## Retorna um mapa carregado pelo seu identificador.
 func get_map(map_id: int) -> Map:
 	return _map_module.map(map_id)
 
 
+## Indica se um mapa está carregado.
 func has_map(map_id: int) -> bool:
 	return _map_module.has(map_id)
 
 
+## Recarrega um mapa a partir dos dados persistidos.
 func reload_map(map_id: int) -> bool:
 	if _map_module.has(map_id):
 		_map_module.remove(map_id)
 	return await load_map(map_id)
 
 
+## Cria e carrega um novo mapa.
 func create_map(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i) -> bool:
 	if _map_module.has(id):
 		push_error("Mapa %d já está carregado" % id)
@@ -58,6 +67,7 @@ func create_map(id: int, identifier: String, bgm: String, bgs: String, size: Vec
 	return await load_map(id)
 
 
+## Atualiza os dados e as estruturas de colisão e passagem de um mapa.
 func update_map(
 	map_id: int,
 	identifier: String,
@@ -124,6 +134,7 @@ func update_map(
 	return true
 
 
+## Valida e retorna a passagem de uma célula do mapa.
 func validate_warp(map_id: int, cell: Vector2i) -> Dictionary:
 	var map: Map = _map_module.map(map_id)
 	if not map:
@@ -140,6 +151,7 @@ func validate_warp(map_id: int, cell: Vector2i) -> Dictionary:
 	return warp
 
 
+## Cria um mapa em memória a partir de um modelo do banco de dados.
 func _load_map_from_model(map_model: Models.MapModel) -> void:
 	var map: Map = Map.new(
 		map_model.id,

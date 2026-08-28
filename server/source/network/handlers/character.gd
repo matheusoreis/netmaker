@@ -2,12 +2,16 @@ extends RefCounted
 class_name CharacterHandler
 
 
+## Serviço de rede utilizado pelo handler.
 var _network: Network
 
+## Serviço responsável pela autenticação das contas.
 var _auth_service: AuthService
+## Serviço responsável pelo gerenciamento dos personagens.
 var _character_service: CharacterService
 
 
+## Cria um handler de personagens.
 func _init(network: Network, auth_service: AuthService, character_service: CharacterService) -> void:
 	_network = network
 
@@ -15,6 +19,7 @@ func _init(network: Network, auth_service: AuthService, character_service: Chara
 	_character_service = character_service
 
 
+## Registra os eventos de personagens na rede.
 func register() -> Error:
 	return _network.register([
 		list_characters,
@@ -24,6 +29,7 @@ func register() -> Error:
 	])
 
 
+## Remove os eventos de personagens da rede.
 func unregister() -> Error:
 	return _network.unregister([
 		list_characters,
@@ -33,6 +39,7 @@ func unregister() -> Error:
 	])
 
 
+## Envia a lista de personagens da conta solicitante.
 func list_characters() -> void:
 	var sender_id: int = _network.sender_id()
 
@@ -46,6 +53,7 @@ func list_characters() -> void:
 	_network.exec(sender_id, &"list_characters", [characters_data])
 
 
+## Cria um personagem para a conta solicitante.
 func create_character(identifier: String, spritesheet: String) -> void:
 	var sender_id: int = _network.sender_id()
 
@@ -65,6 +73,7 @@ func create_character(identifier: String, spritesheet: String) -> void:
 	_network.exec(sender_id, &"create_character")
 
 
+## Exclui um personagem da conta solicitante.
 func delete_character(character_id: int) -> void:
 	var sender_id: int = _network.sender_id()
 
@@ -88,6 +97,7 @@ func delete_character(character_id: int) -> void:
 	_network.exec(sender_id, &"delete_character")
 
 
+## Seleciona um personagem para a conexão solicitante.
 func select_character(character_id: int) -> void:
 	var sender_id: int = _network.sender_id()
 

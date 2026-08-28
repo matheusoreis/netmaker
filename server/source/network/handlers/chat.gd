@@ -2,16 +2,20 @@ extends RefCounted
 class_name ChatHandler
 
 
+## Serviço de rede utilizado pelo handler.
 var _network: Network
 
+## Serviço responsável pelo gerenciamento dos personagens.
 var _character_service: CharacterService
 
 
+## Cria um handler de chat.
 func _init(network: Network, character_service: CharacterService) -> void:
 	_network = network
 	_character_service = character_service
 
 
+## Registra os eventos de chat na rede.
 func register() -> Error:
 	return _network.register([
 		chat_local,
@@ -19,6 +23,7 @@ func register() -> Error:
 	])
 
 
+## Remove os eventos de chat da rede.
 func unregister() -> Error:
 	return _network.unregister([
 		chat_local,
@@ -26,6 +31,7 @@ func unregister() -> Error:
 	])
 
 
+## Envia uma mensagem para os jogadores do mesmo mapa.
 func chat_local(message: String) -> void:
 	var sender_id: int = _network.sender_id()
 
@@ -44,6 +50,7 @@ func chat_local(message: String) -> void:
 	_network.exec(targets, &"chat_local", [character.identifier, clean_message])
 
 
+## Envia uma mensagem para todos os jogadores conectados.
 func chat_global(message: String) -> void:
 	var sender_id: int = _network.sender_id()
 
@@ -62,6 +69,7 @@ func chat_global(message: String) -> void:
 	_network.exec(targets, &"chat_global", [character.identifier, clean_message])
 
 
+## Remove espaços excedentes e limita o tamanho da mensagem.
 func _sanitize_message(message: String) -> String:
 	var trimmed: String = message.strip_edges()
 	if trimmed.is_empty():

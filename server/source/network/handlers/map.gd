@@ -2,13 +2,18 @@ extends RefCounted
 class_name MapHandler
 
 
+## Serviço de rede utilizado pelo handler.
 var _network: Network
 
+## Serviço responsável pela autenticação das contas.
 var _auth_service: AuthService
+## Serviço responsável pelo gerenciamento dos personagens.
 var _character_service: CharacterService
+## Serviço responsável pelo gerenciamento dos mapas.
 var _map_service: MapService
 
 
+## Cria um handler de mapas.
 func _init(network: Network, auth_service: AuthService, character_service: CharacterService, map_service: MapService) -> void:
 	_network = network
 	_auth_service = auth_service
@@ -16,6 +21,7 @@ func _init(network: Network, auth_service: AuthService, character_service: Chara
 	_map_service = map_service
 
 
+## Registra os eventos de mapas na rede.
 func register() -> Error:
 	return _network.register([
 		map_data,
@@ -25,6 +31,7 @@ func register() -> Error:
 	])
 
 
+## Remove os eventos de mapas da rede.
 func unregister() -> Error:
 	return _network.unregister([
 		map_data,
@@ -34,6 +41,7 @@ func unregister() -> Error:
 	])
 
 
+## Envia os dados do mapa atual ao jogador.
 func map_data() -> void:
 	var sender_id: int = _network.sender_id()
 
@@ -50,6 +58,7 @@ func map_data() -> void:
 	_send_map_data(sender_id, map)
 
 
+## Insere o jogador no mapa atual.
 func enter_map() -> void:
 	var sender_id: int = _network.sender_id()
 
@@ -60,10 +69,12 @@ func enter_map() -> void:
 	_enter_map(sender_id)
 
 
+## Remove o jogador do mapa atual.
 func leave_map(peer_id: int) -> void:
 	_leave_map(peer_id)
 
 
+## Move o personagem do jogador na direção informada.
 func move_character(direction: Vector2i) -> void:
 	var sender_id: int = _network.sender_id()
 
@@ -91,6 +102,7 @@ func move_character(direction: Vector2i) -> void:
 		await _apply_warp(sender_id, character, map)
 
 
+## Atualiza os dados do mapa atual para um administrador.
 func update_map(identifier: String, bgm: String, bgs: String, size: Vector2i, collisions: Array, warps: Array) -> void:
 	var sender_id: int = _network.sender_id()
 
@@ -124,6 +136,7 @@ func update_map(identifier: String, bgm: String, bgs: String, size: Vector2i, co
 	_network.exec(sender_id, &"alert", ["MAP_UPDATED"])
 
 
+## Aplica a passagem encontrada para outro mapa.
 func _apply_warp(peer_id: int, character: Character, current_map: Map) -> void:
 	var warp: Dictionary = _map_service.validate_warp(current_map.id, character.cell)
 	if warp.is_empty():
@@ -150,6 +163,7 @@ func _apply_warp(peer_id: int, character: Character, current_map: Map) -> void:
 	_send_map_data(peer_id, new_map)
 
 
+## Envia os dados de um mapa e os personagens presentes nele.
 func _send_map_data(peer_id: int, map: Map) -> void:
 	var targets: Array = _character_service.get_peers_in_map(map.id)
 	targets.erase(peer_id)
@@ -168,6 +182,7 @@ func _send_map_data(peer_id: int, map: Map) -> void:
 	_network.exec(peer_id, &"map_data", map_data)
 
 
+## Notifica o jogador e os demais jogadores sobre sua entrada no mapa.
 func _enter_map(peer_id: int) -> void:
 	var character: Character = _character_service.get_character(peer_id)
 	if character == null:
@@ -185,6 +200,7 @@ func _enter_map(peer_id: int) -> void:
 		_network.exec(targets, &"character_to_characters", [character_data])
 
 
+## Notifica os demais jogadores sobre a saída de um jogador.
 func _leave_map(peer_id: int) -> void:
 	if not _character_service.has_character(peer_id):
 		return

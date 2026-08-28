@@ -5,6 +5,7 @@ class_name MapRepository
 var _database: Database
 
 
+## Configura o banco de dados e cria o esquema de mapas.
 func setup(database: Database) -> void:
 	_database = database
 
@@ -12,6 +13,7 @@ func setup(database: Database) -> void:
 		await setup_schema()
 
 
+## Cria as tabelas e os índices relacionados aos mapas.
 func setup_schema() -> void:
 	await _database.exec("""
 		CREATE TABLE IF NOT EXISTS maps (
@@ -67,6 +69,7 @@ func setup_schema() -> void:
 
 #region Maps
 
+## Retorna todos os mapas cadastrados.
 func get_all_maps() -> Array[Models.MapModel]:
 	var rows: Array[Models] = await _database.rows(
 		"SELECT id, identifier, bgm, bgs, size_x, size_y, created_at, updated_at FROM maps ORDER BY id",
@@ -81,6 +84,7 @@ func get_all_maps() -> Array[Models.MapModel]:
 	return maps
 
 
+## Retorna um mapa pelo seu identificador.
 func get_map(map_id: int) -> Models.MapModel:
 	var model: Models = await _database.row(
 		"SELECT id, identifier, bgm, bgs, size_x, size_y, created_at, updated_at FROM maps WHERE id = ?",
@@ -91,6 +95,7 @@ func get_map(map_id: int) -> Models.MapModel:
 	return model as Models.MapModel
 
 
+## Cria um mapa com os dados informados.
 func create_map(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i) -> bool:
 	var now: int = _database.now()
 
@@ -102,6 +107,7 @@ func create_map(id: int, identifier: String, bgm: String, bgs: String, size: Vec
 	return result == OK
 
 
+## Atualiza os dados de um mapa existente.
 func update_map(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i) -> bool:
 	var now: int = _database.now()
 
@@ -113,6 +119,7 @@ func update_map(id: int, identifier: String, bgm: String, bgs: String, size: Vec
 	return result == OK
 
 
+## Indica se um mapa existe.
 func map_exists(map_id: int) -> bool:
 	var result: Variant = await _database.scalar(
 		"SELECT COUNT(*) FROM maps WHERE id = ?",
@@ -122,6 +129,7 @@ func map_exists(map_id: int) -> bool:
 	return result != null and result > 0
 
 
+## Exclui um mapa pelo seu identificador.
 func delete_map(map_id: int) -> bool:
 	var result: Error = await _database.exec(
 		"DELETE FROM maps WHERE id = ?",
@@ -134,6 +142,7 @@ func delete_map(map_id: int) -> bool:
 
 #region Collisions
 
+## Retorna as colisões de um mapa indexadas por célula.
 func get_collisions(map_id: int) -> Dictionary[Vector2i, int]:
 	var result: Array[Models] = await _database.rows(
 		"SELECT cell_x, cell_y, flag FROM map_collisions WHERE map_id = ?",
@@ -150,6 +159,7 @@ func get_collisions(map_id: int) -> Dictionary[Vector2i, int]:
 	return collisions
 
 
+## Insere uma colisão em uma célula do mapa.
 func insert_collision(map_id: int, cell: Vector2i, flag: int) -> bool:
 	var result: Error = await _database.exec(
 		"INSERT INTO map_collisions (map_id, cell_x, cell_y, flag) VALUES (?, ?, ?, ?)",
@@ -159,6 +169,7 @@ func insert_collision(map_id: int, cell: Vector2i, flag: int) -> bool:
 	return result == OK
 
 
+## Remove todas as colisões de um mapa.
 func delete_collisions_by_map(map_id: int) -> bool:
 	var result: Error = await _database.exec(
 		"DELETE FROM map_collisions WHERE map_id = ?",
@@ -171,6 +182,7 @@ func delete_collisions_by_map(map_id: int) -> bool:
 
 #region Warps
 
+## Retorna as passagens de um mapa indexadas pela célula de origem.
 func get_warps(map_id: int) -> Dictionary[Vector2i, Dictionary]:
 	var result: Array[Models] = await _database.rows(
 		"SELECT map_id, from_cell_x, from_cell_y, to_map_id, to_cell_x, to_cell_y, to_facing_x, to_facing_y FROM map_warps WHERE map_id = ?",
@@ -191,6 +203,7 @@ func get_warps(map_id: int) -> Dictionary[Vector2i, Dictionary]:
 	return warps
 
 
+## Insere uma passagem entre dois mapas.
 func insert_warp(map_id: int, from_cell: Vector2i, to_map_id: int, to_cell: Vector2i, to_facing: Vector2i) -> bool:
 	var result: Error = await _database.exec(
 		"INSERT INTO map_warps (map_id, from_cell_x, from_cell_y, to_map_id, to_cell_x, to_cell_y, to_facing_x, to_facing_y) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -200,6 +213,7 @@ func insert_warp(map_id: int, from_cell: Vector2i, to_map_id: int, to_cell: Vect
 	return result == OK
 
 
+## Remove todas as passagens de um mapa.
 func delete_warps_by_map(map_id: int) -> bool:
 	var result: Error = await _database.exec(
 		"DELETE FROM map_warps WHERE map_id = ?",

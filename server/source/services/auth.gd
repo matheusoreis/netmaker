@@ -2,23 +2,29 @@ extends RefCounted
 class_name AuthService
 
 
+## Repositório responsável pelos dados de autenticação.
 var _auth_repository: AuthRepository
+## Módulo que mantém as contas autenticadas.
 var _auth_module: AuthModule
 
 
+## Cria um serviço de autenticação.
 func _init(auth_repository: AuthRepository, auth_module: AuthModule) -> void:
 	_auth_repository = auth_repository
 	_auth_module = auth_module
 
 
+## Indica se um peer está autenticado.
 func is_signed_in(peer_id: int) -> bool:
 	return _auth_module.has(peer_id)
 
 
+## Retorna a conta autenticada de um peer.
 func get_account(peer_id: int) -> Account:
 	return _auth_module.account(peer_id)
 
 
+## Autentica uma conta e registra o peer no módulo.
 func sign_in(peer_id: int, email: String, password: String) -> Array:
 	var result: Array = await _auth_repository.sign_in(email, password)
 	if result[0] != OK:
@@ -32,6 +38,7 @@ func sign_in(peer_id: int, email: String, password: String) -> Array:
 	return [OK, account]
 
 
+## Cria uma conta e registra o peer no módulo.
 func sign_up(peer_id: int, email: String, password: String, password_confirm: String) -> Array:
 	var result: Array = await _auth_repository.sign_up(email, password, password_confirm)
 	if result[0] != OK:
@@ -44,6 +51,7 @@ func sign_up(peer_id: int, email: String, password: String, password_confirm: St
 	return [OK, account]
 
 
+## Encerra a sessão de uma conta autenticada.
 func sign_out(peer_id: int) -> void:
 	if not _auth_module.has(peer_id):
 		return
@@ -54,6 +62,7 @@ func sign_out(peer_id: int) -> void:
 	_auth_module.remove(peer_id)
 
 
+## Bane uma conta e encerra sua sessão, quando conectada.
 func ban_account(account_id: int) -> int:
 	await _auth_repository.ban_account(account_id)
 
@@ -64,10 +73,12 @@ func ban_account(account_id: int) -> int:
 	return peer_id
 
 
+## Remove o banimento de uma conta.
 func unban_account(account_id: int) -> void:
 	await _auth_repository.unban_account(account_id)
 
 
+## Remove a conta do módulo de autenticação de um peer.
 func remove_account(peer_id: int) -> void:
 	if not _auth_module.has(peer_id):
 		return

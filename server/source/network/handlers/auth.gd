@@ -2,16 +2,20 @@ extends RefCounted
 class_name AuthHandler
 
 
+## Serviço de rede utilizado pelo handler.
 var _network: Network
 
+## Serviço responsável pela autenticação das contas.
 var _auth_service: AuthService
 
 
+## Cria um handler de autenticação.
 func _init(network: Network, auth_service: AuthService) -> void:
 	_network = network
 	_auth_service = auth_service
 
 
+## Registra os eventos de autenticação na rede.
 func register() -> Error:
 	return _network.register([
 		sign_in,
@@ -19,6 +23,7 @@ func register() -> Error:
 	])
 
 
+## Remove os eventos de autenticação da rede.
 func unregister() -> Error:
 	return _network.unregister([
 		sign_in,
@@ -26,6 +31,7 @@ func unregister() -> Error:
 	])
 
 
+## Verifica se a versão do cliente é compatível com o servidor.
 func _is_version_valid(major_version: int, minor_version: int, revision_version: int) -> bool:
 	return (
 		major_version == Constants.MAJOR_VERSION
@@ -34,6 +40,7 @@ func _is_version_valid(major_version: int, minor_version: int, revision_version:
 	)
 
 
+## Valida a versão e o estado de autenticação do cliente.
 func _validate_request(major_version: int, minor_version: int, revision_version: int) -> int:
 	var sender_id: int = _network.sender_id()
 
@@ -48,6 +55,7 @@ func _validate_request(major_version: int, minor_version: int, revision_version:
 	return sender_id
 
 
+## Processa uma solicitação de login.
 func sign_in(email: String, password: String, major_version: int, minor_version: int, revision_version: int) -> void:
 	var sender_id := _validate_request(major_version, minor_version, revision_version)
 	if sender_id == -1:
@@ -61,6 +69,7 @@ func sign_in(email: String, password: String, major_version: int, minor_version:
 	_network.exec(sender_id, &"sign_in")
 
 
+## Processa uma solicitação de criação de conta.
 func sign_up(email: String, password: String, password_confirm: String, major_version: int, minor_version: int, revision_version: int) -> void:
 	var sender_id := _validate_request(major_version, minor_version, revision_version)
 	if sender_id == -1:

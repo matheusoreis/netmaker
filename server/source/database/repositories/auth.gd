@@ -5,6 +5,7 @@ class_name AuthRepository
 var _database: Database
 
 
+## Configura o banco de dados e cria o esquema de autenticação.
 func setup(database: Database) -> void:
 	_database = database
 
@@ -12,6 +13,7 @@ func setup(database: Database) -> void:
 		await setup_schema()
 
 
+## Cria a tabela de contas e seus índices.
 func setup_schema() -> void:
 	await _database.exec("""
 		CREATE TABLE IF NOT EXISTS accounts (
@@ -31,6 +33,7 @@ func setup_schema() -> void:
 	""")
 
 
+## Autentica uma conta usando o e-mail e a senha informados.
 func sign_in(email: String, password: String) -> Array:
 	if not _is_email_valid(email):
 		return [ERR_INVALID_PARAMETER, "INVALID_EMAIL"]
@@ -67,6 +70,7 @@ func sign_in(email: String, password: String) -> Array:
 	return [OK, account]
 
 
+## Cria uma nova conta após validar seus dados.
 func sign_up(email: String, password: String, password_confirm: String) -> Array:
 	if not _is_email_valid(email):
 		return [ERR_INVALID_PARAMETER, "INVALID_EMAIL"]
@@ -121,6 +125,7 @@ func sign_up(email: String, password: String, password_confirm: String) -> Array
 	return [OK, account]
 
 
+## Atualiza o horário do último acesso da conta.
 func update_access_at(account_id: int) -> void:
 	await _database.exec(
 		"UPDATE accounts SET access_at = ? WHERE id = ?",
@@ -128,6 +133,7 @@ func update_access_at(account_id: int) -> void:
 	)
 
 
+## Atualiza o horário da última alteração da conta.
 func update_updated_at(account_id: int) -> void:
 	await _database.exec(
 		"UPDATE accounts SET updated_at = ? WHERE id = ?",
@@ -135,6 +141,7 @@ func update_updated_at(account_id: int) -> void:
 	)
 
 
+## Bane uma conta registrando o horário do banimento.
 func ban_account(account_id: int) -> void:
 	await _database.exec(
 		"UPDATE accounts SET banned_at = ? WHERE id = ?",
@@ -142,6 +149,7 @@ func ban_account(account_id: int) -> void:
 	)
 
 
+## Remove o banimento de uma conta.
 func unban_account(account_id: int) -> void:
 	await _database.exec(
 		"UPDATE accounts SET banned_at = 0 WHERE id = ?",
@@ -149,6 +157,7 @@ func unban_account(account_id: int) -> void:
 	)
 
 
+## Indica se uma conta está banida.
 func is_account_banned(account_id: int) -> bool:
 	var result: Variant = await _database.scalar(
 		"SELECT banned_at FROM accounts WHERE id = ?",
@@ -158,9 +167,11 @@ func is_account_banned(account_id: int) -> bool:
 	return result != null and result > 0
 
 
+## Valida o formato de um endereço de e-mail.
 func _is_email_valid(email: String) -> bool:
 	return RegEx.create_from_string(Constants.EMAIL_REGEX).search(email) != null
 
 
+## Valida o formato de uma senha.
 func _is_password_valid(password: String) -> bool:
 	return RegEx.create_from_string(Constants.PASSWORD_REGEX).search(password) != null

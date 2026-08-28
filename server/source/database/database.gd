@@ -2,6 +2,7 @@ extends RefCounted
 class_name Database
 
 
+## Códigos de retorno utilizados pelo SQLite.
 enum Codes {
 	OK = 0, ERROR = 1, INTERNAL = 2, PERM = 3, ABORT = 4, BUSY = 5,
 	LOCKED = 6, NOMEM = 7, READONLY = 8, INTERRUPT = 9, IOERR = 10,
@@ -38,15 +39,18 @@ var _aslet: Aslet
 var _conn: AsletConn
 
 
+## Inicializa o driver de banco de dados.
 func _init() -> void:
 	_aslet = Aslet.new()
 
 
+## Processa as operações pendentes do banco de dados.
 func poll(time: int) -> void:
 	if _aslet:
 		_aslet.poll(time)
 
 
+## Cria ou abre um banco de dados no caminho informado.
 func create(path: String, filename: String, wal: bool = false) -> Error:
 	var full_path: String = "%s%s.db" % [path, filename]
 
@@ -65,14 +69,17 @@ func create(path: String, filename: String, wal: bool = false) -> Error:
 	return OK
 
 
+## Indica se a conexão com o banco de dados está pronta.
 func is_ready() -> bool:
 	return _conn != null
 
 
+## Retorna o horário atual como timestamp Unix.
 func now() -> int:
 	return int(Time.get_unix_time_from_system())
 
 
+## Retorna as linhas de uma consulta convertidas para o modelo informado.
 func rows(query: String, args: Array = [], ty: GDScript = null) -> Array[Models]:
 	var result: Array = await _conn.fetch(query, args).done as Array
 	if result[0] != OK:
@@ -91,6 +98,7 @@ func rows(query: String, args: Array = [], ty: GDScript = null) -> Array[Models]
 	return values
 
 
+## Retorna a primeira linha de uma consulta convertida para o modelo informado.
 func row(query: String, args: Array = [], ty: GDScript = null) -> Models:
 	var result: Array = await _conn.fetch(query, args).done as Array
 	if result[0] != OK || (result[1] as Array).size() == 0:
@@ -104,6 +112,7 @@ func row(query: String, args: Array = [], ty: GDScript = null) -> Models:
 	return m
 
 
+## Retorna o primeiro valor da primeira linha de uma consulta.
 func scalar(query: String, args: Array = []) -> Variant:
 	var result: Array = await _conn.fetch(query, args).done as Array
 	if result[0] != OK || (result[1] as Array).size() == 0:
@@ -112,11 +121,13 @@ func scalar(query: String, args: Array = []) -> Variant:
 	return (result[1] as Array)[0][0]
 
 
+## Retorna o primeiro valor da consulta ou o valor padrão quando ele não existe.
 func scalar_or(query: String, args: Array = [], default: Variant = null) -> Variant:
 	var value: Variant = await scalar(query, args)
 	return default if value == null else value
 
 
+## Executa uma instrução SQL e retorna o código de erro resultante.
 func exec(query: String, params: Array = []) -> Error:
 	var result: Array = await _conn.exec(query, params).done as Array
 	if result[0] != OK:

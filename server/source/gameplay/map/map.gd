@@ -2,20 +2,29 @@ extends RefCounted
 class_name Map
 
 
+## Identificador do mapa.
 var id: int
+## Nome identificador do mapa.
 var identifier: String
 
+## Nome do arquivo de música de fundo.
 var bgm: String
+## Nome do arquivo de som ambiente.
 var bgs: String
 
+## Dimensões do mapa em células.
 var size: Vector2i
 
+## Colisões do mapa indexadas por célula.
 var collisions: Dictionary[Vector2i, int]
+## Passagens do mapa indexadas por célula de origem.
 var warps: Dictionary[Vector2i, Dictionary]
 
+## Personagens presentes no mapa indexados por identificador.
 var characters: Dictionary[int, Character]
 
 
+## Cria um mapa com os dados informados.
 func _init(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i) -> void:
 	self.id = id
 	self.identifier = identifier
@@ -26,46 +35,57 @@ func _init(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i
 	self.size = size
 
 
+## Importa as colisões do mapa.
 func import_collisions(collisions: Dictionary) -> void:
 	self.collisions.assign(collisions)
 
 
+## Importa as passagens do mapa.
 func import_warps(warps: Dictionary) -> void:
 	self.warps.assign(warps)
 
 
+## Retorna o tamanho do mapa em pixels.
 func pixel_size() -> Vector2i:
 	return Vector2i(size.x * Constants.CELL_SIZE, size.y * Constants.CELL_SIZE)
 
 
+## Indica se uma posição está dentro dos limites do mapa.
 func is_within_bounds(position: Vector2i) -> bool:
 	return position.x >= 0 and position.x < size.x and position.y >= 0 and position.y < size.y
 
 
+## Converte uma célula do mapa para uma posição em pixels.
 func to_screen(cell: Vector2i) -> Vector2:
 	return Vector2(cell.x * Constants.CELL_SIZE, cell.y * Constants.CELL_SIZE)
 
 
+## Converte uma posição em pixels para uma célula do mapa.
 func to_cell(position: Vector2) -> Vector2i:
 	return Vector2i(int(position.x / Constants.CELL_SIZE), int(position.y / Constants.CELL_SIZE))
 
 
+## Retorna as flags de colisão de uma célula.
 func collision_flag(cell: Vector2i) -> int:
 	return collisions.get(cell, Constants.CELL_NONE)
 
 
+## Indica se uma célula está completamente bloqueada.
 func is_solid(cell: Vector2i) -> bool:
 	return (collision_flag(cell) & Constants.CELL_FULL_BLOCK) != 0
 
 
+## Indica se existe uma passagem na célula informada.
 func has_warp(cell: Vector2i) -> bool:
 	return warps.has(cell)
 
 
+## Retorna os dados da passagem na célula informada.
 func get_warp(cell: Vector2i) -> Dictionary:
 	return warps.get(cell, {})
 
 
+## Indica se é possível mover-se na direção informada.
 func can_pass(from: Vector2i, direction: Vector2i) -> bool:
 	var to: Vector2i = from + direction
 
@@ -100,10 +120,12 @@ func can_pass(from: Vector2i, direction: Vector2i) -> bool:
 	return true
 
 
+## Adiciona um personagem ao mapa.
 func add_character(character: Character) -> void:
 	characters[character.id] = character
 
 
+## Remove um personagem do mapa.
 func remove_character(character_id: int) -> void:
 	var character: Character = characters.get(character_id)
 	if not character:
@@ -112,16 +134,19 @@ func remove_character(character_id: int) -> void:
 	characters.erase(character_id)
 
 
+## Retorna um personagem pelo seu identificador.
 func get_character(character_id: int) -> Character:
 	return characters.get(character_id)
 
 
+## Retorna todos os personagens presentes no mapa.
 func get_characters() -> Array[Character]:
 	var result: Array[Character] = []
 	result.assign(characters.values())
 	return result
 
 
+## Indica se existe um personagem na célula informada.
 func has_character_at(cell: Vector2i) -> bool:
 	for character: Character in characters.values():
 		if character.get_cell() == cell:
@@ -129,6 +154,7 @@ func has_character_at(cell: Vector2i) -> bool:
 	return false
 
 
+## Retorna os personagens presentes na célula informada.
 func get_characters_at(cell: Vector2i) -> Array[Character]:
 	var result: Array[Character] = []
 	for character: Character in characters.values():
@@ -137,10 +163,12 @@ func get_characters_at(cell: Vector2i) -> Array[Character]:
 	return result
 
 
+## Retorna os dados do mapa em formato de array.
 func to_array() -> Array:
 	return [id, identifier, bgm, bgs, size, collisions, warps]
 
 
+## Converte uma direção em sua flag de colisão correspondente.
 func _direction_to_flag(direction: Vector2i) -> int:
 	match direction:
 		Vector2i.DOWN:

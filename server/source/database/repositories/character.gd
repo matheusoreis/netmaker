@@ -5,6 +5,7 @@ class_name CharacterRepository
 var _database: Database
 
 
+## Configura o banco de dados e cria o esquema de personagens.
 func setup(database: Database) -> void:
 	_database = database
 
@@ -12,6 +13,7 @@ func setup(database: Database) -> void:
 		await setup_schema()
 
 
+## Cria a tabela de personagens e seus índices.
 func setup_schema() -> void:
 	await _database.exec("""
 		CREATE TABLE IF NOT EXISTS characters (
@@ -46,6 +48,7 @@ func setup_schema() -> void:
 	""")
 
 
+## Retorna todos os personagens pertencentes a uma conta.
 func get_characters_by_account(account_id: int) -> Array[Models.CharacterModel]:
 	var rows: Array[Models] = await _database.rows(
 		"SELECT id, account, identifier, spritesheet, map, cell_x, cell_y, facing_x, facing_y, access_at, created_at, updated_at FROM characters WHERE account = ? ORDER BY id",
@@ -60,6 +63,7 @@ func get_characters_by_account(account_id: int) -> Array[Models.CharacterModel]:
 	return characters
 
 
+## Retorna um personagem pelo seu identificador.
 func get_character_by_id(character_id: int) -> Models.CharacterModel:
 	var model: Models = await _database.row(
 		"SELECT id, account, identifier, spritesheet, map, cell_x, cell_y, facing_x, facing_y, access_at, created_at, updated_at FROM characters WHERE id = ?",
@@ -70,6 +74,7 @@ func get_character_by_id(character_id: int) -> Models.CharacterModel:
 	return model as Models.CharacterModel
 
 
+## Indica se um personagem pertence à conta informada.
 func is_character_owner(character_id: int, account_id: int) -> bool:
 	var model: Models = await _database.row(
 		"SELECT id FROM characters WHERE id = ? AND account = ?",
@@ -80,6 +85,7 @@ func is_character_owner(character_id: int, account_id: int) -> bool:
 	return model != null
 
 
+## Indica se uma conta já possui um personagem com o identificador informado.
 func character_identifier_exists(account_id: int, identifier: String) -> bool:
 	var result: Variant = await _database.scalar(
 		"SELECT COUNT(*) FROM characters WHERE account = ? AND identifier = ?",
@@ -89,6 +95,7 @@ func character_identifier_exists(account_id: int, identifier: String) -> bool:
 	return result > 0
 
 
+## Cria um personagem com a posição inicial padrão.
 func create_character(account_id: int, identifier: String, spritesheet: String) -> Array:
 	if not _is_identifier_valid(identifier):
 		return [ERR_INVALID_PARAMETER, "INVALID_IDENTIFIER"]
@@ -134,6 +141,7 @@ func create_character(account_id: int, identifier: String, spritesheet: String) 
 	return [OK, model as Models.CharacterModel]
 
 
+## Exclui um personagem pertencente à conta informada.
 func delete_character(character_id: int, account_id: int) -> Array:
 	if not await is_character_owner(character_id, account_id):
 		return [ERR_UNAUTHORIZED, "NOT_OWNER"]
@@ -149,6 +157,7 @@ func delete_character(character_id: int, account_id: int) -> Array:
 	return [OK, null]
 
 
+## Seleciona um personagem e registra seu acesso.
 func select_character(character_id: int, account_id: int) -> Array:
 	if not await is_character_owner(character_id, account_id):
 		return [ERR_UNAUTHORIZED, "NOT_OWNER"]
@@ -165,6 +174,7 @@ func select_character(character_id: int, account_id: int) -> Array:
 	return [OK, model]
 
 
+## Atualiza a posição e a direção de um personagem.
 func update_character_position(character_id: int, cell: Vector2i, facing: Vector2i) -> Array:
 	var result: Error = await _database.exec(
 		"UPDATE characters SET cell_x = ?, cell_y = ?, facing_x = ?, facing_y = ? WHERE id = ?",
@@ -177,6 +187,7 @@ func update_character_position(character_id: int, cell: Vector2i, facing: Vector
 	return [OK, null]
 
 
+## Atualiza o mapa, a posição e a direção de um personagem.
 func update_character_map(character_id: int, map_id: int, cell: Vector2i, facing: Vector2i) -> Array:
 	var result: Error = await _database.exec(
 		"UPDATE characters SET map = ?, cell_x = ?, cell_y = ?, facing_x = ?, facing_y = ? WHERE id = ?",
@@ -189,6 +200,7 @@ func update_character_map(character_id: int, map_id: int, cell: Vector2i, facing
 	return [OK, null]
 
 
+## Atualiza o horário do último acesso de um personagem.
 func update_access(character_id: int) -> Array:
 	var result: Error = await _database.exec(
 		"UPDATE characters SET access_at = ? WHERE id = ?",
@@ -201,6 +213,7 @@ func update_access(character_id: int) -> Array:
 	return [OK, null]
 
 
+## Atualiza o horário da última alteração de um personagem.
 func update_updated(character_id: int) -> Array:
 	var result: Error = await _database.exec(
 		"UPDATE characters SET updated_at = ? WHERE id = ?",
@@ -213,5 +226,6 @@ func update_updated(character_id: int) -> Array:
 	return [OK, null]
 
 
+## Valida o identificador de um personagem.
 func _is_identifier_valid(identifier: String) -> bool:
 	return RegEx.create_from_string(Constants.IDENTIFIER_REGEX).search(identifier) != null
