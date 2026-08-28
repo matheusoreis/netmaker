@@ -37,8 +37,6 @@ enum Codes {
 var _aslet: Aslet
 var _conn: AsletConn
 
-var _in_transaction: bool = false
-
 
 func _init() -> void:
 	_aslet = Aslet.new()
