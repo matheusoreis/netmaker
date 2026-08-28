@@ -2,6 +2,7 @@ extends Node
 class_name AuthHandler
 
 
+## Registra as funções remotas relacionadas a autenticação.
 func register() -> Error:
 	return Network.register([
 		sign_in,
@@ -9,6 +10,7 @@ func register() -> Error:
 	])
 
 
+## Desregistra as funções remotas relacionadas a autenticação.
 func unregister() -> Error:
 	return Network.unregister([
 		sign_in,
@@ -16,6 +18,7 @@ func unregister() -> Error:
 	])
 
 
+## Processa o login bem-sucedido e exibe a seleção de personagens.
 func sign_in() -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
@@ -31,6 +34,7 @@ func sign_in() -> void:
 	menu.show_interface(&"CharacterSelection")
 
 
+## Processa o cadastro bem-sucedido e exibe a seleção de personagens.
 func sign_up() -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:

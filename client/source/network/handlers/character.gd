@@ -2,6 +2,7 @@ extends Node
 class_name CharacterHandler
 
 
+## Registra as funções remotas relacionadas a personagens.
 func register() -> Error:
 	return Network.register([
 		list_characters,
@@ -11,6 +12,7 @@ func register() -> Error:
 	])
 
 
+## Desregistra as funções remotas relacionadas a personagens.
 func unregister() -> Error:
 	return Network.unregister([
 		list_characters,
@@ -20,6 +22,7 @@ func unregister() -> Error:
 	])
 
 
+## Atualiza a lista de personagens na interface.
 func list_characters(characters: Array) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
@@ -36,14 +39,17 @@ func list_characters(characters: Array) -> void:
 	menu.show_interface(&"CharacterSelection")
 
 
+## Processa a criação de um novo personagem.
 func create_character() -> void:
 	Network.exec(&"list_characters")
 
 
+## Processa a exclusão de um personagem.
 func delete_character() -> void:
 	Network.exec(&"list_characters")
 
 
+## Processa a seleção de um personagem e entra no jogo.
 func select_character() -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:

@@ -2,6 +2,7 @@ extends Node
 class_name ChatHandler
 
 
+## Registra as funções remotas relacionadas ao chat.
 func register() -> Error:
 	return Network.register([
 		chat_local,
@@ -9,6 +10,7 @@ func register() -> Error:
 	])
 
 
+## Desregistra as funções remotas relacionadas ao chat.
 func unregister() -> Error:
 	return Network.unregister([
 		chat_local,
@@ -16,14 +18,17 @@ func unregister() -> Error:
 	])
 
 
+## Adiciona uma mensagem local ao chat.
 func chat_local(sender_name: String, message: String) -> void:
 	_add_message(sender_name, message, "local")
 
 
+## Adiciona uma mensagem global ao chat.
 func chat_global(sender_name: String, message: String) -> void:
 	_add_message(sender_name, message, "global")
 
 
+## Adiciona uma mensagem formatada ao chat.
 func _add_message(sender_name: String, message: String, type: String) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
@@ -48,6 +53,7 @@ func _add_message(sender_name: String, message: String, type: String) -> void:
 	chat.add_message(formatted)
 
 
+## Retorna a cor correspondente ao tipo de mensagem.
 func _get_color_for_type(type: String) -> String:
 	match type:
 		"global":

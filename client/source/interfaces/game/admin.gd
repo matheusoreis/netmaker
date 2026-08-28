@@ -2,13 +2,16 @@ extends PanelContainer
 class_name Admin
 
 
+## Referência ao nó principal do jogo.
 var _main: Main
 
 
+## Inicializa a interface administrativa.
 func _ready() -> void:
 	_main = get_tree().root.get_node("./Main")
 
 
+## Exibe uma confirmação antes de executar uma ação.
 func _show_confirmation(game: Game, message: String, confirmed: Callable) -> void:
 	var confirmation: ConfirmationInterface = game.get_interface(&"Confirmation")
 
@@ -24,6 +27,7 @@ func _show_confirmation(game: Game, message: String, confirmed: Callable) -> voi
 	game.show_interface(&"Confirmation")
 
 
+## Fecha a interface administrativa.
 func _on_close_pressed() -> void:
 	var game: Game = _main.current_scene
 	if game == null:
@@ -32,6 +36,7 @@ func _on_close_pressed() -> void:
 	game.hide_interface(&"Admin")
 
 
+## Envia as atualizações do mapa para o servidor.
 func _on_update_map_pressed() -> void:
 	var game: Game = _main.current_scene
 	if game == null:

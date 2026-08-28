@@ -2,6 +2,7 @@ extends Node
 class_name ActionHandler
 
 
+## Registra as funções remotas relacionadas a ações.
 func register() -> Error:
 	return Network.register([
 		alert,
@@ -9,6 +10,7 @@ func register() -> Error:
 	])
 
 
+## Desregistra as funções remotas relacionadas a ações.
 func unregister() -> Error:
 	return Network.unregister([
 		alert,
@@ -16,6 +18,7 @@ func unregister() -> Error:
 	])
 
 
+## Exibe um alerta com a mensagem informada.
 func alert(code: String) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
@@ -35,6 +38,7 @@ func alert(code: String) -> void:
 	, CONNECT_ONE_SHOT)
 
 
+## Exibe uma confirmação com a mensagem informada.
 func confirmation(code: String) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:

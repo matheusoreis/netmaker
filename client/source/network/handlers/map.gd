@@ -2,6 +2,7 @@ extends Node
 class_name MapHandler
 
 
+## Registra as funções remotas relacionadas a mapas.
 func register() -> Error:
 	return Network.register([
 		map_data,
@@ -14,6 +15,7 @@ func register() -> Error:
 	])
 
 
+## Desregistra as funções remotas relacionadas a mapas.
 func unregister() -> Error:
 	return Network.unregister([
 		map_data,
@@ -26,6 +28,7 @@ func unregister() -> Error:
 	])
 
 
+## Recebe os dados completos do mapa e o instancia.
 func map_data(id: int, identifier: String, bgm: String, bgs: String, size: Vector2i, collisions: Dictionary, warps: Dictionary, characters: Array) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
@@ -86,6 +89,7 @@ func map_data(id: int, identifier: String, bgm: String, bgs: String, size: Vecto
 	Network.exec(&"enter_map")
 
 
+## Recebe os dados do personagem do jogador e o instancia.
 func character_data(character_data: Array) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
@@ -141,6 +145,7 @@ func character_data(character_data: Array) -> void:
 	character.start_warp_cooldown()
 
 
+## Recebe dados de outros personagens e os instancia no mapa.
 func character_to_characters(character_data: Array) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
@@ -178,6 +183,7 @@ func character_to_characters(character_data: Array) -> void:
 	game.current_map.add_character(character)
 
 
+## Move um personagem na direção informada.
 func move_character(id: int, direction: Vector2i) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
@@ -194,6 +200,7 @@ func move_character(id: int, direction: Vector2i) -> void:
 	character.move(direction)
 
 
+## Corrige a posição e direção do personagem do jogador.
 func correct_movement(cell: Vector2i, facing: Vector2i) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
@@ -206,6 +213,7 @@ func correct_movement(cell: Vector2i, facing: Vector2i) -> void:
 	game.current_character.correct(cell, facing)
 
 
+## Remove um personagem que saiu do mapa.
 func character_left(id: int) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
@@ -218,6 +226,7 @@ func character_left(id: int) -> void:
 	game.current_map.remove_character(id)
 
 
+## Troca para um novo mapa.
 func warp_map(_map_id: int) -> void:
 	var main: Main = get_tree().root.get_node("./Main")
 	if main == null:
@@ -230,6 +239,7 @@ func warp_map(_map_id: int) -> void:
 	_unload_current_map(game)
 
 
+## Descarrega o mapa atual e libera seus recursos.
 func _unload_current_map(game: Game) -> void:
 	if game.current_map == null:
 		return

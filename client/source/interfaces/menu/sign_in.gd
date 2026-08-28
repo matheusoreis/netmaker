@@ -2,13 +2,16 @@ extends PanelContainer
 class_name SignInInterface
 
 
+## Referência ao nó principal do jogo.
 var _main: Main
 
 
+## Inicializa a interface.
 func _ready() -> void:
 	_main = get_tree().root.get_node("./Main")
 
 
+## Exibe um alerta no menu informado.
 func _show_alert(menu: Menu, message: String) -> void:
 	var alert: AlertInterface = menu.get_interface(&"Alert")
 
@@ -20,6 +23,7 @@ func _show_alert(menu: Menu, message: String) -> void:
 	menu.show_interface(&"Alert")
 
 
+## Valida as credenciais de login.
 func _validate_credentials(email: String, password: String) -> String:
 	if email.is_empty():
 		return "Informe o e-mail e tente novamente!"
@@ -30,6 +34,7 @@ func _validate_credentials(email: String, password: String) -> String:
 	return ""
 
 
+## Fecha a interface e sai do jogo.
 func _on_close_pressed() -> void:
 	var menu: Menu = _main.current_scene
 	if menu == null:
@@ -49,6 +54,7 @@ func _on_close_pressed() -> void:
 	menu.show_interface(&"Confirmation")
 
 
+## Processa o login do usuário.
 func _on_sign_in_pressed() -> void:
 	var menu: Menu = _main.current_scene
 	if menu == null:
@@ -67,6 +73,7 @@ func _on_sign_in_pressed() -> void:
 	])
 
 
+## Abre a interface de cadastro.
 func _on_sign_up_pressed() -> void:
 	var menu: Menu = _main.current_scene
 	if menu == null:
