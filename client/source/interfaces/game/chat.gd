@@ -18,6 +18,12 @@ var _panel_style: StyleBoxFlat
 func _ready() -> void:
 	_main = get_tree().root.get_node("./Main")
 
+	# Obtém o StyleBoxFlat do painel para controlar a opacidade
+	var stylebox: StyleBox = get_theme_stylebox("panel")
+	if stylebox is StyleBoxFlat:
+		_panel_style = stylebox
+		_panel_style.bg_color.a = UNFOCUSED_OPACITY
+
 
 ## Adiciona uma mensagem ao histórico do chat.
 func add_message(text: String) -> void:
